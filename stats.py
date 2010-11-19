@@ -19,7 +19,9 @@
 
 """
 C2C user's stats
-Compute statistics for the outing list
+================
+
+Compute some statistics for the outing list of a user.
 """
 
 __author__ = "Simon <contact at saimon dot org>"
@@ -31,30 +33,24 @@ __license__ = "GPL"
 import re
 import string
 import urllib
+import numpy as np
 import matplotlib.pyplot as plt
 
-USERID = 6424
-NBOUTINGS = 100
-
-URL = "http://www.camptocamp.org/outings/list/user/" + str(USERID) + \
-      "/orderby/date/order/desc/npp/" + str(NBOUTINGS)
-
+ACT = ('escalade', 'rocher haute montagne', 'alpinisme neige, glace, mixte',
+       'cascade de glace', 'ski, surf, raquette', 'randonée pédestre')
 
 class c2cstats:
-    table = ""
-    title = []
-    date = []
-    activity = []
-    altitude = []
-    gain = []
-    area = []
-    cotation = []
-
     def __init__(self, page):
-        self.gettable(page)
-        self.getcontent()
+        self.title = []
+        self.date = []
+        self.activity = []
+        self.altitude = []
+        self.gain = []
+        self.area = []
+        self.cotation = []
+        self.get_content(self.get_table(page))
 
-    def gettable(self, page):
+    def get_table(self, page):
         "Get the table from the page"
         try:
             start = string.index(page, "<table class=\"list\">")
@@ -71,35 +67,46 @@ class c2cstats:
         # head = re.search(pattern, page).groups()[0]
 
         pattern = re.compile(r'<tbody>(.*)</tbody>')
-        self.table = re.search(pattern, page).groups()[0]
+        return re.search(pattern, page).groups()[0]
 
-    def getcontent(self):
+    def get_content(self, table):
         "Get the content of eah line of the table"
-        lines = string.split(self.table, '</tr>')
+        lines = string.split(table, '</tr>')
 
         # pattern = re.compile(r"""
-        # <td>.*</td>
-        # <td><a href=".*">(.*)</a> </td>                 # title
+        # <td>.*</td>                                     # checkbox
+        # <td><a href=".*">(.*)</a> </td>                 # link, title
         # <td>(.*)</td>                                   # date
-        # <td><span class=".*" title="(.*)"></span></td>  # activity
+        # <td><span class=".*" title="(.*)"></span><span class="printonly">.*</span></td>  # activity
         # <td>(.*)</td>                                   # altitude
         # <td>(.*)</td>                                   # gain
         # <td>(.*)</td>                                   # cotation
-        # <td>.*</td>
-        # <td>.*</td>
+        # <td>.*</td>                                     # conditions
+        # <td><span .*></span><span class="printonly">.*</span></td>    # frequentation
         # <td>(<a href=".*">(.*)</a>)*</td>               # regions
-        # <td>.*</td>
-        # <td>.*</td>
-        # <td>.*</td>
+        # <td>.*</td>                                     # nb images
+        # <td>.*</td>                                     # nb comments
+        # <td>.*</td>                                     # user
         # """, re.VERBOSE)
 
         pattern = re.compile(r'<td>.*</td><td><a href=".*">(.*)</a> </td>'+
                              '<td>(.*)</td>'+
-                             '<td><span class=".*" title="(.*)"></span></td>'+
+                             '<td><span class=".*" title="(.*)"></span><span class="printonly">.*</span></td>'+
                              '<td>(.*)</td><td>(.*)</td><td>(.*)</td>'+
                              '<td>.*</td><td>.*</td>'+
                              '<td>(<a href=".*">(.*)</a>)*</td>'+
                              '<td>.*</td><td>.*</td><td>.*</td>')
+
+        # # cotation detail :
+        # <td>
+        # <span title="Cotation globale&nbsp;: D">D</span>/
+        # <span title="Engagement&nbsp;: I">I</span>/
+        # <span title="Qualit\xc3\xa9 de l\'\xc3\xa9quipement en place&nbsp;: P1 (bien \xc3\xa9quip\xc3\xa9)">P1</span>
+        # <span title="Cotation libre&nbsp;: 5c">5c</span>
+        # (<span title="Cotation libre obligatoire&nbsp;: 5b">5b</span>)
+        # </td>
+        # # regions
+        # <td><a href="/areas/14403/fr/ecrins">&Eacute;crins</a> <a href="/areas/14361/fr/hautes-alpes">Hautes-Alpes</a></td>
 
         for l in lines:
             if not re.search(pattern, l):
@@ -114,25 +121,63 @@ class c2cstats:
             self.cotation.append(data[5])
             self.area.append(data[6])
 
-    def plotyear(self):
+    def plot_year(self):
+        "Plot histogram of years"
         year = [int(string.split(i)[2]) for i in self.date]
-        h = plt.hist(year, max(year) - min(year))
+        # n, bins, patches = plt.hist(year, max(year)-min(year)+1,
+        #                             range = (min(year)-0.5, max(year)+0.5))
+
+        n, bins = np.histogram(year, max(year)-min(year)+1,
+                               range = (min(year)-0.5, max(year)+0.5))
+
+        plt.figure()
+        plt.bar(bins[:-1], n)
         plt.xlabel('Year')
         plt.ylabel('Nb of outings')
         plt.title('Nb of outings per year')
-        plt.axis([min(year), max(year), 0, max(h[0])+1])
-        plt.show()
+        # plt.axis([min(year), max(year), 0, max(n)+1])
 
-        rects1 = plt.bar([2004,2005,2006,2007,2008,2009], list(h[0]))
+        labels = [str(i) for i in range(min(year),max(year)+1)]
+        plt.xticks(bins[:-1]+0.4, labels)
+        # plt.yticks(np.arange(0,81,10))
+        # plt.legend( (p1[0], p2[0]), ('Men', 'Women')
+        plt.savefig('years.svg')
+
+    def plot_act(self):
+        "Plot activities"
+        ind = [ACT.index(i) for i in self.activity]
+
+        n, bins = np.histogram(ind, len(ACT), range = (-0.5, max(ind)+0.5))
+        fracs = n / float(n.sum())
+
+        explode = np.zeros(len(ACT)) + 0.05
+
+        plt.figure()
+        plt.pie(fracs, explode=explode, labels=ACT, autopct='%1.1f%%', shadow=True)
+        plt.title('Repartition between activities', bbox={'facecolor':'0.8', 'pad':5})
+        plt.savefig('activities.svg')
 
 
-def getpage(url):
+
+def get_page(url):
     usock = urllib.urlopen(url)
     page = usock.read()
     usock.close()
-    return page
+    return page.decode('utf-8')
+
 
 if __name__ == "__main__":
-    page = getpage(URL)
+    userid = 7286
+    nboutings = 150
 
+    url = "http://www.camptocamp.org/outings/list/user/" + str(userid) + \
+          "/orderby/date/order/desc/npp/" + str(nboutings)
+
+    print "Getting page %s ..." % url
+    page = get_page(url)
+
+    print "Analyzing data ..."
     stats = c2cstats(page)
+    stats.plot_year()
+    stats.plot_act()
+    plt.show()
