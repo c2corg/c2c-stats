@@ -39,7 +39,9 @@ import matplotlib.pyplot as plt
 ACT = ('escalade', 'rocher haute montagne', 'alpinisme neige, glace, mixte',
        'cascade de glace', 'ski, surf, raquette', 'randonée pédestre')
 
-class c2cstats:
+
+class C2CStats:
+    "Compute statistics"
     def __init__(self, page):
         self.title = []
         self.date = []
@@ -61,7 +63,7 @@ class c2cstats:
             print "Error: outing list not found."
             return 0
 
-        page = "".join(string.split(page,'\n'))
+        page = "".join(string.split(page, '\n'))
 
         # pattern = re.compile(r'<thead>(.*)</thead>')
         # head = re.search(pattern, page).groups()[0]
@@ -77,36 +79,41 @@ class c2cstats:
         # <td>.*</td>                                     # checkbox
         # <td><a href=".*">(.*)</a> </td>                 # link, title
         # <td>(.*)</td>                                   # date
-        # <td><span class=".*" title="(.*)"></span><span class="printonly">.*</span></td>  # activity
+        # <td><span class=".*" title="(.*)"></span>
+        # <span class="printonly">.*</span></td>          # activity
         # <td>(.*)</td>                                   # altitude
         # <td>(.*)</td>                                   # gain
         # <td>(.*)</td>                                   # cotation
         # <td>.*</td>                                     # conditions
-        # <td><span .*></span><span class="printonly">.*</span></td>    # frequentation
+        # <td><span .*></span>
+        # <span class="printonly">.*</span></td>          # frequentation
         # <td>(<a href=".*">(.*)</a>)*</td>               # regions
         # <td>.*</td>                                     # nb images
         # <td>.*</td>                                     # nb comments
         # <td>.*</td>                                     # user
         # """, re.VERBOSE)
 
-        pattern = re.compile(r'<td>.*</td><td><a href=".*">(.*)</a> </td>'+
-                             '<td>(.*)</td>'+
-                             '<td><span class=".*" title="(.*)"></span><span class="printonly">.*</span></td>'+
-                             '<td>(.*)</td><td>(.*)</td><td>(.*)</td>'+
-                             '<td>.*</td><td>.*</td>'+
-                             '<td>(<a href=".*">(.*)</a>)*</td>'+
+        pattern = re.compile(r'<td>.*</td><td><a href=".*">(.*)</a> </td>' +
+                             '<td>(.*)</td>' +
+                             '<td><span class=".*" title="(.*)"></span>' +
+                             '<span class="printonly">.*</span></td>' +
+                             '<td>(.*)</td><td>(.*)</td><td>(.*)</td>' +
+                             '<td>.*</td><td>.*</td>' +
+                             '<td>(<a href=".*">(.*)</a>)*</td>' +
                              '<td>.*</td><td>.*</td><td>.*</td>')
 
         # # cotation detail :
         # <td>
         # <span title="Cotation globale&nbsp;: D">D</span>/
         # <span title="Engagement&nbsp;: I">I</span>/
-        # <span title="Qualit\xc3\xa9 de l\'\xc3\xa9quipement en place&nbsp;: P1 (bien \xc3\xa9quip\xc3\xa9)">P1</span>
+        # <span title="Qualit\xc3\xa9 de l\'\xc3\xa9quipement en place&nbsp;:
+        # P1 (bien \xc3\xa9quip\xc3\xa9)">P1</span>
         # <span title="Cotation libre&nbsp;: 5c">5c</span>
         # (<span title="Cotation libre obligatoire&nbsp;: 5b">5b</span>)
         # </td>
         # # regions
-        # <td><a href="/areas/14403/fr/ecrins">&Eacute;crins</a> <a href="/areas/14361/fr/hautes-alpes">Hautes-Alpes</a></td>
+        # <td><a href="/areas/14403/fr/ecrins">&Eacute;crins</a>
+        # <a href="/areas/14361/fr/hautes-alpes">Hautes-Alpes</a></td>
 
         for l in lines:
             if not re.search(pattern, l):
@@ -127,8 +134,8 @@ class c2cstats:
         # n, bins, patches = plt.hist(year, max(year)-min(year)+1,
         #                             range = (min(year)-0.5, max(year)+0.5))
 
-        n, bins = np.histogram(year, max(year)-min(year)+1,
-                               range = (min(year)-0.5, max(year)+0.5))
+        n, bins = np.histogram(year, max(year) - min(year) + 1,
+                               range=(min(year) - 0.5, max(year) + 0.5))
 
         plt.figure()
         plt.bar(bins[:-1], n)
@@ -137,8 +144,8 @@ class c2cstats:
         plt.title('Nb of outings per year')
         # plt.axis([min(year), max(year), 0, max(n)+1])
 
-        labels = [str(i) for i in range(min(year),max(year)+1)]
-        plt.xticks(bins[:-1]+0.4, labels)
+        labels = [str(i) for i in range(min(year), max(year) + 1)]
+        plt.xticks(bins[:-1] + 0.4, labels)
         # plt.yticks(np.arange(0,81,10))
         # plt.legend( (p1[0], p2[0]), ('Men', 'Women')
         plt.savefig('years.svg')
@@ -147,16 +154,17 @@ class c2cstats:
         "Plot activities"
         ind = [ACT.index(i) for i in self.activity]
 
-        n, bins = np.histogram(ind, len(ACT), range = (-0.5, max(ind)+0.5))
+        n, bins = np.histogram(ind, len(ACT), range=(-0.5, max(ind) + 0.5))
         fracs = n / float(n.sum())
 
         explode = np.zeros(len(ACT)) + 0.05
 
         plt.figure()
-        plt.pie(fracs, explode=explode, labels=ACT, autopct='%1.1f%%', shadow=True)
-        plt.title('Repartition between activities', bbox={'facecolor':'0.8', 'pad':5})
+        plt.pie(fracs, explode=explode, labels=ACT, autopct='%1.1f%%',
+                shadow=True)
+        plt.title('Repartition between activities',
+                  bbox={'facecolor': '0.8', 'pad': 5})
         plt.savefig('activities.svg')
-
 
 
 def get_page(url):
@@ -174,10 +182,10 @@ if __name__ == "__main__":
           "/orderby/date/order/desc/npp/" + str(nboutings)
 
     print "Getting page %s ..." % url
-    page = get_page(url)
+    p = get_page(url)
 
     print "Analyzing data ..."
-    stats = c2cstats(page)
+    stats = C2CStats(p)
     stats.plot_year()
     stats.plot_act()
     plt.show()
