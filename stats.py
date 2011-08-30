@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 # c2cstats - Compute statistics for camptocamp.org
-# Copyright (C) 2009, 2010 - saimon.org
+# Copyright (C) 2009, 2010, 2011 - saimon.org
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -168,11 +168,20 @@ class C2CStats:
 
 
 def get_page(url):
-    usock = urllib.urlopen(url)
-    page = usock.read()
-    usock.close()
-    return page.decode('utf-8')
+    """ Retourne le code source de la page 'url' """
 
+    page = urllib.urlopen(url)
+    page_content = page.read()
+    page_code = page.getcode()
+
+    if page_content == "Not Found" or page_code == 404:
+        print "Erreur, la page n'existe pas."
+        exit()
+
+    #Suppression des sauts de ligne, les tabulations et les retours chariot
+    page_content = page_content.replace("\n","").replace("\t","").replace("\r","")
+    return page_content
+    # return page.decode('utf-8')
 
 if __name__ == "__main__":
     userid = 7286
