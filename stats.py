@@ -30,14 +30,14 @@ __date__ = ""
 __copyright__ = "Copyright (c) 2009, 2010 Simon <contact at saimon dot org>"
 __license__ = "GPL"
 
-import re
 import string
 import urllib
 import numpy as np
 import matplotlib.pyplot as plt
+from BeautifulSoup import BeautifulSoup
 
-ACT = ('escalade', 'rocher haute montagne', 'alpinisme neige, glace, mixte',
-       'cascade de glace', 'ski, surf, raquette', 'randonée pédestre')
+ACT = (u'escalade', u'rocher haute montagne', u'alpinisme neige, glace, mixte',
+       u'cascade de glace', u'ski, surf', u'randonée pédestre')
 
 
 class C2CStats:
@@ -49,84 +49,63 @@ class C2CStats:
         self.altitude = []
         self.gain = []
         self.area = []
-        self.cotation = []
-        self.get_content(self.get_table(page))
 
-    def get_table(self, page):
-        "Get the table from the page"
-        try:
-            start = string.index(page, "<table class=\"list\">")
-            page = page[start:]
-            end = string.index(page, "</table>")
-            page = page[:end]
-        except ValueError:
-            print "Error: outing list not found."
-            return 0
+        self.cot_globale = []
+        self.cot_libre = []
+        self.cot_oblige = []
+        self.cot_skitech = []
+        self.cot_skiponc = []
+        self.cot_glace = []
+        self.cot_rando = []
+        self.exposition = []
+        self.engagement = []
+        self.equipement = []
 
-        page = "".join(string.split(page, '\n'))
+        self.get_content(page)
 
-        # pattern = re.compile(r'<thead>(.*)</thead>')
-        # head = re.search(pattern, page).groups()[0]
-
-        pattern = re.compile(r'<tbody>(.*)</tbody>')
-        return re.search(pattern, page).groups()[0]
-
-    def get_content(self, table):
+    def get_content(self, page):
         "Get the content of eah line of the table"
-        lines = string.split(table, '</tr>')
 
-        # pattern = re.compile(r"""
-        # <td>.*</td>                                     # checkbox
-        # <td><a href=".*">(.*)</a> </td>                 # link, title
-        # <td>(.*)</td>                                   # date
-        # <td><span class=".*" title="(.*)"></span>
-        # <span class="printonly">.*</span></td>          # activity
-        # <td>(.*)</td>                                   # altitude
-        # <td>(.*)</td>                                   # gain
-        # <td>(.*)</td>                                   # cotation
-        # <td>.*</td>                                     # conditions
-        # <td><span .*></span>
-        # <span class="printonly">.*</span></td>          # frequentation
-        # <td>(<a href=".*">(.*)</a>)*</td>               # regions
-        # <td>.*</td>                                     # nb images
-        # <td>.*</td>                                     # nb comments
-        # <td>.*</td>                                     # user
-        # """, re.VERBOSE)
-
-        pattern = re.compile(r'<td>.*</td><td><a href=".*">(.*)</a> </td>' +
-                             '<td>(.*)</td>' +
-                             '<td><span class=".*" title="(.*)"></span>' +
-                             '<span class="printonly">.*</span></td>' +
-                             '<td>(.*)</td><td>(.*)</td><td>(.*)</td>' +
-                             '<td>.*</td><td>.*</td>' +
-                             '<td>(<a href=".*">(.*)</a>)*</td>' +
-                             '<td>.*</td><td>.*</td><td>.*</td>')
-
-        # # cotation detail :
-        # <td>
-        # <span title="Cotation globale&nbsp;: D">D</span>/
-        # <span title="Engagement&nbsp;: I">I</span>/
-        # <span title="Qualit\xc3\xa9 de l\'\xc3\xa9quipement en place&nbsp;:
-        # P1 (bien \xc3\xa9quip\xc3\xa9)">P1</span>
-        # <span title="Cotation libre&nbsp;: 5c">5c</span>
-        # (<span title="Cotation libre obligatoire&nbsp;: 5b">5b</span>)
-        # </td>
-        # # regions
-        # <td><a href="/areas/14403/fr/ecrins">&Eacute;crins</a>
-        # <a href="/areas/14361/fr/hautes-alpes">Hautes-Alpes</a></td>
+        soup = BeautifulSoup(''.join(page))
+        table = soup.find('table', "list")
+        lines = table.findAll('tr')
+        lines = lines[1:]
 
         for l in lines:
-            if not re.search(pattern, l):
-                continue
+            t = l.contents
+            self.title.append(t[1].contents[0].text)
+            self.date.append(t[2].contents[0].text)
+            self.altitude.append(t[4].text)
+            self.gain.append(t[5].text)
 
-            data = re.search(pattern, l).groups()
-            self.title.append(data[0])
-            self.date.append(data[1])
-            self.activity.append(data[2])
-            self.altitude.append(data[3])
-            self.gain.append(data[4])
-            self.cotation.append(data[5])
-            self.area.append(data[6])
+            for a in t[3].findAll('span', "printonly"):
+                self.activity.append(a.text)
+
+            for r in t[9].findAll('a'):
+                self.area.append(r.text)
+
+            for i in t[6].findAll('span'):
+                if i['title'].startswith(u'Cotation globale'):
+                    self.cot_globale.append(i.text)
+                elif i['title'].startswith(u'Engagement'):
+                    self.engagement.append(i.text)
+                elif i['title'].startswith(u'Qualité de l\'équipement'):
+                    self.equipement.append(i.text)
+                elif i['title'].startswith(u'Cotation libre obligatoire'):
+                    self.cot_oblige.append(i.text)
+                elif i['title'].startswith(u'Cotation libre&nbsp;'):
+                    self.cot_libre.append(i.text)
+                elif i['title'].startswith(u'Cotation technique'):
+                    self.cot_skitech.append(i.text)
+                elif i['title'].startswith(u'Cotation ponctuelle ski'):
+                    self.cot_skiponc.append(i.text)
+                elif i['title'].startswith(u'Exposition'):
+                    self.exposition.append(i.text)
+                elif i['title'].startswith(u'Cotation glace'):
+                    self.cot_glace.append(i.text)
+                elif i['title'].startswith(u'Cotation randonnée'):
+                    self.cot_rando.append(i.text)
+
 
     def plot_year(self):
         "Plot histogram of years"
@@ -187,14 +166,14 @@ if __name__ == "__main__":
     userid = 7286
     nboutings = 150
 
-    url = "http://www.camptocamp.org/outings/list/user/" + str(userid) + \
+    url = "http://www.camptocamp.org/outings/list/users/" + str(userid) + \
           "/orderby/date/order/desc/npp/" + str(nboutings)
 
     print "Getting page %s ..." % url
-    p = get_page(url)
+    page = get_page(url)
 
     print "Analyzing data ..."
-    stats = C2CStats(p)
+    stats = C2CStats(page)
     stats.plot_year()
     stats.plot_act()
     plt.show()
