@@ -36,8 +36,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from BeautifulSoup import BeautifulSoup
 
-ACT = (u'escalade', u'rocher haute montagne', u'alpinisme neige, glace, mixte',
-       u'cascade de glace', u'ski, surf', u'randonée pédestre')
+ACTIVITIES = (u'escalade',
+              u'rocher haute montagne',
+              u'alpinisme neige, glace, mixte',
+              u'cascade de glace',
+              u'ski, surf',
+              u'randonnée pédestre')
 
 
 class C2CStats:
@@ -118,9 +122,9 @@ class C2CStats:
 
         plt.figure()
         plt.bar(bins[:-1], n)
-        plt.xlabel('Year')
-        plt.ylabel('Nb of outings')
-        plt.title('Nb of outings per year')
+        plt.xlabel(u'Année')
+        plt.ylabel('Nb de sorties')
+        plt.title('Nb de sorties par an')
         # plt.axis([min(year), max(year), 0, max(n)+1])
 
         labels = [str(i) for i in range(min(year), max(year) + 1)]
@@ -131,17 +135,18 @@ class C2CStats:
 
     def plot_act(self):
         "Plot activities"
-        ind = [ACT.index(i) for i in self.activity]
+        ind = [ACTIVITIES.index(i) for i in self.activity]
 
-        n, bins = np.histogram(ind, len(ACT), range=(-0.5, max(ind) + 0.5))
+        n, bins = np.histogram(ind, len(ACTIVITIES),
+                               range=(-0.5, len(ACTIVITIES) + 0.5))
         fracs = n / float(n.sum())
 
-        explode = np.zeros(len(ACT)) + 0.05
+        explode = np.zeros(len(ACTIVITIES)) + 0.05
 
         plt.figure()
-        plt.pie(fracs, explode=explode, labels=ACT, autopct='%1.1f%%',
+        plt.pie(fracs, explode=explode, labels=ACTIVITIES, autopct='%1.1f%%',
                 shadow=True)
-        plt.title('Repartition between activities',
+        plt.title(u'Répartition par activité',
                   bbox={'facecolor': '0.8', 'pad': 5})
         plt.savefig('activities.svg')
 
@@ -163,8 +168,8 @@ def get_page(url):
     # return page.decode('utf-8')
 
 if __name__ == "__main__":
-    userid = 7286
-    nboutings = 150
+    userid = 6424
+    nboutings = 100
 
     url = "http://www.camptocamp.org/outings/list/users/" + str(userid) + \
           "/orderby/date/order/desc/npp/" + str(nboutings)
