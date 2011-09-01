@@ -17,23 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; If not, see http://www.gnu.org/licenses/
 
-"""
-C2C user's stats
-================
-
-Compute some statistics for the outing list of a user.
-"""
-
-__author__ = "Simon <contact at saimon dot org>"
-__version__ = "0.1"
-__date__ = ""
-__copyright__ = "Copyright (c) 2009, 2010 Simon <contact at saimon dot org>"
-__license__ = "GPL"
-
-import argparse
 import datetime
 import string
-import sys
 import urllib
 import numpy as np
 import matplotlib.pyplot as plt
@@ -189,36 +174,3 @@ def get_page(url):
     page_content = page_content.replace("\n","").replace("\t","").replace("\r","")
     return page_content
     # return page.decode('utf-8')
-
-def main():
-    "main program"
-
-    version = "version %s, %s" % (__version__, __date__)
-
-    parser = argparse.ArgumentParser(description='Compute some statistics for camptocamp.org.')
-    parser.add_argument('user_id', help='user id')
-    parser.add_argument('--version', action='version',
-                        version="%(prog)s " + version)
-    parser.add_argument('-n', '--nboutings', default=100,
-                        help=u"Nombre de sorties à récupérer")
-
-    args = parser.parse_args()
-
-    url = "http://www.camptocamp.org/outings/list/users/" + str(args.user_id) + \
-          "/orderby/date/order/desc/npp/" + str(args.nboutings)
-
-    print "Getting page %s ..." % url
-    page = get_page(url)
-
-    print "Analyzing data ..."
-    stats = C2CStats(page)
-    stats.plot_date()
-    stats.plot_activity()
-    stats.plot_area()
-    plt.show()
-
-    return 0
-
-if __name__ == "__main__":
-    status = main()
-    sys.exit(status)
