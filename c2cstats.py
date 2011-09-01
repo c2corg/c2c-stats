@@ -34,6 +34,7 @@ __license__ = "GPL"
 import os, sys
 import argparse
 from c2cstats.parser import C2CParser
+from c2cstats.plots import plot_all
 
 def main():
     "main program"
@@ -53,10 +54,8 @@ def main():
           "/orderby/date/order/desc/npp/" + str(args.nboutings)
 
     print "Analyzing data ..."
-    stats = C2CParser(url)
-    stats.plot_date()
-    stats.plot_activity()
-    stats.plot_area()
+    data = C2CParser(url)
+    plot_all(data)
     return 0
 
 if __name__ == "__main__":
