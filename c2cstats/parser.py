@@ -29,9 +29,9 @@ MONTHS = {u'janvier': 1, u'février': 2, u'mars': 3, u'avril': 4, u'mai': 5,
           u'juin': 6, u'juillet': 7, u'août': 8, u'septembre': 9,
           u'octobre': 10, u'novembre': 11, u'décembre': 12}
 
-class C2CStats:
+class C2CParser:
     "Compute statistics"
-    def __init__(self, page):
+    def __init__(self, url):
         self.title = []
         self.date = []
         self.activity = []
@@ -50,6 +50,8 @@ class C2CStats:
         self.engagement = []
         self.equipement = []
 
+        print "Getting page %s ..." % url
+        page = get_page(url)
         self.get_content(page)
 
     def get_content(self, page):

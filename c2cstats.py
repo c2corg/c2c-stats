@@ -33,7 +33,7 @@ __license__ = "GPL"
 # imports
 import os, sys
 import argparse
-from c2cstats.stats import C2CStats, get_page
+from c2cstats.parser import C2CParser
 
 def main():
     "main program"
@@ -52,11 +52,8 @@ def main():
     url = "http://www.camptocamp.org/outings/list/users/" + str(args.user_id) + \
           "/orderby/date/order/desc/npp/" + str(args.nboutings)
 
-    print "Getting page %s ..." % url
-    page = get_page(url)
-
     print "Analyzing data ..."
-    stats = C2CStats(page)
+    stats = C2CParser(url)
     stats.plot_date()
     stats.plot_activity()
     stats.plot_area()
