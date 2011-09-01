@@ -31,6 +31,7 @@ __copyright__ = "Copyright (c) 2009, 2010 Simon <contact at saimon dot org>"
 __license__ = "GPL"
 
 import argparse
+import datetime
 import string
 import sys
 import urllib
@@ -45,6 +46,9 @@ ACTIVITIES = (u'escalade',
               u'ski, surf',
               u'randonnée pédestre')
 
+MONTHS = {u'janvier': 1, u'février': 2, u'mars': 3, u'avril': 4, u'mai': 5,
+          u'juin': 6, u'juillet': 7, u'août': 8, u'septembre': 9,
+          u'octobre': 10, u'novembre': 11, u'décembre': 12}
 
 class C2CStats:
     "Compute statistics"
@@ -113,7 +117,7 @@ class C2CStats:
                     self.cot_rando.append(i.text)
 
 
-    def plot_year(self):
+    def plot_date(self):
         "Plot histogram of years"
         year = [int(string.split(i)[2]) for i in self.date]
         # n, bins, patches = plt.hist(year, max(year)-min(year)+1,
@@ -135,7 +139,18 @@ class C2CStats:
         # plt.legend( (p1[0], p2[0]), ('Men', 'Women')
         plt.savefig('years.svg')
 
-    def plot_act(self):
+        # try with plot_date
+        d = []
+        for i in self.date:
+            t = i.split(' ')
+            d.append(datetime.date(int(t[2]), MONTHS[t[1]], int(t[0])))
+
+        plt.figure()
+        plt.plot_date(d, np.ones(100))
+        plt.savefig('timeline.svg')
+
+
+    def plot_activity(self):
         "Plot activities"
         ind = [ACTIVITIES.index(i) for i in self.activity]
 
@@ -191,8 +206,8 @@ def main():
 
     print "Analyzing data ..."
     stats = C2CStats(page)
-    stats.plot_year()
-    stats.plot_act()
+    stats.plot_date()
+    stats.plot_activity()
     plt.show()
 
     return 0
