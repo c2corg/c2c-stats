@@ -19,6 +19,13 @@ MONTHS = {u'janvier': 1, u'février': 2, u'mars': 3, u'avril': 4, u'mai': 5,
 COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D', 'D+',
                     'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+', 'ED4', 'ED5', 'ED6', 'ED7')
 
+# COTATION_ESCALADE = ('2', '3a', '3b', '3c', '4a', '4b', '4c', '5a', '5a+', '5b',
+#                      '5b+', '5c', '5c+', '6a', '6a+', '6b', '6b+', '6c', '6c+',
+#                      '7a', '7a+', '7b', '7b+', '7c', '7c+', '8a', '8a+', '8b',
+#                      '8b+', '8c', '8c+', '9a', '9a+', '9b', '9b+')
+COTATION_ESCALADE = ('3a', '3b', '3c', '4a', '4b', '4c', '5a', '5a+', '5b',
+                     '5b+', '5c', '5c+', '6a', '6a+', '6b', '6b+', '6c', '6c+',
+                     '7a', '7a+', '7b', '7b+', '7c', '7c+', '8a')
 
 def plot_all(data):
     plot_date(data.date)
@@ -102,3 +109,23 @@ def plot_cot_globale(data):
     plt.xlabel(u'Cotation globale')
     plt.xticks(x + 0.4, COTATION_GLOBALE)
     plt.savefig(get_filepath('cot_global'))
+
+def plot_cot_escalade(cot_libre, cot_oblige):
+    "Hist plot for cot_globale"
+
+    width = 0.45
+    x = np.arange(len(COTATION_ESCALADE))
+    c1 = Counter(cot_libre)
+    counts1 = [c1[k] for k in COTATION_ESCALADE]
+
+    c2 = Counter(cot_oblige)
+    counts2 = [c2[k] for k in COTATION_ESCALADE]
+
+    plt.figure()
+    p1 = plt.bar(x, counts1, width, color='r')
+    p2 = plt.bar(x+width, counts2, width)
+    plt.xlabel(u'Cotation escalade')
+    plt.xticks(x + width, COTATION_ESCALADE)
+    plt.legend( (p1[0], p2[0]), ('Cotation libre', u'Cotation obligé') )
+    plt.savefig(get_filepath('cot_escalade'))
+

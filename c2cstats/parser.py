@@ -75,7 +75,7 @@ class C2CParser:
                     self.equipement.append(i.text)
                 elif i['title'].startswith(u'Cotation libre obligatoire'):
                     self.cot_oblige.append(i.text)
-                elif i['title'].startswith(u'Cotation libre&nbsp;'):
+                elif i['title'].startswith(u'Cotation libre'):
                     self.cot_libre.append(i.text)
                 elif i['title'].startswith(u'Cotation technique'):
                     self.cot_skitech.append(i.text)
