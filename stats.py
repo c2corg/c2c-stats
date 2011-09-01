@@ -38,13 +38,7 @@ import urllib
 import numpy as np
 import matplotlib.pyplot as plt
 from BeautifulSoup import BeautifulSoup
-
-ACTIVITIES = (u'escalade',
-              u'rocher haute montagne',
-              u'alpinisme neige, glace, mixte',
-              u'cascade de glace',
-              u'ski, surf',
-              u'randonnée pédestre')
+from collections import Counter
 
 MONTHS = {u'janvier': 1, u'février': 2, u'mars': 3, u'avril': 4, u'mai': 5,
           u'juin': 6, u'juillet': 7, u'août': 8, u'septembre': 9,
@@ -76,7 +70,7 @@ class C2CStats:
     def get_content(self, page):
         "Get the content of eah line of the table"
 
-        soup = BeautifulSoup(''.join(page))
+        soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         table = soup.find('table', "list")
         lines = table.findAll('tr')
         lines = lines[1:]
@@ -151,21 +145,33 @@ class C2CStats:
 
 
     def plot_activity(self):
-        "Plot activities"
-        ind = [ACTIVITIES.index(i) for i in self.activity]
+        "Pie plot for activities"
 
-        n, bins = np.histogram(ind, len(ACTIVITIES),
-                               range=(-0.5, len(ACTIVITIES) + 0.5))
-        fracs = n / float(n.sum())
-
-        explode = np.zeros(len(ACTIVITIES)) + 0.05
+        c = Counter(self.activity)
+        explode = np.zeros(len(c)) + 0.05
 
         plt.figure()
-        plt.pie(fracs, explode=explode, labels=ACTIVITIES, autopct='%1.1f%%',
-                shadow=True)
-        plt.title(u'Répartition par activité',
-                  bbox={'facecolor': '0.8', 'pad': 5})
+        plt.pie(c.values(), labels=c.keys(), explode=explode, shadow=True, autopct='%d')
+        plt.title(u'Répartition par activité')
         plt.savefig('activities.svg')
+
+    def plot_area(self):
+        "Pie plot for areas"
+
+        c = Counter(self.area)
+        use = c.most_common(10)
+
+        labels = [k for k,v in use]
+        counts = [v for k,v in use]
+        labels.append(u'Autres')
+        counts.append(sum(c.values()) - sum(counts))
+
+        explode = np.zeros(len(counts)) + 0.05
+
+        plt.figure()
+        plt.pie(counts, labels=labels, explode=explode, shadow=True, autopct='%d')
+        plt.title(u'Répartition par région')
+        plt.savefig('regions.svg')
 
 
 def get_page(url):
@@ -208,6 +214,7 @@ def main():
     stats = C2CStats(page)
     stats.plot_date()
     stats.plot_activity()
+    stats.plot_area()
     plt.show()
 
     return 0
