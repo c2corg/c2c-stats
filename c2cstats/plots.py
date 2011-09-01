@@ -15,10 +15,16 @@ MONTHS = {u'janvier': 1, u'février': 2, u'mars': 3, u'avril': 4, u'mai': 5,
           u'juin': 6, u'juillet': 7, u'août': 8, u'septembre': 9,
           u'octobre': 10, u'novembre': 11, u'décembre': 12}
 
+
+COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D', 'D+',
+                    'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+', 'ED4', 'ED5', 'ED6', 'ED7')
+
+
 def plot_all(data):
     plot_date(data.date)
     plot_activity(data.activity)
     plot_area(data.area)
+    plot_cot_globale(data.cot_globale)
 
 def get_filepath(name):
     return os.path.join(OUTPUT_DIR, name+FILE_EXT)
@@ -84,3 +90,15 @@ def plot_area(data):
     plt.title(u'Répartition par région')
     plt.savefig(get_filepath('regions'))
 
+def plot_cot_globale(data):
+    "Hist plot for cot_globale"
+
+    c = Counter(data)
+    counts = [c[k] for k in COTATION_GLOBALE]
+    x = np.arange(len(counts))
+
+    plt.figure()
+    plt.bar(x, counts)
+    plt.xlabel(u'Cotation globale')
+    plt.xticks(x + 0.4, COTATION_GLOBALE)
+    plt.savefig(get_filepath('cot_global'))
