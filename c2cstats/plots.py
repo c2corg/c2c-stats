@@ -1,13 +1,15 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 
-"""module docstring"""
-
 import datetime
 import string
+import os.path
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import Counter
+
+OUTPUT_DIR = "_output"
+FILE_EXT = ".svg"
 
 MONTHS = {u'janvier': 1, u'février': 2, u'mars': 3, u'avril': 4, u'mai': 5,
           u'juin': 6, u'juillet': 7, u'août': 8, u'septembre': 9,
@@ -17,6 +19,9 @@ def plot_all(data):
     plot_date(data.date)
     plot_activity(data.activity)
     plot_area(data.area)
+
+def get_filepath(name):
+    return os.path.join(OUTPUT_DIR, name+FILE_EXT)
 
 def plot_date(data):
     "Plot histogram of years"
@@ -38,7 +43,7 @@ def plot_date(data):
     plt.xticks(bins[:-1] + 0.4, labels)
     # plt.yticks(np.arange(0,81,10))
     # plt.legend( (p1[0], p2[0]), ('Men', 'Women')
-    plt.savefig('years.svg')
+    plt.savefig(get_filepath('years'))
 
     # try with plot_date
     d = []
@@ -48,8 +53,7 @@ def plot_date(data):
 
     plt.figure()
     plt.plot_date(d, np.ones(100))
-    plt.savefig('timeline.svg')
-
+    plt.savefig(get_filepath('timeline'))
 
 def plot_activity(data):
     "Pie plot for activities"
@@ -60,7 +64,7 @@ def plot_activity(data):
     plt.figure()
     plt.pie(c.values(), labels=c.keys(), explode=explode, shadow=True, autopct='%d')
     plt.title(u'Répartition par activité')
-    plt.savefig('activities.svg')
+    plt.savefig(get_filepath('activities'))
 
 def plot_area(data):
     "Pie plot for areas"
@@ -78,4 +82,5 @@ def plot_area(data):
     plt.figure()
     plt.pie(counts, labels=labels, explode=explode, shadow=True, autopct='%d')
     plt.title(u'Répartition par région')
-    plt.savefig('regions.svg')
+    plt.savefig(get_filepath('regions'))
+
