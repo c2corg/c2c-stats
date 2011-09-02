@@ -31,7 +31,7 @@ __copyright__ = "Copyright (c) 2009, 2010 Simon <contact at saimon dot org>"
 __license__ = "GPL"
 
 # imports
-import os, sys
+import sys
 import argparse
 from c2cstats.parser import C2CParser
 from c2cstats.plots import C2CPlots
@@ -45,16 +45,10 @@ def main():
     parser.add_argument('user_id', help='user id')
     parser.add_argument('--version', action='version',
                         version="%(prog)s " + version)
-    parser.add_argument('-n', '--nboutings', default=100,
-                        help=u"Nombre de sorties à récupérer")
-
     args = parser.parse_args()
 
-    url = "http://www.camptocamp.org/outings/list/users/" + str(args.user_id) + \
-          "/orderby/date/order/desc/npp/" + str(args.nboutings)
-
     print "Analyzing data ..."
-    data = C2CParser(url)
+    data = C2CParser(args.user_id)
     plots = C2CPlots(data)
     plots.plot_all()
     return 0

@@ -20,9 +20,13 @@
 import urllib
 from BeautifulSoup import BeautifulSoup
 
+NB_ITEMS = 100
+
 class C2CParser:
     "Compute statistics"
-    def __init__(self, url):
+    def __init__(self, user_id):
+        self.user_id = user_id
+
         self.title = []
         self.date = []
         self.activity = []
@@ -41,11 +45,38 @@ class C2CParser:
         self.engagement = []
         self.equipement = []
 
-        print "Getting page %s ..." % url
-        page = get_page(url)
-        self.get_content(page)
+        self.parse_outings()
 
-    def get_content(self, page):
+
+    def get_outings_url(self, page):
+        return "http://www.camptocamp.org/outings/list/users/" + \
+               str(self.user_id) + \
+               "/orderby/date/order/desc/npp/" + str(NB_ITEMS) + \
+               "/page/" + str(page)
+
+    def parse_outings(self):
+        pagenb = 1
+        url = self.get_outings_url(pagenb)
+
+        print "Parsing outings list %s ..." % url
+        page = get_page(url)
+        soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        self.nboutings = int(soup.find('div', 'content_article').form.p.findAll('b')[2].text)
+
+        self.parse_outings_list(page)
+
+        # parse other pages if nboutings > 100
+        nbtemp = self.nboutings - 100
+        while nbtemp > 0:
+            pagenb += 1
+            nbtemp -= 100
+            url = self.get_outings_url(pagenb)
+            print "Parsing next page %s ..." % url
+            page = get_page(url)
+            self.parse_outings_list(page)
+
+
+    def parse_outings_list(self, page):
         "Get the content of eah line of the table"
 
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
