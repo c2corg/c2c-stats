@@ -60,8 +60,9 @@ class C2CParser:
             self.altitude.append(t[4].text)
             self.gain.append(t[5].text)
 
-            for a in t[3].findAll('span', "printonly"):
-                self.activity.append(a.text)
+            # keep only the first one for now
+            a = t[3].find('span', "printonly")
+            self.activity.append(a.text)
 
             for r in t[9].findAll('a'):
                 self.area.append(r.text)
