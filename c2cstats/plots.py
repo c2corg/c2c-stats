@@ -31,6 +31,14 @@ class C2CPlots:
         self.act = np.array(self.data.activity)
         self.year = np.array([int(i.split()[2]) for i in self.data.date])
 
+        if not os.path.isdir(OUTPUT_DIR):
+            print "Creating output directory"
+            os.mkdir(os.path.realpath(OUTPUT_DIR))
+
+    def get_filepath(self, name):
+        "return path for output file: _output/userid_plotname.ext"
+        return os.path.join(OUTPUT_DIR, str(self.data.user_id)+'_'+name+FILE_EXT)
+
     def plot_all(self):
         self.plot_date()
         self.plot_activity()
@@ -61,7 +69,7 @@ class C2CPlots:
         plt.title('Nb de sorties par an')
         plt.xticks(x, labels)
         plt.legend()
-        plt.savefig(get_filepath('years'))
+        plt.savefig(self.get_filepath('years'))
 
         # try with plot_date
         # d = []
@@ -71,7 +79,7 @@ class C2CPlots:
 
         # plt.figure()
         # plt.plot_date(d, np.ones(100))
-        # plt.savefig(get_filepath('timeline'))
+        # plt.savefig(self.get_filepath('timeline'))
 
     def plot_activity(self):
         "Pie plot for activities"
@@ -82,7 +90,7 @@ class C2CPlots:
         plt.figure()
         plt.pie(c.values(), labels=c.keys(), explode=explode, shadow=True, autopct='%d')
         plt.title(u'Répartition par activité')
-        plt.savefig(get_filepath('activities'))
+        plt.savefig(self.get_filepath('activities'))
 
     def plot_area(self):
         "Pie plot for areas"
@@ -100,7 +108,7 @@ class C2CPlots:
         plt.figure()
         plt.pie(counts, labels=labels, explode=explode, shadow=True, autopct='%d')
         plt.title(u'Répartition par région')
-        plt.savefig(get_filepath('regions'))
+        plt.savefig(self.get_filepath('regions'))
 
     def plot_cot_globale(self):
         "Hist plot for cot_globale"
@@ -113,7 +121,7 @@ class C2CPlots:
         plt.bar(x, counts)
         plt.xlabel(u'Cotation globale')
         plt.xticks(x + 0.4, COTATION_GLOBALE)
-        plt.savefig(get_filepath('cot_global'))
+        plt.savefig(self.get_filepath('cot_global'))
 
     def plot_cot_escalade(self):
         "Hist plot for cot_globale"
@@ -132,8 +140,4 @@ class C2CPlots:
         plt.xlabel(u'Cotation escalade')
         plt.xticks(x + width, COTATION_ESCALADE)
         plt.legend( (p1[0], p2[0]), ('Cotation libre', u'Cotation obligé') )
-        plt.savefig(get_filepath('cot_escalade'))
-
-def get_filepath(name):
-    return os.path.join(OUTPUT_DIR, name+FILE_EXT)
-
+        plt.savefig(self.get_filepath('cot_escalade'))
