@@ -47,7 +47,7 @@ def main():
                         version="%(prog)s " + version)
     args = parser.parse_args()
 
-    print "Analyzing data ..."
+    print ":: Compute stats for user %s ..." % args.user_id
     data = C2CParser(args.user_id)
     plots = C2CPlots(data)
     plots.plot_all()
