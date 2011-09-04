@@ -43,12 +43,21 @@ class C2CPlots:
         self.plot_date()
         self.plot_activity()
         self.plot_area()
+
         self.plot_cot_globale()
+        self.plot_cot_globale(u'alpinisme neige, glace, mixte')
+        self.plot_cot_globale(u'cascade de glace')
         self.plot_cot_globale(u'escalade')
         self.plot_cot_globale(u'rocher haute montagne')
-        self.plot_cot_globale(u'cascade de glace')
-        self.plot_cot_globale(u'alpinisme neige, glace, mixte')
         self.plot_cot_globale(u'ski, surf')
+
+        self.plot_gain()
+        self.plot_gain(u'alpinisme neige, glace, mixte')
+        self.plot_gain(u'cascade de glace')
+        self.plot_gain(u'escalade')
+        self.plot_gain(u'rocher haute montagne')
+        self.plot_gain(u'ski, surf')
+
 
     def plot_date(self):
         "Plot histogram of years"
@@ -159,3 +168,35 @@ class C2CPlots:
         plt.xticks(x + width, COTATION_ESCALADE)
         plt.legend( (p1[0], p2[0]), ('Cotation libre', u'Cotation obligé') )
         plt.savefig(self.get_filepath('cot_escalade'))
+
+    def plot_gain(self, activity=''):
+        "Hist plot for gain"
+
+        xlabel = u'Dénivelé'
+        filename = 'denivele'
+        gain = np.array(self.data.gain)
+        year = self.year
+        x = np.unique(year)
+        labels = [str(i) for i in np.unique(self.year)]
+
+        if activity:
+            ind = (self.act == activity)
+            gain = gain[ind]
+            year = year[ind]
+            if len(gain) == 0:
+                return
+
+            filename += '_'+activity
+            xlabel += u' ' + activity
+
+        counts = []
+        for i in x:
+            ind = (year == i)
+            select = np.array([int(k[:-1]) for k in gain[ind] if k])
+            counts.append(np.sum(select))
+
+        plt.figure()
+        plt.bar(x, counts)
+        plt.xlabel(xlabel)
+        plt.xticks(x + 0.4, labels)
+        plt.savefig(self.get_filepath(filename))
