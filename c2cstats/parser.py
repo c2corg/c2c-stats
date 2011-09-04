@@ -25,7 +25,7 @@ NB_ITEMS = 100
 class C2CParser:
     "Compute statistics"
     def __init__(self, user_id):
-        self.user_id = user_id
+        self.user_id = str(user_id)
 
         self.title = []
         self.date = []
@@ -62,7 +62,7 @@ class C2CParser:
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         self.nboutings = int(soup.find('div', 'content_article').form.p.findAll('b')[2].text)
 
-        self.parse_outings_list(page)
+        self.parse_outings_list(page, pagenb)
 
         # parse other pages if nboutings > 100
         nbtemp = self.nboutings - 100
@@ -72,12 +72,12 @@ class C2CParser:
             url = self.get_outings_url(pagenb)
             print "Parse next page %s ..." % url
             page = get_page(url)
-            self.parse_outings_list(page)
+            self.parse_outings_list(page, pagenb)
 
         print "Found %d outings" % self.nboutings
 
 
-    def parse_outings_list(self, page):
+    def parse_outings_list(self, page, pagenb):
         "Get the content of eah line of the table"
 
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
@@ -85,6 +85,7 @@ class C2CParser:
         lines = table.findAll('tr')
         lines = lines[1:]
 
+        count = 0 + (pagenb-1)*100
         for l in lines:
             t = l.contents
             self.title.append(t[1].contents[0].text)
@@ -99,27 +100,41 @@ class C2CParser:
             for r in t[9].findAll('a'):
                 self.area.append(r.text)
 
+            # needed to have the same numer of values in each list
+            self.cot_globale.append('')
+            self.cot_libre.append('')
+            self.cot_oblige.append('')
+            self.cot_skitech.append('')
+            self.cot_skiponc.append('')
+            self.cot_glace.append('')
+            self.cot_rando.append('')
+            self.exposition.append('')
+            self.engagement.append('')
+            self.equipement.append('')
+
             for i in t[6].findAll('span'):
                 if i['title'].startswith(u'Cotation globale'):
-                    self.cot_globale.append(i.text)
+                    self.cot_globale[count] = i.text
                 elif i['title'].startswith(u'Engagement'):
-                    self.engagement.append(i.text)
+                    self.engagement[count] = i.text
                 elif i['title'].startswith(u'Qualité de l\'équipement'):
-                    self.equipement.append(i.text)
+                    self.equipement[count] = i.text
                 elif i['title'].startswith(u'Cotation libre obligatoire'):
-                    self.cot_oblige.append(i.text)
+                    self.cot_oblige[count] = i.text
                 elif i['title'].startswith(u'Cotation libre'):
-                    self.cot_libre.append(i.text)
+                    self.cot_libre[count] = i.text
                 elif i['title'].startswith(u'Cotation technique'):
-                    self.cot_skitech.append(i.text)
+                    self.cot_skitech[count] = i.text
                 elif i['title'].startswith(u'Cotation ponctuelle ski'):
-                    self.cot_skiponc.append(i.text)
+                    self.cot_skiponc[count] = i.text
                 elif i['title'].startswith(u'Exposition'):
-                    self.exposition.append(i.text)
+                    self.exposition[count] = i.text
                 elif i['title'].startswith(u'Cotation glace'):
-                    self.cot_glace.append(i.text)
+                    self.cot_glace[count] = i.text
                 elif i['title'].startswith(u'Cotation randonnée'):
-                    self.cot_rando.append(i.text)
+                    self.cot_rando[count] = i.text
+
+            count += 1
 
 
 def get_page(url):

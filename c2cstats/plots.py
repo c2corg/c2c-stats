@@ -44,6 +44,11 @@ class C2CPlots:
         self.plot_activity()
         self.plot_area()
         self.plot_cot_globale()
+        self.plot_cot_globale(u'escalade')
+        self.plot_cot_globale(u'rocher haute montagne')
+        self.plot_cot_globale(u'cascade de glace')
+        self.plot_cot_globale(u'alpinisme neige, glace, mixte')
+        self.plot_cot_globale(u'ski, surf')
 
     def plot_date(self):
         "Plot histogram of years"
@@ -110,18 +115,31 @@ class C2CPlots:
         plt.title(u'Répartition par région')
         plt.savefig(self.get_filepath('regions'))
 
-    def plot_cot_globale(self):
+    def plot_cot_globale(self, activity=''):
         "Hist plot for cot_globale"
 
-        c = Counter(self.data.cot_globale)
+        xlabel = u'Cotation globale'
+        filename = 'cot_global'
+        cot = np.array(self.data.cot_globale)
+
+        if activity:
+            ind = (self.act == activity)
+            cot = cot[ind]
+            if len(cot) == 0:
+                return
+
+            filename += '_'+activity
+            xlabel += u' ' + activity
+
+        c = Counter(cot)
         counts = [c[k] for k in COTATION_GLOBALE]
         x = np.arange(len(counts))
 
         plt.figure()
         plt.bar(x, counts)
-        plt.xlabel(u'Cotation globale')
+        plt.xlabel(xlabel)
         plt.xticks(x + 0.4, COTATION_GLOBALE)
-        plt.savefig(self.get_filepath('cot_global'))
+        plt.savefig(self.get_filepath(filename))
 
     def plot_cot_escalade(self):
         "Hist plot for cot_globale"
