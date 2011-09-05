@@ -94,8 +94,10 @@ class C2CParser:
             self.gain.append(t[5].text)
 
             # keep only the first one for now
-            a = t[3].find('span', "printonly")
-            self.activity.append(a.text)
+            if t[3].find('span', "printonly"):
+                self.activity.append(t[3].find('span', "printonly").text)
+            else:
+                self.activity.append('')
 
             for r in t[9].findAll('a'):
                 self.area.append(r.text)
