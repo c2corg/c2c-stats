@@ -1,7 +1,10 @@
 Calcul de statistiques pour camptocamp.org
 ==========================================
 
-TODO
+Utilisation
+~~~~~~~~~~~
+
+    c2cstats.py [-h] [--version] user_id
 
 Dépendances
 ~~~~~~~~~~~
