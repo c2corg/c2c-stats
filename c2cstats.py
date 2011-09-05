@@ -37,6 +37,7 @@ import os.path
 from c2cstats.parser import C2CParser
 from c2cstats.plots import C2CPlots
 from c2cstats.settings import read_settings
+from c2cstats.writer import Writer
 
 def main():
     "main program"
@@ -57,6 +58,7 @@ def main():
     data = C2CParser(args.user_id)
     plots = C2CPlots(data, settings)
     plots.plot_all()
+    w = Writer(data, settings)
     return 0
 
 if __name__ == "__main__":

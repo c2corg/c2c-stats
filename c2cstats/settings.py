@@ -11,7 +11,15 @@ _CONFIG = {'THEME': 'default',
            'LINK': 'https://github.com/saimn/c2c-stats',
            'OUTPUT_DIR': '_output',
            'OUTPUT_EXT': '.svg',
-           'ACTIVITIES': activities
+           'ACTIVITIES': activities,
+           'PLOTS': [{'file': 'years'},
+                     {'file': 'activities'},
+                     {'file': 'regions'},
+                     {'file': 'cot_globale'},
+                     {'file': 'cot_globale_per_activity'},
+                     {'file': 'cot_escalade'},
+                     {'file': 'denivele'}
+                     ]
            }
 
 def read_settings(filename=''):
