@@ -27,8 +27,12 @@ class C2CPlots:
         self.data = data
         self.settings = settings
 
-        self.act = np.array(self.data.activity)
-        self.year = np.array([int(i.split()[2]) for i in self.data.date])
+        self.activity = np.array(data.activity)
+        self.cot_globale = np.array(data.cot_globale)
+        self.gain = np.array(data.gain)
+        self.year = np.array([int(i.split()[2]) for i in data.date])
+        self.year_uniq = np.unique(self.year)
+        self.year_labels = [str(i) for i in self.year_uniq]
 
         if not os.path.isdir(self.settings['OUTPUT_DIR']):
             print "Creating output directory ..."
@@ -54,27 +58,26 @@ class C2CPlots:
 
     def plot_date(self):
         "Plot histogram of years"
-        x = np.unique(self.year)
-        labels = [str(i) for i in np.unique(self.year)]
-
         # outings per year and per activity
         h = []
-        for i in np.unique(self.act):
-            ind = (self.act == i)
+        for i in np.unique(self.activity):
+            ind = (self.activity == i)
             h.append(list(self.year[ind]))
 
         plt.figure()
 
         # outings per year
-        # plt.hist(year, len(x), histtype='bar', range=(x[0]-0.5, x[-1]+0.5), rwidth=0.6)
+        # plt.hist(year, len(self.year_uniq), histtype='bar',
+        #          range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5), rwidth=0.6)
         # outings per year and per activity
-        plt.hist(h, len(x), histtype='barstacked', range=(x[0]-0.5, x[-1]+0.5),
-                 label=np.unique(self.act))
+        plt.hist(h, len(self.year_uniq), histtype='barstacked',
+                 range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5),
+                 label=np.unique(self.activity))
 
         plt.xlabel(u'Année')
         plt.ylabel('Nb de sorties')
         plt.title('Nb de sorties par an')
-        plt.xticks(x, labels)
+        plt.xticks(self.year_uniq, self.year_labels)
         plt.legend()
         plt.savefig(self.get_filepath('years'))
 
@@ -91,7 +94,7 @@ class C2CPlots:
     def plot_activity(self):
         "Pie plot for activities"
 
-        c = Counter(self.data.activity)
+        c = Counter(self.activity)
         explode = np.zeros(len(c)) + 0.05
 
         plt.figure()
@@ -104,7 +107,6 @@ class C2CPlots:
 
         c = Counter(self.data.area)
         use = c.most_common(10)
-
         labels = [k for k,v in use]
         counts = [v for k,v in use]
         labels.append(u'Autres')
@@ -122,10 +124,10 @@ class C2CPlots:
 
         xlabel = u'Cotation globale'
         filename = 'cot_global'
-        cot = np.array(self.data.cot_globale)
+        cot = self.cot_globale
 
         if activity:
-            ind = (self.act == activity)
+            ind = (self.activity == activity)
             cot = cot[ind]
             if len(cot) == 0:
                 return
@@ -167,13 +169,11 @@ class C2CPlots:
 
         xlabel = u'Dénivelé'
         filename = 'denivele'
-        gain = np.array(self.data.gain)
+        gain = self.gain
         year = self.year
-        x = np.unique(year)
-        labels = [str(i) for i in np.unique(self.year)]
 
         if activity:
-            ind = (self.act == activity)
+            ind = (self.activity == activity)
             gain = gain[ind]
             year = year[ind]
             if len(gain) == 0:
@@ -183,13 +183,13 @@ class C2CPlots:
             xlabel += u' ' + activity
 
         counts = []
-        for i in x:
+        for i in self.year_uniq:
             ind = (year == i)
             select = np.array([int(k[:-1]) for k in gain[ind] if k])
             counts.append(np.sum(select))
 
         plt.figure()
-        plt.bar(x, counts)
+        plt.bar(self.year_uniq, counts)
         plt.xlabel(xlabel)
-        plt.xticks(x + 0.4, labels)
+        plt.xticks(self.year_uniq + 0.4, self.year_labels)
         plt.savefig(self.get_filepath(filename))
