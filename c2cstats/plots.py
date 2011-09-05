@@ -28,6 +28,10 @@ class C2CPlots:
         self.settings = settings
 
         self.activity = np.array(data.activity)
+        self.acts = np.unique(self.activity)
+        ind = (self.acts != u'')
+        self.acts = self.acts[ind]
+
         self.cot_globale = np.array(data.cot_globale)
         self.gain = np.array(data.gain)
         self.year = np.array([int(i.split()[2]) for i in data.date])
@@ -44,13 +48,15 @@ class C2CPlots:
                             name+self.settings['OUTPUT_EXT'])
 
     def plot_all(self):
-        self.plot_date()
         self.plot_activity()
         self.plot_area()
+        self.plot_date()
 
+        self.plot_cot_escalade()
         self.plot_cot_globale()
-        for act in self.settings['ACTIVITIES']:
-            self.plot_cot_globale(act)
+        self.plot_cot_globale_per_activity()
+        # for act in self.settings['ACTIVITIES']:
+        #     self.plot_cot_globale(act)
 
         self.plot_gain()
         for act in self.settings['ACTIVITIES']:
@@ -78,7 +84,7 @@ class C2CPlots:
         plt.ylabel('Nb de sorties')
         plt.title('Nb de sorties par an')
         plt.xticks(self.year_uniq, self.year_labels)
-        plt.legend()
+        plt.legend(loc='upper left')
         plt.savefig(self.get_filepath('years'))
 
         # try with plot_date
@@ -123,7 +129,7 @@ class C2CPlots:
         "Hist plot for cot_globale"
 
         xlabel = u'Cotation globale'
-        filename = 'cot_global'
+        filename = 'cot_globale'
         cot = self.cot_globale
 
         if activity:
@@ -145,6 +151,26 @@ class C2CPlots:
         plt.xticks(x + 0.4, COTATION_GLOBALE)
         plt.savefig(self.get_filepath(filename))
 
+
+    def plot_cot_globale_per_activity(self):
+        "Hist plot for cot_globale"
+        x = np.arange(len(COTATION_GLOBALE))
+        width = 1./len(self.acts)
+        colors = ('b', 'g', 'r', 'c', 'm', 'y')
+
+        plt.figure()
+        for i in np.arange(len(self.acts)):
+            ind = (self.activity == self.acts[i])
+            c = Counter(self.cot_globale[ind])
+            counts = [c[k] for k in COTATION_GLOBALE]
+            plt.bar(x + i*width, counts, width, label=self.acts[i],
+                    color=colors[i])
+
+        plt.xlabel(u'Cotation globale')
+        plt.xticks(x + 0.4, COTATION_GLOBALE)
+        plt.legend(loc='upper left')
+        plt.savefig(self.get_filepath('cot_globale_per_activity'))
+
     def plot_cot_escalade(self):
         "Hist plot for cot_globale"
 
@@ -157,11 +183,11 @@ class C2CPlots:
         counts2 = [c2[k] for k in COTATION_ESCALADE]
 
         plt.figure()
-        p1 = plt.bar(x, counts1, width, color='r')
-        p2 = plt.bar(x+width, counts2, width)
+        plt.bar(x, counts1, width, color='r', label=u'Cotation libre')
+        plt.bar(x+width, counts2, width, color='b', label=u'Cotation obligé')
         plt.xlabel(u'Cotation escalade')
         plt.xticks(x + width, COTATION_ESCALADE)
-        plt.legend( (p1[0], p2[0]), ('Cotation libre', u'Cotation obligé') )
+        plt.legend(loc='upper left')
         plt.savefig(self.get_filepath('cot_escalade'))
 
     def plot_gain(self, activity=''):
