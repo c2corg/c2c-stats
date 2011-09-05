@@ -206,7 +206,7 @@ class C2CPlots:
             if len(gain) == 0:
                 return
 
-            filename += '_'+activity
+            filename += '_' + activity.replace(' ', '_').replace(',', '')
             xlabel += u' ' + activity
 
         counts = []
