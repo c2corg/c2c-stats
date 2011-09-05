@@ -57,7 +57,7 @@ class C2CParser:
         pagenb = 1
         url = self.get_outings_url(pagenb)
 
-        print "Parse outings list %s ..." % url
+        print u"Récupération de %s ..." % url
         page = get_page(url)
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         self.nboutings = int(soup.find('div', 'content_article').form.p.findAll('b')[2].text)
@@ -70,11 +70,11 @@ class C2CParser:
             pagenb += 1
             nbtemp -= 100
             url = self.get_outings_url(pagenb)
-            print "Parse next page %s ..." % url
+            print u"Récupération de %s ..." % url
             page = get_page(url)
             self.parse_outings_list(page, pagenb)
 
-        print "Found %d outings" % self.nboutings
+        print u"%d sorties trouvées" % self.nboutings
 
 
     def parse_outings_list(self, page, pagenb):

@@ -39,7 +39,6 @@ class C2CPlots:
         self.year_labels = [str(i) for i in self.year_uniq]
 
         if not os.path.isdir(self.settings['OUTPUT_DIR']):
-            print "Creating output directory ..."
             os.makedirs(self.settings['OUTPUT_DIR'])
 
     def get_filepath(self, name):
@@ -61,6 +60,8 @@ class C2CPlots:
         self.plot_gain()
         for act in self.settings['ACTIVITIES']:
             self.plot_gain(act)
+
+        print "Fin. Résultats dans %s" % self.settings['OUTPUT_DIR']
 
     def plot_date(self):
         "Plot histogram of years"
