@@ -33,8 +33,10 @@ __license__ = "GPL"
 # imports
 import sys
 import argparse
+import os.path
 from c2cstats.parser import C2CParser
 from c2cstats.plots import C2CPlots
+from c2cstats.settings import read_settings
 
 def main():
     "main program"
@@ -47,9 +49,13 @@ def main():
                         version="%(prog)s " + version)
     args = parser.parse_args()
 
+    settings = read_settings()
+    settings['OUTPUT_DIR'] = os.path.join(settings['OUTPUT_DIR'],
+                                          str(args.user_id))
+
     print ":: Compute stats for user %s ..." % args.user_id
     data = C2CParser(args.user_id)
-    plots = C2CPlots(data)
+    plots = C2CPlots(data, settings)
     plots.plot_all()
     return 0
 
