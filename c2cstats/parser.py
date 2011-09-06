@@ -17,14 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; If not, see http://www.gnu.org/licenses/
 
+import json
 import urllib
 from BeautifulSoup import BeautifulSoup
 
 NB_ITEMS = 100
 BASE_URL = "http://www.camptocamp.org/outings/list/layout/light/users/%s/npp/%d/page/%d"
 
-class C2CParser:
-    "Compute statistics"
+class Outings:
+    "Parse the list of outings of user user_id"
     def __init__(self, user_id):
         self.user_id = str(user_id)
 
@@ -132,6 +133,15 @@ class C2CParser:
                     self.cot_rando[count] = i.text
 
             count += 1
+
+
+class Username:
+    "Retrieve the name of user_id"
+    def __init__(self, user_id):
+        url = "http://www.camptocamp.org/users/fr/%s.json" % str(user_id)
+        p = get_page(url)
+        j = json.loads(p)
+        self.name = j[u'properties'][u'name']
 
 
 def get_page(url):

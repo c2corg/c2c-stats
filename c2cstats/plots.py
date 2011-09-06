@@ -23,7 +23,7 @@ COTATION_ESCALADE = ('3a', '3b', '3c', '4a', '4b', '4c', '5a', '5a+', '5b',
                      '7a', '7a+', '7b', '7b+', '7c', '7c+', '8a')
 # '2', '8a+', '8b', '8b+', '8c', '8c+', '9a', '9a+', '9b', '9b+'
 
-class C2CPlots:
+class Plots:
     "Make plots from data"
     def __init__(self, data, settings):
         self.data = data

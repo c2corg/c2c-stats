@@ -9,6 +9,7 @@ import os
 import os.path
 from shutil import copytree, ignore_patterns
 from jinja2 import Environment, PackageLoader
+from c2cstats.parser import Username
 
 THEMES_PATH = os.path.normpath(os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                             '..', 'themes'))
@@ -53,9 +54,11 @@ class Writer():
         copytree(self.theme_path, path, ignore=ignore_patterns('*.html'))
 
     def create_context(self):
+        user = Username(self.data.user_id)
         self.context['nboutings'] = self.data.nboutings
         self.context['user_id'] = self.data.user_id
         self.context['static_path'] = STATIC_PATH
+        self.context['username'] = user.name
 
         plots = self.settings['PLOTS']
         for p in plots:
