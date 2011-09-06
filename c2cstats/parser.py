@@ -21,6 +21,7 @@ import urllib
 from BeautifulSoup import BeautifulSoup
 
 NB_ITEMS = 100
+BASE_URL = "http://www.camptocamp.org/outings/list/layout/light/users/%s/npp/%d/page/%d"
 
 class C2CParser:
     "Compute statistics"
@@ -47,20 +48,14 @@ class C2CParser:
 
         self.parse_outings()
 
-
-    def get_outings_url(self, page):
-        return "http://www.camptocamp.org/outings/list/users/" + self.user_id + \
-               "/orderby/date/order/desc/npp/" + str(NB_ITEMS) + \
-               "/page/" + str(page)
-
     def parse_outings(self):
         pagenb = 1
-        url = self.get_outings_url(pagenb)
+        url = get_outings_url(self.user_id, pagenb)
 
         print u"Récupération de %s ..." % url
         page = get_page(url)
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        nbout = soup.find('div', 'content_article').form.p.findAll('b')
+        nbout = soup.p.findAll('b')
 
         if len(nbout) == 1:
             self.nboutings = int(nbout[0].text)
@@ -74,21 +69,18 @@ class C2CParser:
         while nbtemp > 0:
             pagenb += 1
             nbtemp -= 100
-            url = self.get_outings_url(pagenb)
+            url = get_outings_url(self.user_id, pagenb)
             print u"Récupération de %s ..." % url
             page = get_page(url)
             self.parse_outings_list(page, pagenb)
 
         print u"%d sorties trouvées" % self.nboutings
 
-
     def parse_outings_list(self, page, pagenb):
         "Get the content of eah line of the table"
 
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        table = soup.find('table', "list")
-        lines = table.findAll('tr')
-        lines = lines[1:]
+        lines = soup.table.tbody.findAll('tr')
 
         count = 0 + (pagenb-1)*100
         for l in lines:
@@ -159,3 +151,7 @@ def get_page(url):
     page_content = page_content.replace("\n","").replace("\t","").replace("\r","")
     return page_content
     # return page.decode('utf-8')
+
+def get_outings_url(user_id, page):
+    return BASE_URL % (user_id, NB_ITEMS, page)
+
