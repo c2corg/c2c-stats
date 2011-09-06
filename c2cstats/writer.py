@@ -62,7 +62,7 @@ class Writer():
 
         plots = self.settings['PLOTS']
         for p in plots:
-            p['file'] += self.settings['OUTPUT_EXT']
+            plots[p]['file'] += self.settings['OUTPUT_EXT']
         self.context['plots'] = plots
 
 
