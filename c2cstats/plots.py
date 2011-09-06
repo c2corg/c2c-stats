@@ -157,7 +157,7 @@ class C2CPlots:
         "Hist plot for cot_globale"
         x = np.arange(len(COTATION_GLOBALE))
         width = 1./len(self.acts)
-        colors = ('b', 'g', 'r', 'c', 'm', 'y')
+        colors = ('b', 'g', 'r', 'c', 'm', 'y', 'k')
 
         plt.figure()
         for i in np.arange(len(self.acts)):

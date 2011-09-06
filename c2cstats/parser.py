@@ -60,7 +60,12 @@ class C2CParser:
         print u"Récupération de %s ..." % url
         page = get_page(url)
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        self.nboutings = int(soup.find('div', 'content_article').form.p.findAll('b')[2].text)
+        nbout = soup.find('div', 'content_article').form.p.findAll('b')
+
+        if len(nbout) == 1:
+            self.nboutings = int(nbout[0].text)
+        else:
+            self.nboutings = int(nbout[2].text)
 
         self.parse_outings_list(page, pagenb)
 
