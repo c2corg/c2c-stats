@@ -85,19 +85,17 @@ class C2CParser:
         count = 0 + (pagenb-1)*100
         for l in lines:
             t = l.contents
-            self.title.append(t[1].contents[0].text)
-            self.date.append(t[2].contents[0].text)
+            self.title.append(t[1].a.text)
+            self.date.append(t[2].time.text)
             self.altitude.append(t[4].text)
             self.gain.append(t[5].text)
+            self.area.append(t[9].a.text)
 
             # keep only the first one for now
             if t[3].find('span', "printonly"):
                 self.activity.append(t[3].find('span', "printonly").text)
             else:
                 self.activity.append('')
-
-            for r in t[9].findAll('a'):
-                self.area.append(r.text)
 
             # needed to have the same numer of values in each list
             self.cot_globale.append('')
