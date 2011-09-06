@@ -5,6 +5,8 @@ import datetime
 import os
 import os.path
 import numpy as np
+import matplotlib
+matplotlib.use('SVG')
 import matplotlib.pyplot as plt
 from collections import Counter
 
@@ -43,8 +45,7 @@ class C2CPlots:
 
     def get_filepath(self, name):
         "return path for output file: _output/userid/name.ext"
-        return os.path.join(self.settings['OUTPUT_DIR'],
-                            name+self.settings['OUTPUT_EXT'])
+        return os.path.join(self.settings['OUTPUT_DIR'], name)
 
     def plot_all(self):
         self.plot_activity()
@@ -71,7 +72,7 @@ class C2CPlots:
             ind = (self.activity == i)
             h.append(list(self.year[ind]))
 
-        plt.figure()
+        fig = plt.figure()
 
         # outings per year
         # plt.hist(year, len(self.year_uniq), histtype='bar',
@@ -85,8 +86,13 @@ class C2CPlots:
         plt.ylabel('Nb de sorties')
         plt.title('Nb de sorties par an')
         plt.xticks(self.year_uniq, self.year_labels)
-        plt.legend(loc='upper left')
-        plt.savefig(self.get_filepath('years'))
+        leg = plt.legend(loc='upper left', fancybox=True)
+        leg.get_frame().set_alpha(0.5)
+
+        # rotate and align the tick labels so they look better
+        fig.autofmt_xdate(rotation=45)
+
+        plt.savefig(self.get_filepath('years'), transparent=True)
 
         # try with plot_date
         # d = []
@@ -96,7 +102,7 @@ class C2CPlots:
 
         # plt.figure()
         # plt.plot_date(d, np.ones(100))
-        # plt.savefig(self.get_filepath('timeline'))
+        # plt.savefig(self.get_filepath('timeline'), transparent=True)
 
     def plot_activity(self):
         "Pie plot for activities"
@@ -107,7 +113,7 @@ class C2CPlots:
         plt.figure()
         plt.pie(c.values(), labels=c.keys(), explode=explode, shadow=True, autopct='%d')
         plt.title(u'Répartition par activité')
-        plt.savefig(self.get_filepath('activities'))
+        plt.savefig(self.get_filepath('activities'), transparent=True)
 
     def plot_area(self):
         "Pie plot for areas"
@@ -124,7 +130,7 @@ class C2CPlots:
         plt.figure()
         plt.pie(counts, labels=labels, explode=explode, shadow=True, autopct='%d')
         plt.title(u'Répartition par région')
-        plt.savefig(self.get_filepath('regions'))
+        plt.savefig(self.get_filepath('regions'), transparent=True)
 
     def plot_cot_globale(self, activity=''):
         "Hist plot for cot_globale"
@@ -150,7 +156,7 @@ class C2CPlots:
         plt.bar(x, counts)
         plt.xlabel(xlabel)
         plt.xticks(x + 0.4, COTATION_GLOBALE)
-        plt.savefig(self.get_filepath(filename))
+        plt.savefig(self.get_filepath(filename), transparent=True)
 
 
     def plot_cot_globale_per_activity(self):
@@ -169,8 +175,9 @@ class C2CPlots:
 
         plt.xlabel(u'Cotation globale')
         plt.xticks(x + 0.4, COTATION_GLOBALE)
-        plt.legend(loc='upper left')
-        plt.savefig(self.get_filepath('cot_globale_per_activity'))
+        leg = plt.legend(loc='upper left', fancybox=True)
+        leg.get_frame().set_alpha(0.5)
+        plt.savefig(self.get_filepath('cot_globale_per_activity'), transparent=True)
 
     def plot_cot_escalade(self):
         "Hist plot for cot_globale"
@@ -183,13 +190,15 @@ class C2CPlots:
         c2 = Counter(self.data.cot_oblige)
         counts2 = [c2[k] for k in COTATION_ESCALADE]
 
-        plt.figure()
+        fig = plt.figure()
         plt.bar(x, counts1, width, color='r', label=u'Cotation libre')
         plt.bar(x+width, counts2, width, color='b', label=u'Cotation obligé')
         plt.xlabel(u'Cotation escalade')
         plt.xticks(x + width, COTATION_ESCALADE)
-        plt.legend(loc='upper left')
-        plt.savefig(self.get_filepath('cot_escalade'))
+        leg = plt.legend(loc='upper left', fancybox=True)
+        leg.get_frame().set_alpha(0.5)
+        fig.autofmt_xdate(rotation=45)
+        plt.savefig(self.get_filepath('cot_escalade'), transparent=True)
 
     def plot_gain(self, activity=''):
         "Hist plot for gain"
@@ -215,8 +224,9 @@ class C2CPlots:
             select = np.array([int(k[:-1]) for k in gain[ind] if k])
             counts.append(np.sum(select))
 
-        plt.figure()
+        fig = plt.figure()
         plt.bar(self.year_uniq, counts)
         plt.xlabel(xlabel)
         plt.xticks(self.year_uniq + 0.4, self.year_labels)
-        plt.savefig(self.get_filepath(filename))
+        fig.autofmt_xdate(rotation=45)
+        plt.savefig(self.get_filepath(filename), transparent=True)
