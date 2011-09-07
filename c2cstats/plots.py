@@ -23,6 +23,8 @@ COTATION_ESCALADE = ('3a', '3b', '3c', '4a', '4b', '4c', '5a', '5a+', '5b',
                      '7a', '7a+', '7b', '7b+', '7c', '7c+', '8a')
 # '2', '8a+', '8b', '8b+', '8c', '8c+', '9a', '9a+', '9b', '9b+'
 
+COTATION_GLACE = ('2', '3', '3+', '4', '4+', '5', '5+', '6', '6+', '7', '7+')
+
 class Plots:
     "Make plots from data"
     def __init__(self, data, settings):
@@ -50,6 +52,7 @@ class Plots:
         self.plot_date()
 
         self.plot_cot_escalade()
+        self.plot_cot_glace()
         self.plot_cot_globale()
         self.plot_cot_globale_per_activity()
         # for act in self.settings['ACTIVITIES']:
@@ -196,6 +199,19 @@ class Plots:
         leg.get_frame().set_alpha(0.5)
         fig.autofmt_xdate(rotation=45)
         plt.savefig(self.get_filepath('cot_escalade'), transparent=True)
+
+    def plot_cot_glace(self):
+        "Hist plot for cot_glace"
+
+        x = np.arange(len(COTATION_GLACE))
+        c = Counter(self.data.cot_glace)
+        counts = [c[k] for k in COTATION_GLACE]
+
+        fig = plt.figure()
+        plt.bar(x, counts)
+        plt.xlabel(u'Cotation glace')
+        plt.xticks(x + 0.4, COTATION_GLACE)
+        plt.savefig(self.get_filepath('cot_glace'), transparent=True)
 
     def plot_gain(self, activity=''):
         "Hist plot for gain"
