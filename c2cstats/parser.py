@@ -83,6 +83,17 @@ class Outings:
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         lines = soup.table.tbody.findAll('tr')
 
+        cotations = {'cot_globale': u'Cotation globale',
+                     'engagement': u'Qualité de l\'équipement',
+                     'equipement': u'Qualité de l\'équipement',
+                     'cot_oblige': u'Cotation libre obligatoire',
+                     'cot_libre': u'Cotation libre',
+                     'cot_skitech': u'Cotation technique',
+                     'cot_skiponc': u'Exposition',
+                     'cot_glace': u'Cotation glace',
+                     'cot_rando': u'Cotation randonnée'
+                     }
+
         count = 0 + (pagenb-1)*100
         for l in lines:
             t = l.contents
@@ -98,39 +109,14 @@ class Outings:
             else:
                 self.activity.append('')
 
-            # needed to have the same numer of values in each list
-            self.cot_globale.append('')
-            self.cot_libre.append('')
-            self.cot_oblige.append('')
-            self.cot_skitech.append('')
-            self.cot_skiponc.append('')
-            self.cot_glace.append('')
-            self.cot_rando.append('')
-            self.exposition.append('')
-            self.engagement.append('')
-            self.equipement.append('')
+            # add null string  to have the same numer of values in each list
+            for c in cotations.keys():
+                self.__dict__[c].append('')
 
             for i in t[6].findAll('span'):
-                if i['title'].startswith(u'Cotation globale'):
-                    self.cot_globale[count] = i.text
-                elif i['title'].startswith(u'Engagement'):
-                    self.engagement[count] = i.text
-                elif i['title'].startswith(u'Qualité de l\'équipement'):
-                    self.equipement[count] = i.text
-                elif i['title'].startswith(u'Cotation libre obligatoire'):
-                    self.cot_oblige[count] = i.text
-                elif i['title'].startswith(u'Cotation libre'):
-                    self.cot_libre[count] = i.text
-                elif i['title'].startswith(u'Cotation technique'):
-                    self.cot_skitech[count] = i.text
-                elif i['title'].startswith(u'Cotation ponctuelle ski'):
-                    self.cot_skiponc[count] = i.text
-                elif i['title'].startswith(u'Exposition'):
-                    self.exposition[count] = i.text
-                elif i['title'].startswith(u'Cotation glace'):
-                    self.cot_glace[count] = i.text
-                elif i['title'].startswith(u'Cotation randonnée'):
-                    self.cot_rando[count] = i.text
+                for c in cotations.keys():
+                    if i['title'].startswith(cotations[c]):
+                        self.__dict__[c][count] = i.text
 
             count += 1
 
