@@ -24,6 +24,7 @@ COTATION_ESCALADE = ('3a', '3b', '3c', '4a', '4b', '4c', '5a', '5a+', '5b',
 # '2', '8a+', '8b', '8b+', '8c', '8c+', '9a', '9a+', '9b', '9b+'
 
 COTATION_GLACE = ('2', '3', '3+', '4', '4+', '5', '5+', '6', '6+', '7', '7+')
+COTATION_RANDO = ('T1', 'T2', 'T3', 'T4', 'T5', 'T6')
 
 class Plots:
     "Make plots from data"
@@ -51,12 +52,17 @@ class Plots:
         self.plot_area()
         self.plot_date()
 
-        self.plot_cot_escalade()
-        self.plot_cot_glace()
         self.plot_cot_globale()
         self.plot_cot_globale_per_activity()
-        # for act in self.settings['ACTIVITIES']:
-        #     self.plot_cot_globale(act)
+
+        if u'escalade' in self.acts or u'rocher haute montagne' in self.acts:
+            self.plot_cot_escalade()
+
+        if u'cascade de glace' in self.acts:
+            self.plot_cot_glace()
+
+        if u'randonn\xe9e p\xe9destre' in self.acts:
+            self.plot_cot_rando()
 
         self.plot_gain()
         for act in self.settings['ACTIVITIES']:
@@ -212,6 +218,19 @@ class Plots:
         plt.xlabel(u'Cotation glace')
         plt.xticks(x + 0.4, COTATION_GLACE)
         plt.savefig(self.get_filepath('cot_glace'), transparent=True)
+
+    def plot_cot_rando(self):
+        "Hist plot for cot_rando"
+
+        x = np.arange(len(COTATION_RANDO))
+        c = Counter(self.data.cot_rando)
+        counts = [c[k] for k in COTATION_RANDO]
+
+        fig = plt.figure()
+        plt.bar(x, counts)
+        plt.xlabel(u'Cotation rando')
+        plt.xticks(x + 0.4, COTATION_RANDO)
+        plt.savefig(self.get_filepath('cot_rando'), transparent=True)
 
     def plot_gain(self, activity=''):
         "Hist plot for gain"
