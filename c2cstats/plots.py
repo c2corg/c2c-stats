@@ -29,13 +29,10 @@ class Plots:
         self.data = data
         self.settings = settings
 
-        self.activity = np.array(data.activity)
-        self.acts = np.unique(self.activity)
+        self.acts = np.unique(self.data.activity)
         ind = (self.acts != u'')
         self.acts = self.acts[ind]
 
-        self.cot_globale = np.array(data.cot_globale)
-        self.gain = np.array(data.gain)
         self.year = np.array([int(i.split()[2]) for i in data.date])
         self.year_uniq = np.unique(self.year)
         self.year_labels = [str(i) for i in self.year_uniq]
@@ -68,8 +65,8 @@ class Plots:
         "Plot histogram of years"
         # outings per year and per activity
         h = []
-        for i in np.unique(self.activity):
-            ind = (self.activity == i)
+        for i in np.unique(self.data.activity):
+            ind = (self.data.activity == i)
             h.append(list(self.year[ind]))
 
         fig = plt.figure()
@@ -80,7 +77,7 @@ class Plots:
         # outings per year and per activity
         plt.hist(h, len(self.year_uniq), histtype='barstacked',
                  range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5),
-                 label=np.unique(self.activity))
+                 label=np.unique(self.data.activity))
 
         plt.xlabel(u'Année')
         plt.ylabel('Nb de sorties')
@@ -107,7 +104,7 @@ class Plots:
     def plot_activity(self):
         "Pie plot for activities"
 
-        c = Counter(self.activity)
+        c = Counter(self.data.activity)
         explode = np.zeros(len(c)) + 0.05
 
         plt.figure()
@@ -137,10 +134,10 @@ class Plots:
 
         xlabel = u'Cotation globale'
         filename = 'cot_globale'
-        cot = self.cot_globale
+        cot = np.copy(self.data.cot_globale)
 
         if activity:
-            ind = (self.activity == activity)
+            ind = (self.data.activity == activity)
             cot = cot[ind]
             if len(cot) == 0:
                 return
@@ -167,8 +164,8 @@ class Plots:
 
         plt.figure()
         for i in np.arange(len(self.acts)):
-            ind = (self.activity == self.acts[i])
-            c = Counter(self.cot_globale[ind])
+            ind = (self.data.activity == self.acts[i])
+            c = Counter(self.data.cot_globale[ind])
             counts = [c[k] for k in COTATION_GLOBALE]
             plt.bar(x + i*width, counts, width, label=self.acts[i],
                     color=colors[i])
@@ -205,11 +202,11 @@ class Plots:
 
         xlabel = u'Dénivelé'
         filename = 'denivele'
-        gain = self.gain
+        gain = np.copy(self.data.gain)
         year = self.year
 
         if activity:
-            ind = (self.activity == activity)
+            ind = (self.data.activity == activity)
             gain = gain[ind]
             year = year[ind]
             if len(gain) == 0:

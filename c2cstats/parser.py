@@ -19,6 +19,7 @@
 
 import json
 import urllib
+import numpy as np
 from BeautifulSoup import BeautifulSoup
 
 NB_ITEMS = 100
@@ -28,25 +29,6 @@ class Outings:
     "Parse the list of outings of user user_id"
     def __init__(self, user_id):
         self.user_id = str(user_id)
-
-        self.title = []
-        self.date = []
-        self.activity = []
-        self.altitude = []
-        self.gain = []
-        self.area = []
-
-        self.cot_globale = []
-        self.cot_libre = []
-        self.cot_oblige = []
-        self.cot_skitech = []
-        self.cot_skiponc = []
-        self.cot_glace = []
-        self.cot_rando = []
-        self.exposition = []
-        self.engagement = []
-        self.equipement = []
-
         self.parse_outings()
 
     def parse_outings(self):
@@ -63,6 +45,24 @@ class Outings:
         else:
             self.nboutings = int(nbout[2].text)
 
+        # self.title = []
+        self.date = np.zeros(self.nboutings, dtype=np.dtype('U20'))
+        self.activity = np.zeros(self.nboutings, dtype=np.dtype('U30'))
+        self.altitude = np.zeros(self.nboutings, dtype=np.dtype('U6'))
+        self.gain = np.zeros(self.nboutings, dtype=np.dtype('U6'))
+        self.area = []
+
+        self.cot_globale = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.cot_libre = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.cot_oblige = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.cot_skitech = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.cot_skiponc = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.cot_glace = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.cot_rando = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.engagement = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.equipement = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.exposition = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+
         self.parse_outings_list(page, pagenb)
 
         # parse other pages if nboutings > 100
@@ -75,6 +75,7 @@ class Outings:
             page = get_page(url)
             self.parse_outings_list(page, pagenb)
 
+        self.area = np.array(self.area)
         print u"%d sorties trouvées" % self.nboutings
 
     def parse_outings_list(self, page, pagenb):
@@ -84,8 +85,9 @@ class Outings:
         lines = soup.table.tbody.findAll('tr')
 
         cotations = {'cot_globale': u'Cotation globale',
-                     'engagement': u'Qualité de l\'équipement',
+                     'engagement': u'Engagement',
                      'equipement': u'Qualité de l\'équipement',
+                     'exposition': u'Exposition',
                      'cot_oblige': u'Cotation libre obligatoire',
                      'cot_libre': u'Cotation libre',
                      'cot_skitech': u'Cotation technique',
@@ -94,31 +96,25 @@ class Outings:
                      'cot_rando': u'Cotation randonnée'
                      }
 
-        count = 0 + (pagenb-1)*100
+        n = 0 + (pagenb-1)*100
         for l in lines:
             t = l.contents
-            self.title.append(t[1].a.text)
-            self.date.append(t[2].time.text)
-            self.altitude.append(t[4].text)
-            self.gain.append(t[5].text)
+            # self.title.append(t[1].a.text)
+            self.date[n] = t[2].time.text
+            self.altitude[n] = t[4].text
+            self.gain[n] = t[5].text
             self.area.append(t[9].a.text)
 
             # keep only the first one for now
             if t[3].find('span', "printonly"):
-                self.activity.append(t[3].find('span', "printonly").text)
-            else:
-                self.activity.append('')
-
-            # add null string  to have the same numer of values in each list
-            for c in cotations.keys():
-                self.__dict__[c].append('')
+                self.activity[n] = t[3].find('span', "printonly").text
 
             for i in t[6].findAll('span'):
                 for c in cotations.keys():
                     if i['title'].startswith(cotations[c]):
-                        self.__dict__[c][count] = i.text
+                        self.__dict__[c][n] = i.text
 
-            count += 1
+            n += 1
 
 
 class Username:
