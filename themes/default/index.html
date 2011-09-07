@@ -25,8 +25,8 @@
         </ul>
       </header>
       <div id="main" role="main">
-        {% for p in plots %}
-        <img src="{{ plots[p]['file'] }}" />
+        {% for file in files %}
+        <img src="{{ file }}" />
         {% endfor %}
       </div>
       <footer>

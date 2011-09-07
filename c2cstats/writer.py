@@ -6,7 +6,6 @@ Generate html pages for each directory of images
 """
 
 import os
-import os.path
 from shutil import copytree, ignore_patterns
 from jinja2 import Environment, PackageLoader
 from c2cstats.parser import Username
@@ -60,9 +59,11 @@ class Writer():
         self.context['static_path'] = STATIC_PATH
         self.context['username'] = user.name
 
-        plots = self.settings['PLOTS']
-        for p in plots:
-            plots[p]['file'] += self.settings['OUTPUT_EXT']
-        self.context['plots'] = plots
+        output_dir = self.settings['OUTPUT_DIR']
+        fileList = [os.path.normcase(f)
+                    for f in os.listdir(output_dir)]
+        fileList = [os.path.join(output_dir, f)
+                    for f in fileList
+                    if os.path.splitext(f)[1] in self.settings['OUTPUT_EXT']]
 
-
+        self.context['files'] = sorted(fileList)

@@ -6,22 +6,12 @@ import os, sys
 activities = (u'alpinisme neige, glace, mixte', u'cascade de glace',
               u'escalade', u'rocher haute montagne', u'ski, surf')
 
-plconf = {'years': {'file': 'years'},
-          'activities': {'file': 'activities'},
-          'regions': {'file': 'regions'},
-          'cot_globale': {'file': 'cot_globale'},
-          'cot_globale_per_activity': {'file': 'cot_globale_per_activity'},
-          'cot_escalade': {'file': 'cot_escalade'},
-          'denivele': {'file': 'denivele'}
-          }
-
 _CONFIG = {'THEME': 'default',
            'INDEX_PAGE': 'index.html',
            'LINK': 'https://github.com/saimn/c2c-stats',
            'OUTPUT_DIR': '_output',
            'OUTPUT_EXT': '.svg',
            'ACTIVITIES': activities,
-           'PLOTS': plconf,
            }
 
 def read_settings(filename=''):
