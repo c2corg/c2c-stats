@@ -6,9 +6,13 @@ Utilisation
 
     c2cstats.py [-h] [--version] user_id
 
+Les fichiers générés (images svg et une page web listant les images,
+index.html) se trouvent dans le dossier `_output/user_id/`
+
 Dépendances
 ~~~~~~~~~~~
 
 * BeautilfulSoup
 * Matplotlib
 * Numpy
+* Jinja2
