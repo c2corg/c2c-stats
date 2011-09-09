@@ -10,9 +10,8 @@ matplotlib.use('SVG')
 import matplotlib.pyplot as plt
 from collections import Counter
 
-MONTHS = {u'janvier': 1, u'février': 2, u'mars': 3, u'avril': 4, u'mai': 5,
-          u'juin': 6, u'juillet': 7, u'août': 8, u'septembre': 9,
-          u'octobre': 10, u'novembre': 11, u'décembre': 12}
+MONTHS = (u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', u'juillet',
+          u'août', u'septembre', u'octobre', u'novembre', u'décembre')
 
 COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
                     'D+', 'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+')
@@ -64,9 +63,10 @@ class Plots:
         if u'randonn\xe9e p\xe9destre' in self.acts:
             self.plot_cot_rando()
 
-        self.plot_gain()
         for act in self.settings['ACTIVITIES']:
-            self.plot_gain(act)
+            if act in self.acts:
+                self.plot_gain(act)
+                self.plot_gain_cumul(act)
 
         print "Fin. Résultats dans %s" % self.settings['OUTPUT_DIR']
 
@@ -238,7 +238,7 @@ class Plots:
         xlabel = u'Dénivelé'
         filename = 'denivele'
         gain = np.copy(self.data.gain)
-        year = self.year
+        year = np.copy(self.year)
 
         if activity:
             ind = (self.data.activity == activity)
@@ -253,12 +253,52 @@ class Plots:
         counts = []
         for i in self.year_uniq:
             ind = (year == i)
-            select = np.array([int(k[:-1]) for k in gain[ind] if k])
-            counts.append(np.sum(select))
+            counts.append(np.sum(gain[ind]))
 
         fig = plt.figure()
         plt.bar(self.year_uniq, counts)
         plt.xlabel(xlabel)
         plt.xticks(self.year_uniq + 0.4, self.year_labels)
         fig.autofmt_xdate(rotation=45)
+        plt.savefig(self.get_filepath(filename), transparent=True)
+
+    def plot_gain_cumul(self, activity=''):
+        "Cumulative plot per year for gain"
+
+        xlabel = u'Dénivelé'
+        filename = 'denivele_cumul'
+        gain = np.copy(self.data.gain)
+        date = np.copy(self.data.date)
+
+        months_idx = np.arange(12)
+
+        if activity:
+            ind = (self.data.activity == activity)
+            gain = gain[ind]
+            date = date[ind]
+            if len(gain) == 0:
+                return
+
+            filename += '_' + activity.replace(' ', '_').replace(',', '')
+            xlabel += u' ' + activity
+
+        month = np.array([i.split()[1] for i in date])
+        year = np.array([int(i.split()[2]) for i in date])
+
+        fig = plt.figure()
+        for y in self.year_uniq:
+            ind = (year == y)
+            counts = np.zeros(12)
+
+            for m in months_idx:
+                sel = (month[ind] == MONTHS[m])
+                counts[m] = np.sum(gain[ind][sel])
+
+            plt.plot(months_idx+1, counts.cumsum(), label=str(y))
+
+        plt.xlabel(xlabel)
+        plt.xticks(months_idx + 1.4, MONTHS)
+        fig.autofmt_xdate(rotation=45)
+        leg = plt.legend(loc='upper left', fancybox=True)
+        leg.get_frame().set_alpha(0.5)
         plt.savefig(self.get_filepath(filename), transparent=True)

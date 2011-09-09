@@ -49,7 +49,7 @@ class Outings:
         self.date = np.zeros(self.nboutings, dtype=np.dtype('U20'))
         self.activity = np.zeros(self.nboutings, dtype=np.dtype('U30'))
         self.altitude = np.zeros(self.nboutings, dtype=np.dtype('U6'))
-        self.gain = np.zeros(self.nboutings, dtype=np.dtype('U6'))
+        self.gain = np.zeros(self.nboutings, dtype=np.dtype('I6'))
         self.area = []
 
         self.cot_globale = np.zeros(self.nboutings, dtype=np.dtype('U3'))
@@ -102,7 +102,8 @@ class Outings:
             # self.title.append(t[1].a.text)
             self.date[n] = t[2].time.text
             self.altitude[n] = t[4].text
-            self.gain[n] = t[5].text
+            if t[5].text:
+                self.gain[n] = int(t[5].text[:-1])
             self.area.append(t[9].a.text)
 
             # keep only the first one for now
