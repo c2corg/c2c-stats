@@ -25,6 +25,12 @@ from BeautifulSoup import BeautifulSoup
 NB_ITEMS = 100
 BASE_URL = "http://www.camptocamp.org/outings/list/layout/light/users/%s/npp/%d/page/%d"
 
+class ParserError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return self.msg
+
 class Outings:
     "Parse the list of outings of user user_id"
     def __init__(self, user_id):
@@ -36,11 +42,13 @@ class Outings:
         url = get_outings_url(self.user_id, pagenb)
 
         print "Get %s ..." % url
-        page = get_page(url)
+        page, headers = get_page(url)
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         nbout = soup.p.findAll('b')
 
-        if len(nbout) == 1:
+        if len(nbout) == 0:
+            raise ParserError('Invalid page')
+        elif len(nbout) == 1:
             self.nboutings = int(nbout[0].text)
         else:
             self.nboutings = int(nbout[2].text)
@@ -72,7 +80,7 @@ class Outings:
             nbtemp -= 100
             url = get_outings_url(self.user_id, pagenb)
             print "Get %s ..." % url
-            page = get_page(url)
+            page, headers = get_page(url)
             self.parse_outings_list(page, pagenb)
 
         self.area = np.array(self.area)
@@ -121,10 +129,12 @@ class Outings:
 class Username:
     "Retrieve the name of user_id"
     def __init__(self, user_id):
+        self.name = 'Anonyme'
         url = "http://www.camptocamp.org/users/fr/%s.json" % str(user_id)
-        p = get_page(url)
-        j = json.loads(p)
-        self.name = j[u'properties'][u'name']
+        p, headers = get_page(url)
+        if headers['Content-Type'] == 'application/json':
+            j = json.loads(p)
+            self.name = j[u'properties'][u'name']
 
 
 def get_page(url):
@@ -134,12 +144,11 @@ def get_page(url):
     page_code = page.getcode()
 
     if page_content == "Not Found" or page_code == 404:
-        print "Error: page not found."
-        exit()
+        raise ParserError('Page not found')
 
     # Remove linebreaks & tabulations
     page_content = page_content.replace("\n","").replace("\t","").replace("\r","")
-    return page_content
+    return page_content, page.headers
     # return page.decode('utf-8')
 
 def get_outings_url(user_id, page):

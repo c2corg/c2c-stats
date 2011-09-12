@@ -34,7 +34,7 @@ __license__ = "GPL"
 import sys
 import argparse
 import os.path
-from c2cstats.parser import Outings
+from c2cstats.parser import Outings, ParserError
 from c2cstats.plots import Plots
 from c2cstats.settings import read_settings
 from c2cstats.writer import Writer
@@ -55,7 +55,12 @@ def main():
                                           str(args.user_id))
 
     print ":: Statistics for user %s ..." % args.user_id
-    data = Outings(args.user_id)
+    try:
+        data = Outings(args.user_id)
+    except ParserError:
+        print 'Error while loading page'
+        return 1
+
     plots = Plots(data, settings)
     plots.plot_all()
     w = Writer(data, settings)
