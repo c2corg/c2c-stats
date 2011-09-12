@@ -35,7 +35,7 @@ class Outings:
         pagenb = 1
         url = get_outings_url(self.user_id, pagenb)
 
-        print u"Récupération de %s ..." % url
+        print "Get %s ..." % url
         page = get_page(url)
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         nbout = soup.p.findAll('b')
@@ -71,15 +71,15 @@ class Outings:
             pagenb += 1
             nbtemp -= 100
             url = get_outings_url(self.user_id, pagenb)
-            print u"Récupération de %s ..." % url
+            print "Get %s ..." % url
             page = get_page(url)
             self.parse_outings_list(page, pagenb)
 
         self.area = np.array(self.area)
-        print u"%d sorties trouvées" % self.nboutings
+        print "Found %d outings" % self.nboutings
 
     def parse_outings_list(self, page, pagenb):
-        "Get the content of eah line of the table"
+        "Get the content of each line of the table"
 
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         lines = soup.table.tbody.findAll('tr')
@@ -96,7 +96,7 @@ class Outings:
                      'cot_rando': u'Cotation randonnée'
                      }
 
-        n = 0 + (pagenb-1)*100
+        n = (pagenb-1)*100
         for l in lines:
             t = l.contents
             # self.title.append(t[1].a.text)
@@ -128,17 +128,16 @@ class Username:
 
 
 def get_page(url):
-    """ Retourne le code source de la page 'url' """
-
+    "Return the HTML source of the page 'url'"
     page = urllib.urlopen(url)
     page_content = page.read()
     page_code = page.getcode()
 
     if page_content == "Not Found" or page_code == 404:
-        print "Erreur, la page n'existe pas."
+        print "Error: page not found."
         exit()
 
-    #Suppression des sauts de ligne, les tabulations et les retours chariot
+    # Remove linebreaks & tabulations
     page_content = page_content.replace("\n","").replace("\t","").replace("\r","")
     return page_content
     # return page.decode('utf-8')

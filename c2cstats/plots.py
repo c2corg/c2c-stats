@@ -68,7 +68,7 @@ class Plots:
                 self.plot_gain(act)
                 self.plot_gain_cumul(act)
 
-        print "Fin. Résultats dans %s" % self.settings['OUTPUT_DIR']
+        print "Results available in %s" % self.settings['OUTPUT_DIR']
 
     def plot_date(self):
         "Plot histogram of years"

@@ -54,7 +54,7 @@ def main():
     settings['OUTPUT_DIR'] = os.path.join(settings['OUTPUT_DIR'],
                                           str(args.user_id))
 
-    print ":: Statistiques pour l'utilisateur %s ..." % args.user_id
+    print ":: Statistics for user %s ..." % args.user_id
     data = Outings(args.user_id)
     plots = Plots(data, settings)
     plots.plot_all()
