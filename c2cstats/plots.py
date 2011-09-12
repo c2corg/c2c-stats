@@ -7,6 +7,9 @@ import os.path
 import numpy as np
 import matplotlib
 matplotlib.use('SVG')
+matplotlib.rc('legend', fancybox=True)
+matplotlib.rc('figure', figsize=(7, 5))
+
 import matplotlib.pyplot as plt
 from collections import Counter
 
@@ -92,7 +95,7 @@ class Plots:
         plt.ylabel('Nb de sorties')
         plt.title('Nb de sorties par an')
         plt.xticks(self.year_uniq, self.year_labels)
-        leg = plt.legend(loc='upper left', fancybox=True)
+        leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
 
         # rotate and align the tick labels so they look better
@@ -181,7 +184,7 @@ class Plots:
 
         plt.xlabel(u'Cotation globale')
         plt.xticks(x + 0.4, COTATION_GLOBALE)
-        leg = plt.legend(loc='upper left', fancybox=True)
+        leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
         plt.savefig(self.get_filepath('cot_globale_per_activity'), transparent=True)
 
@@ -201,7 +204,7 @@ class Plots:
         plt.bar(x+width, counts2, width, color='b', label=u'Cotation obligé')
         plt.xlabel(u'Cotation escalade')
         plt.xticks(x + width, COTATION_ESCALADE)
-        leg = plt.legend(loc='upper left', fancybox=True)
+        leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
         fig.autofmt_xdate(rotation=45)
         plt.savefig(self.get_filepath('cot_escalade'), transparent=True)
@@ -299,6 +302,6 @@ class Plots:
         plt.xlabel(xlabel)
         plt.xticks(months_idx + 1.4, MONTHS)
         fig.autofmt_xdate(rotation=45)
-        leg = plt.legend(loc='upper left', fancybox=True)
+        leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
         plt.savefig(self.get_filepath(filename), transparent=True)
