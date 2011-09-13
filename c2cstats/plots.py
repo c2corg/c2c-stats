@@ -17,6 +17,9 @@ import matplotlib.pyplot as plt
 from collections import Counter
 from functools import wraps
 
+# minimal number of outings needed to make a plot of one activity
+ACT_MIN = 5
+
 MONTHS = (u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', u'juillet',
           u'août', u'septembre', u'octobre', u'novembre', u'décembre')
 
@@ -73,6 +76,7 @@ class Plots:
         self.settings = settings
         self.barcolor = colors_list[1]
 
+        self.act_count = Counter(self.data.activity)
         self.acts = np.unique(self.data.activity)
         ind = (self.acts != u'')
         self.acts = self.acts[ind]
@@ -96,20 +100,22 @@ class Plots:
         self.plot_cot_globale('cot_globale')
         self.plot_cot_globale_per_activity('cot_globale_per_activity')
 
-        if u'escalade' in self.acts or u'rocher haute montagne' in self.acts:
+        if (self.act_count[u'escalade'] +
+            self.act_count[u'rocher haute montagne']) > ACT_MIN:
             self.plot_cot_escalade('cot_escalade')
 
-        if u'cascade de glace' in self.acts:
+        if self.act_count[u'cascade de glace'] > ACT_MIN:
             self.plot_cot_glace('cot_glace')
 
-        if u'randonn\xe9e p\xe9destre' in self.acts:
+        if self.act_count[u'randonn\xe9e p\xe9destre'] > ACT_MIN:
             self.plot_cot_rando('cot_rando')
 
         for act in self.settings['ACTIVITIES']:
-            if act in self.acts:
+            if self.act_count[act] > ACT_MIN:
                 fileext = '_' + act.replace(' ', '_').replace(',', '')
-                self.plot_gain('denivele'+fileext, activity=act)
-                self.plot_gain_cumul('denivele_cumul'+fileext, activity=act)
+                fileext = fileext.replace(u'randonnée_pédestre', 'rando')
+                self.plot_gain('denivele' + fileext, activity=act)
+                self.plot_gain_cumul('denivele_cumul' + fileext, activity=act)
 
         print "Results available in %s" % self.settings['OUTPUT_DIR']
 
@@ -127,6 +133,7 @@ class Plots:
         # outings per year
         # plt.hist(year, len(self.year_uniq), histtype='bar',
         #          range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5), rwidth=0.6)
+
         # outings per year and per activity
         ax = plt.gca()
         ax.hist(h, len(self.year_uniq), histtype='barstacked',
@@ -157,12 +164,10 @@ class Plots:
     def plot_activity(self):
         "Pie plot for activities"
 
-        c = Counter(self.data.activity)
-        explode = np.zeros(len(c)) + 0.05
-
+        explode = np.zeros(len(self.act_count)) + 0.05
         plt.figure()
-        plt.pie(c.values(), labels=c.keys(), explode=explode, shadow=True,
-                autopct='%d', colors=colors_list)
+        plt.pie(self.act_count.values(), labels=self.act_count.keys(),
+                explode=explode, shadow=True, autopct='%d', colors=colors_list)
         plt.title(u'Répartition par activité')
         plt.savefig(self.get_filepath('activities'), transparent=True)
 

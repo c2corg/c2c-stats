@@ -3,8 +3,13 @@
 
 import os, sys
 
-activities = (u'alpinisme neige, glace, mixte', u'cascade de glace',
-              u'escalade', u'rocher haute montagne', u'ski, surf')
+activities = (u'alpinisme neige, glace, mixte',
+              u'cascade de glace',
+              u'escalade',
+              u'rocher haute montagne',
+              u'ski, surf',
+              u'raquette',
+              u'randonnée pédestre')
 
 _CONFIG = {'THEME': 'default',
            'INDEX_PAGE': 'index.html',
