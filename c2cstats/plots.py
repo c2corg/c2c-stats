@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('SVG')
 matplotlib.rc('legend', fancybox=True)
-matplotlib.rc('figure', figsize=(7, 5))
+matplotlib.rc('figure', figsize=(6, 4.5))
 matplotlib.rc('font', **{'family':'sans-serif', 'size': 10.0,
                          'sans-serif': 'Droid Sans'})
 
@@ -48,11 +48,9 @@ def remove_axes(func):
     "Remove right and top axes and save fig"
     @wraps(func)
     def wrapper(self, filename, **kwargs):
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-
         func(self, filename, **kwargs)
 
+        ax = plt.gca()
         # Remove the surrounding lines from the plot
         for loc, spine in ax.spines.iteritems():
             if loc in ['right', 'top']:
@@ -64,7 +62,6 @@ def remove_axes(func):
 
         # Switch the position of the ticks to be outside the axes
         ax.tick_params(axis='y', direction='out')
-
         plt.savefig(self.get_filepath(filename), transparent=True)
     return wrapper
 
@@ -135,7 +132,8 @@ class Plots:
         #          range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5), rwidth=0.6)
 
         # outings per year and per activity
-        ax = plt.gca()
+        fig = plt.figure()
+        ax = plt.axes([0.1, 0.3, 0.9, 0.7])
         ax.hist(h, len(self.year_uniq), histtype='barstacked',
                 range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5),
                 label=np.unique(self.data.activity), color=colors_list[0:nbact])
@@ -144,8 +142,9 @@ class Plots:
         ax.set_xticks(self.year_uniq)
         ax.set_xticklabels(self.year_labels)
 
-        leg = plt.legend(loc='best')
-        leg.get_frame().set_alpha(0.5)
+        # Put a legend below current axis
+        leg = ax.legend(loc='upper center', bbox_to_anchor=(0.45, -0.07),
+                        frameon=False, ncol=2, mode="expand")
 
         # rotate and align the tick labels so they look better
         fig = plt.gcf()
@@ -193,6 +192,9 @@ class Plots:
     def plot_cot_globale(self, filename, activity=''):
         "Hist plot for cot_globale"
 
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+
         xlabel = u'Cotation globale'
         cot = np.copy(self.data.cot_globale)
 
@@ -209,7 +211,6 @@ class Plots:
         counts = [c[k] for k in COTATION_GLOBALE]
         x = np.arange(len(counts))
 
-        ax = plt.gca()
         ax.bar(x, counts, color=self.barcolor)
         ax.set_xlabel(xlabel)
         ax.set_xticks(x+0.4)
@@ -218,10 +219,13 @@ class Plots:
     @remove_axes
     def plot_cot_globale_per_activity(self, filename):
         "Hist plot for cot_globale"
+
+        fig = plt.figure()
+        ax = plt.axes([0.1, 0.3, 0.9, 0.7])
+
         x = np.arange(len(COTATION_GLOBALE))
         width = 1./len(self.acts)
 
-        ax = plt.gca()
         for i in np.arange(len(self.acts)):
             ind = (self.data.activity == self.acts[i])
             c = Counter(self.data.cot_globale[ind])
@@ -229,16 +233,21 @@ class Plots:
             ax.bar(x + i*width, counts, width, label=self.acts[i],
                    color=colors_iter.next())
 
-        ax.set_xlabel(u'Cotation globale')
+        ax.set_ylabel(u'Cotation globale')
         ax.set_xticks(x + 0.4)
         ax.set_xticklabels(COTATION_GLOBALE)
 
-        leg = plt.legend(loc='best')
+        # Put a legend below current axis
+        leg = ax.legend(loc='upper center', bbox_to_anchor=(0.45, -0.07),
+                        frameon=False, ncol=2, mode="expand")
         leg.get_frame().set_alpha(0.5)
 
     @remove_axes
     def plot_cot_escalade(self, filename):
         "Hist plot for cot_globale"
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
         width = 0.45
         x = np.arange(len(COTATION_ESCALADE))
@@ -248,7 +257,6 @@ class Plots:
         c2 = Counter(self.data.cot_oblige)
         counts2 = [c2[k] for k in COTATION_ESCALADE]
 
-        ax = plt.gca()
         ax.bar(x, counts1, width, label=u'Cotation libre', color=self.barcolor)
         ax.bar(x+width, counts2, width, label=u'Cotation obligé', color=colors_list[-1])
         ax.set_xlabel(u'Cotation escalade')
@@ -265,11 +273,13 @@ class Plots:
     def plot_cot_glace(self, filename):
         "Hist plot for cot_glace"
 
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+
         x = np.arange(len(COTATION_GLACE))
         c = Counter(self.data.cot_glace)
         counts = [c[k] for k in COTATION_GLACE]
 
-        ax = plt.gca()
         ax.bar(x, counts, color=self.barcolor)
         ax.set_xlabel(u'Cotation glace')
         ax.set_xticks(x + 0.4)
@@ -279,11 +289,13 @@ class Plots:
     def plot_cot_rando(self, filename):
         "Hist plot for cot_rando"
 
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+
         x = np.arange(len(COTATION_RANDO))
         c = Counter(self.data.cot_rando)
         counts = [c[k] for k in COTATION_RANDO]
 
-        ax = plt.gca()
         ax.bar(x, counts, color=self.barcolor)
         ax.set_xlabel(u'Cotation rando')
         ax.set_xticks(x + 0.4)
@@ -292,6 +304,9 @@ class Plots:
     @remove_axes
     def plot_gain(self, filename, activity=''):
         "Hist plot for gain"
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
         xlabel = u'Dénivelé'
         gain = np.copy(self.data.gain)
@@ -310,7 +325,6 @@ class Plots:
             ind = (year == i)
             counts.append(np.sum(gain[ind]))
 
-        ax = plt.gca()
         ax.bar(self.year_uniq, counts, color=self.barcolor)
         ax.set_xlabel(xlabel)
         ax.set_xticks(self.year_uniq + 0.4)
@@ -322,6 +336,9 @@ class Plots:
     @remove_axes
     def plot_gain_cumul(self, filename, activity=''):
         "Cumulative plot per year for gain"
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
         xlabel = u'Dénivelé'
         gain = np.copy(self.data.gain)
@@ -340,7 +357,6 @@ class Plots:
         month = np.array([i.split()[1] for i in date])
         year = np.array([int(i.split()[2]) for i in date])
 
-        ax = plt.gca()
         for y in self.year_uniq:
             ind = (year == y)
             counts = np.zeros(12)
@@ -349,8 +365,8 @@ class Plots:
                 sel = (month[ind] == MONTHS[m])
                 counts[m] = np.sum(gain[ind][sel])
 
-            ax.plot(months_idx+1, counts.cumsum(), label=str(y),
-                    color=colors_iter.next())
+            ax.plot(months_idx+1, counts.cumsum(), 'o-', label=str(y),
+                    color=colors_iter.next(), linewidth=2)
 
         ax.set_xlabel(xlabel)
         ax.set_xticks(months_idx + 1.4)
