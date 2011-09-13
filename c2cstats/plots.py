@@ -10,9 +10,8 @@ import matplotlib
 matplotlib.use('SVG')
 matplotlib.rc('legend', fancybox=True)
 matplotlib.rc('figure', figsize=(7, 5))
-matplotlib.rc('font', **{'family':'sans-serif', 'serif':['Palatino'],
-                         'size': 10.0, 'monospace': 'Droid Sans Mono',
-                         'sans-serif': 'Fontin Sans'})
+matplotlib.rc('font', **{'family':'sans-serif', 'size': 10.0,
+                         'sans-serif': 'Droid Sans'})
 
 import matplotlib.pyplot as plt
 from collections import Counter
