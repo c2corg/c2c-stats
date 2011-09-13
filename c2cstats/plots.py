@@ -15,6 +15,7 @@ matplotlib.rc('font', **{'family':'sans-serif', 'size': 10.0,
 
 import matplotlib.pyplot as plt
 from collections import Counter
+from functools import wraps
 
 MONTHS = (u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', u'juillet',
           u'août', u'septembre', u'octobre', u'novembre', u'décembre')
@@ -38,6 +39,32 @@ colors_list = ['#D73027', '#FC8D59', '#FEE090', '#FFFFBF', '#E0F3F8',
                '#91BFDB', '#4575B4']
 
 colors_iter = itertools.cycle(colors_list)
+
+
+def remove_axes(func):
+    "Remove right and top axes and save fig"
+    @wraps(func)
+    def wrapper(self, filename, **kwargs):
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+
+        func(self, filename, **kwargs)
+
+        # Remove the surrounding lines from the plot
+        for loc, spine in ax.spines.iteritems():
+            if loc in ['right', 'top']:
+                spine.set_color('none')
+
+        # Display ticks only at the bottom and left
+        ax.xaxis.set_ticks_position('none')
+        ax.yaxis.set_ticks_position('left')
+
+        # Switch the position of the ticks to be outside the axes
+        ax.tick_params(axis='y', direction='out')
+
+        plt.savefig(self.get_filepath(filename), transparent=True)
+    return wrapper
+
 
 class Plots:
     "Make plots from data"
@@ -64,28 +91,30 @@ class Plots:
     def plot_all(self):
         self.plot_activity()
         self.plot_area()
-        self.plot_date()
+        self.plot_date('years')
 
-        self.plot_cot_globale()
-        self.plot_cot_globale_per_activity()
+        self.plot_cot_globale('cot_globale')
+        self.plot_cot_globale_per_activity('cot_globale_per_activity')
 
         if u'escalade' in self.acts or u'rocher haute montagne' in self.acts:
-            self.plot_cot_escalade()
+            self.plot_cot_escalade('cot_escalade')
 
         if u'cascade de glace' in self.acts:
-            self.plot_cot_glace()
+            self.plot_cot_glace('cot_glace')
 
         if u'randonn\xe9e p\xe9destre' in self.acts:
-            self.plot_cot_rando()
+            self.plot_cot_rando('cot_rando')
 
         for act in self.settings['ACTIVITIES']:
             if act in self.acts:
-                self.plot_gain(act)
-                self.plot_gain_cumul(act)
+                fileext = '_' + act.replace(' ', '_').replace(',', '')
+                self.plot_gain('denivele'+fileext, activity=act)
+                self.plot_gain_cumul('denivele_cumul'+fileext, activity=act)
 
         print "Results available in %s" % self.settings['OUTPUT_DIR']
 
-    def plot_date(self):
+    @remove_axes
+    def plot_date(self, filename):
         "Plot histogram of years"
         # outings per year and per activity
         h = []
@@ -93,28 +122,27 @@ class Plots:
             ind = (self.data.activity == i)
             h.append(list(self.year[ind]))
 
-        fig = plt.figure()
         nbact = len(np.unique(self.data.activity))
 
         # outings per year
         # plt.hist(year, len(self.year_uniq), histtype='bar',
         #          range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5), rwidth=0.6)
         # outings per year and per activity
-        plt.hist(h, len(self.year_uniq), histtype='barstacked',
-                 range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5),
-                 label=np.unique(self.data.activity), color=colors_list[0:nbact])
+        ax = plt.gca()
+        ax.hist(h, len(self.year_uniq), histtype='barstacked',
+                range=(self.year_uniq[0]-0.5, self.year_uniq[-1]+0.5),
+                label=np.unique(self.data.activity), color=colors_list[0:nbact])
 
-        plt.xlabel(u'Année')
-        plt.ylabel('Nb de sorties')
-        plt.title('Nb de sorties par an')
-        plt.xticks(self.year_uniq, self.year_labels)
+        ax.set_ylabel('Nb de sorties par an')
+        ax.set_xticks(self.year_uniq)
+        ax.set_xticklabels(self.year_labels)
+
         leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
 
         # rotate and align the tick labels so they look better
+        fig = plt.gcf()
         fig.autofmt_xdate(rotation=45)
-
-        plt.savefig(self.get_filepath('years'), transparent=True)
 
         # try with plot_date
         # d = []
@@ -156,11 +184,11 @@ class Plots:
         plt.title(u'Répartition par région')
         plt.savefig(self.get_filepath('regions'), transparent=True)
 
-    def plot_cot_globale(self, activity=''):
+    @remove_axes
+    def plot_cot_globale(self, filename, activity=''):
         "Hist plot for cot_globale"
 
         xlabel = u'Cotation globale'
-        filename = 'cot_globale'
         cot = np.copy(self.data.cot_globale)
 
         if activity:
@@ -176,48 +204,35 @@ class Plots:
         counts = [c[k] for k in COTATION_GLOBALE]
         x = np.arange(len(counts))
 
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
+        ax = plt.gca()
         ax.bar(x, counts, color=self.barcolor)
         ax.set_xlabel(xlabel)
         ax.set_xticks(x+0.4)
         ax.set_xticklabels(COTATION_GLOBALE)
 
-        # Remove the surrounding lines from the plot
-        for loc, spine in ax.spines.iteritems():
-            if loc in ['right', 'top']:
-                spine.set_color('none')
-
-        # Display ticks only at the bottom and left
-        ax.xaxis.set_ticks_position('none')
-        ax.yaxis.set_ticks_position('left')
-
-        # Switch the position of the ticks to be outside the axes
-        ax.tick_params(axis='y', direction='out')
-
-        plt.savefig(self.get_filepath(filename), transparent=True)
-
-
-    def plot_cot_globale_per_activity(self):
+    @remove_axes
+    def plot_cot_globale_per_activity(self, filename):
         "Hist plot for cot_globale"
         x = np.arange(len(COTATION_GLOBALE))
         width = 1./len(self.acts)
 
-        plt.figure()
+        ax = plt.gca()
         for i in np.arange(len(self.acts)):
             ind = (self.data.activity == self.acts[i])
             c = Counter(self.data.cot_globale[ind])
             counts = [c[k] for k in COTATION_GLOBALE]
-            plt.bar(x + i*width, counts, width, label=self.acts[i],
-                    color=colors_iter.next())
+            ax.bar(x + i*width, counts, width, label=self.acts[i],
+                   color=colors_iter.next())
 
-        plt.xlabel(u'Cotation globale')
-        plt.xticks(x + 0.4, COTATION_GLOBALE)
+        ax.set_xlabel(u'Cotation globale')
+        ax.set_xticks(x + 0.4)
+        ax.set_xticklabels(COTATION_GLOBALE)
+
         leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
-        plt.savefig(self.get_filepath('cot_globale_per_activity'), transparent=True)
 
-    def plot_cot_escalade(self):
+    @remove_axes
+    def plot_cot_escalade(self, filename):
         "Hist plot for cot_globale"
 
         width = 0.45
@@ -228,96 +243,99 @@ class Plots:
         c2 = Counter(self.data.cot_oblige)
         counts2 = [c2[k] for k in COTATION_ESCALADE]
 
-        fig = plt.figure()
-        plt.bar(x, counts1, width, label=u'Cotation libre', color=self.barcolor)
-        plt.bar(x+width, counts2, width, label=u'Cotation obligé', color=colors_list[-1])
-        plt.xlabel(u'Cotation escalade')
-        plt.xticks(x + width, COTATION_ESCALADE)
+        ax = plt.gca()
+        ax.bar(x, counts1, width, label=u'Cotation libre', color=self.barcolor)
+        ax.bar(x+width, counts2, width, label=u'Cotation obligé', color=colors_list[-1])
+        ax.set_xlabel(u'Cotation escalade')
+        ax.set_xticks(x + width)
+        ax.set_xticklabels(COTATION_ESCALADE)
+
         leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
-        fig.autofmt_xdate(rotation=45)
-        plt.savefig(self.get_filepath('cot_escalade'), transparent=True)
 
-    def plot_cot_glace(self):
+        fig = plt.gcf()
+        fig.autofmt_xdate(rotation=45)
+
+    @remove_axes
+    def plot_cot_glace(self, filename):
         "Hist plot for cot_glace"
 
         x = np.arange(len(COTATION_GLACE))
         c = Counter(self.data.cot_glace)
         counts = [c[k] for k in COTATION_GLACE]
 
-        fig = plt.figure()
-        plt.bar(x, counts, color=self.barcolor)
-        plt.xlabel(u'Cotation glace')
-        plt.xticks(x + 0.4, COTATION_GLACE)
-        plt.savefig(self.get_filepath('cot_glace'), transparent=True)
+        ax = plt.gca()
+        ax.bar(x, counts, color=self.barcolor)
+        ax.set_xlabel(u'Cotation glace')
+        ax.set_xticks(x + 0.4)
+        ax.set_xticklabels(COTATION_GLACE)
 
-    def plot_cot_rando(self):
+    @remove_axes
+    def plot_cot_rando(self, filename):
         "Hist plot for cot_rando"
 
         x = np.arange(len(COTATION_RANDO))
         c = Counter(self.data.cot_rando)
         counts = [c[k] for k in COTATION_RANDO]
 
-        fig = plt.figure()
-        plt.bar(x, counts, color=self.barcolor)
-        plt.xlabel(u'Cotation rando')
-        plt.xticks(x + 0.4, COTATION_RANDO)
-        plt.savefig(self.get_filepath('cot_rando'), transparent=True)
+        ax = plt.gca()
+        ax.bar(x, counts, color=self.barcolor)
+        ax.set_xlabel(u'Cotation rando')
+        ax.set_xticks(x + 0.4)
+        ax.set_xticklabels(COTATION_RANDO)
 
-    def plot_gain(self, activity=''):
+    @remove_axes
+    def plot_gain(self, filename, activity=''):
         "Hist plot for gain"
 
         xlabel = u'Dénivelé'
-        filename = 'denivele'
         gain = np.copy(self.data.gain)
         year = np.copy(self.year)
 
         if activity:
+            xlabel += u' ' + activity
             ind = (self.data.activity == activity)
             gain = gain[ind]
             year = year[ind]
             if len(gain) == 0:
                 return
 
-            filename += '_' + activity.replace(' ', '_').replace(',', '')
-            xlabel += u' ' + activity
-
         counts = []
         for i in self.year_uniq:
             ind = (year == i)
             counts.append(np.sum(gain[ind]))
 
-        fig = plt.figure()
-        plt.bar(self.year_uniq, counts, color=self.barcolor)
-        plt.xlabel(xlabel)
-        plt.xticks(self.year_uniq + 0.4, self.year_labels)
-        fig.autofmt_xdate(rotation=45)
-        plt.savefig(self.get_filepath(filename), transparent=True)
+        ax = plt.gca()
+        ax.bar(self.year_uniq, counts, color=self.barcolor)
+        ax.set_xlabel(xlabel)
+        ax.set_xticks(self.year_uniq + 0.4)
+        ax.set_xticklabels(self.year_labels)
 
-    def plot_gain_cumul(self, activity=''):
+        fig = plt.gcf()
+        fig.autofmt_xdate(rotation=45)
+
+    @remove_axes
+    def plot_gain_cumul(self, filename, activity=''):
         "Cumulative plot per year for gain"
 
         xlabel = u'Dénivelé'
-        filename = 'denivele_cumul'
         gain = np.copy(self.data.gain)
         date = np.copy(self.data.date)
 
         months_idx = np.arange(12)
 
         if activity:
+            xlabel += u' ' + activity
             ind = (self.data.activity == activity)
             gain = gain[ind]
             date = date[ind]
             if len(gain) == 0:
                 return
 
-            filename += '_' + activity.replace(' ', '_').replace(',', '')
-            xlabel += u' ' + activity
-
         month = np.array([i.split()[1] for i in date])
         year = np.array([int(i.split()[2]) for i in date])
 
-        fig = plt.figure()
+        ax = plt.gca()
         for y in self.year_uniq:
             ind = (year == y)
             counts = np.zeros(12)
@@ -326,12 +344,15 @@ class Plots:
                 sel = (month[ind] == MONTHS[m])
                 counts[m] = np.sum(gain[ind][sel])
 
-            plt.plot(months_idx+1, counts.cumsum(), label=str(y),
-                     color=colors_iter.next())
+            ax.plot(months_idx+1, counts.cumsum(), label=str(y),
+                    color=colors_iter.next())
 
-        plt.xlabel(xlabel)
-        plt.xticks(months_idx + 1.4, MONTHS)
+        ax.set_xlabel(xlabel)
+        ax.set_xticks(months_idx + 1.4)
+        ax.set_xticklabels(MONTHS)
+
+        fig = plt.gcf()
         fig.autofmt_xdate(rotation=45)
+
         leg = plt.legend(loc='best')
         leg.get_frame().set_alpha(0.5)
-        plt.savefig(self.get_filepath(filename), transparent=True)
