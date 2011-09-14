@@ -7,7 +7,7 @@ import os.path
 import itertools
 import numpy as np
 import matplotlib
-matplotlib.use('SVG')
+matplotlib.use('AGG')
 matplotlib.rc('legend', fancybox=True)
 matplotlib.rc('figure', figsize=(6, 4.5))
 matplotlib.rc('font', **{'family':'sans-serif', 'size': 10.0,

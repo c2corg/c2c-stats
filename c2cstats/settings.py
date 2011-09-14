@@ -15,7 +15,7 @@ _CONFIG = {'THEME': 'default',
            'INDEX_PAGE': 'index.html',
            'LINK': 'https://github.com/saimn/c2c-stats',
            'OUTPUT_DIR': '_output',
-           'OUTPUT_EXT': '.svg',
+           'OUTPUT_EXT': '.png',
            'ACTIVITIES': activities,
            }
 
