@@ -6,7 +6,7 @@ Generate html pages for each directory of images
 """
 
 import os
-from shutil import copytree, ignore_patterns
+from shutil import copytree
 from jinja2 import Environment, PackageLoader
 from c2cstats.parser import Username
 
@@ -16,14 +16,14 @@ STATIC_DIR = 'static'
 class Writer():
     """ Generate html pages for each directory of images """
 
-    def __init__(self, data, settings):
-        self.data = data
+    def __init__(self, data, settings, static=False):
         self.settings = settings
         self.jinja_env = Environment(loader=PackageLoader('c2cstats', TPL_PATH))
 
-        self.context = {}
-        self.create_context()
-        self.copy_static_files()
+        self.create_context(data)
+        if static:
+            self.copy_static_files()
+
         self.render_template(self.settings['INDEX_PAGE'])
 
 
@@ -51,11 +51,13 @@ class Writer():
             copytree(static_path, dst_path)
 
 
-    def create_context(self):
-        user = Username(self.data.user_id)
-        self.context['nboutings'] = self.data.nboutings
-        self.context['user_id'] = self.data.user_id
+    def create_context(self, data):
+        self.context = {}
+        self.context['nboutings'] = data.nboutings
+        self.context['user_id'] = data.user_id
         self.context['static_path'] = os.path.join('..', STATIC_DIR)
+
+        user = Username(self.context['user_id'])
         self.context['username'] = user.name
 
         output_dir = self.settings['OUTPUT_DIR']

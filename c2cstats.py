@@ -63,7 +63,7 @@ def main():
 
     plots = Plots(data, settings)
     plots.plot_all()
-    w = Writer(data, settings)
+    w = Writer(data, settings, static=True)
     return 0
 
 if __name__ == "__main__":
