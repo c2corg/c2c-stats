@@ -51,8 +51,6 @@ def main():
     args = parser.parse_args()
 
     settings = read_settings()
-    settings['OUTPUT_DIR'] = os.path.join(settings['OUTPUT_DIR'],
-                                          str(args.user_id))
 
     print ":: Statistics for user %s ..." % args.user_id
     try:
@@ -61,9 +59,11 @@ def main():
         print 'Error while loading page'
         return 1
 
-    plots = Plots(data, settings)
+    plots = Plots(data, settings, settings['OUTPUT_DIR'])
     plots.plot_all()
-    w = Writer(data, settings, static=True)
+
+    data_dir = os.path.join(settings['OUTPUT_DIR'], str(args.user_id))
+    w = Writer(data_dir, data.user_id, data.nboutings, static=True)
     return 0
 
 if __name__ == "__main__":

@@ -68,9 +68,10 @@ def remove_axes(func):
 
 class Plots:
     "Make plots from data"
-    def __init__(self, data, settings):
+    def __init__(self, data, settings, output_dir):
         self.data = data
         self.settings = settings
+
         self.barcolor = colors_list[1]
 
         self.act_count = Counter(self.data.activity)
@@ -82,12 +83,15 @@ class Plots:
         self.year_uniq = np.unique(self.year)
         self.year_labels = [str(i) for i in self.year_uniq]
 
-        if not os.path.isdir(self.settings['OUTPUT_DIR']):
-            os.makedirs(self.settings['OUTPUT_DIR'])
+        self.out_dir = os.path.join(output_dir, str(data.user_id))
+        if not os.path.isdir(self.out_dir):
+            os.makedirs(self.out_dir)
+
 
     def get_filepath(self, name):
         "return path for output file: _output/userid/name.ext"
-        return os.path.join(self.settings['OUTPUT_DIR'], name)
+        return os.path.join(self.out_dir, name)
+
 
     def plot_all(self):
         self.plot_activity()
@@ -114,7 +118,7 @@ class Plots:
                 self.plot_gain('denivele' + fileext, activity=act)
                 self.plot_gain_cumul('denivele_cumul' + fileext, activity=act)
 
-        print "Results available in %s" % self.settings['OUTPUT_DIR']
+        print "Results available in %s" % self.out_dir
 
     @remove_axes
     def plot_date(self, filename):
