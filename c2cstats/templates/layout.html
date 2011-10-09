@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <title>C2C stats</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <div class="page">
+      <h1>{% block title %}{% endblock %}</h1>
+
+      <nav>
+        <a href="{{ url_for('index') }}">index</a>
+      </nav>
+
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="{{ category }}">{{ message }}</div>
+      {% endfor %}
+
+      {% block body %}{% endblock %}
+
+      <!-- <footer> -->
+      <!--   plop {% block gentime %}{% endblock %} -->
+      <!-- </footer> -->
+    </div>
+  </body>
+</html>

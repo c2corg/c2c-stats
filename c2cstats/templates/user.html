@@ -1,0 +1,13 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+Statistiques pour l'utilisateur {{ user_id }}
+{% endblock %}
+
+{% block body %}
+{% for file in files %}
+<img src="{{ url_for('images', filename=file) }}" />
+{% endfor %}
+{% endblock %}
+
