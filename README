@@ -1,13 +1,13 @@
 Calcul de statistiques pour camptocamp.org
 ==========================================
 
-Utilisation
-~~~~~~~~~~~
+Utilisation en ligne de commande
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    c2cstats.py [-h] [--version] user_id
+    c2cstats.py [-h] [--version] [--output OUTPUT_DIR] user_id
 
-Les fichiers générés (images svg et une page web listant les images,
-index.html) se trouvent dans le dossier `_output/user_id/`
+Les fichiers générés (images png et une page web listant les images,
+index.html) se trouvent dans le dossier `_output/user_id/`.
 
 Dépendances
 ~~~~~~~~~~~
@@ -16,3 +16,11 @@ Dépendances
 * Matplotlib
 * Numpy
 * Jinja2
+
+Application web
+~~~~~~~~~~~~~~~
+
+* développée avec Flask
+* pour l'utiliser en local:
+
+    python2 runserver.py
