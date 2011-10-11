@@ -14,7 +14,6 @@ activities = (u'alpinisme neige, glace, mixte',
 _CONFIG = {'LINK': 'https://github.com/saimn/c2c-stats',
            'OUTPUT_DIR': '_output',
            'ACTIVITIES': activities,
-           'IMG_EXT' : '.png',
            }
 
 def read_settings(filename=''):

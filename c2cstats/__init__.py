@@ -17,12 +17,13 @@ SETTINGS = read_settings()
 SECRET_KEY = 'development key'
 
 app = Flask(__name__)
-
-# app.config['STATIC_ROOT'] = 'http://static.example.com/'
-app.config['STATIC_ROOT'] = '/'
+app.config['IMG_DIR'] = SETTINGS['OUTPUT_DIR']
+app.config['IMG_URL'] = '/images'
+app.config['IMG_EXT'] = ['.png']
 
 app.config.from_object(__name__)
 app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
+
 
 
 @app.route('/')
@@ -34,7 +35,7 @@ def index():
 def show_user_stats(user_id):
     user_id = str(user_id)
 
-    data_dir = SETTINGS['OUTPUT_DIR']
+    data_dir = app.config['IMG_DIR']
 
     if user_id not in os.listdir(data_dir):
         try:
@@ -45,16 +46,16 @@ def show_user_stats(user_id):
         plots = Plots(data, SETTINGS, data_dir)
         plots.plot_all()
         flash('Generated plots')
-        # w = Writer(data, SETTINGS)
 
-    output_dir = os.path.join(data_dir, user_id)
-    # print output_dir
+    context = {
+        'img_url': app.config['IMG_URL'],
+        'user_id': user_id,
+        }
 
-    files = [os.path.join(user_id, f)
-             for f in os.listdir(output_dir)
-             if os.path.splitext(f)[1] in SETTINGS['IMG_EXT']]
+    context['files'] = [f for f in os.listdir(os.path.join(data_dir, user_id))
+                        if os.path.splitext(f)[1] in app.config['IMG_EXT']]
 
-    return render_template('user.html', user_id=user_id, files=files)
+    return render_template('user.html', **context)
 
 
 @app.route('/query', methods=['POST'])
@@ -63,7 +64,3 @@ def query_user():
     return redirect(url_for('show_user_stats',
                             user_id=int(request.form['user_id'])))
 
-
-@app.route('/images/<path:filename>')
-def images(filename):
-     return send_from_directory(SETTINGS['OUTPUT_DIR'], filename)

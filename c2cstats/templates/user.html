@@ -7,7 +7,7 @@ Statistiques pour l'utilisateur {{ user_id }}
 
 {% block body %}
 {% for file in files %}
-<img src="{{ url_for('images', filename=file) }}" />
+<img src="{{ img_url }}/{{ user_id }}/{{ file }}" />
 {% endfor %}
 {% endblock %}
 
