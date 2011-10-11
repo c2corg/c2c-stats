@@ -9,16 +9,15 @@ from c2cstats.plots import Plots
 from c2cstats.writer import Writer
 
 from flask import Flask, request, g, redirect, url_for, \
-     render_template, flash, send_from_directory
+     render_template, flash
 
 # configuration
 SECRET_KEY = 'development key'
+IMG_DIR = '_output'
+IMG_URL = '/images'
+IMG_EXT = ['.png']
 
 app = Flask(__name__)
-app.config['IMG_DIR'] = '_output'
-app.config['IMG_URL'] = '/images'
-app.config['IMG_EXT'] = ['.png']
-
 app.config.from_object(__name__)
 app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
 
@@ -27,6 +26,9 @@ app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
 def index():
     return render_template('index.html')
 
+@app.route('/user/')
+def user_index():
+    return redirect(url_for('index'))
 
 @app.route('/user/<int:user_id>')
 def show_user_stats(user_id):
@@ -42,7 +44,6 @@ def show_user_stats(user_id):
 
         plots = Plots(data, data_dir)
         plots.plot_all()
-        flash('Generated plots')
 
     context = {
         'img_url': app.config['IMG_URL'],
@@ -57,7 +58,6 @@ def show_user_stats(user_id):
 
 @app.route('/query', methods=['POST'])
 def query_user():
-    flash("Statistiques pour l'utilisateur %s" % request.form['user_id'])
     return redirect(url_for('show_user_stats',
                             user_id=int(request.form['user_id'])))
 
