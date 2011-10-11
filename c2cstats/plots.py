@@ -20,6 +20,14 @@ from functools import wraps
 # minimal number of outings needed to make a plot of one activity
 ACT_MIN = 5
 
+ACTIVITIES = (u'alpinisme neige, glace, mixte',
+              u'cascade de glace',
+              u'escalade',
+              u'rocher haute montagne',
+              u'ski, surf',
+              u'raquette',
+              u'randonnée pédestre')
+
 MONTHS = (u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', u'juillet',
           u'août', u'septembre', u'octobre', u'novembre', u'décembre')
 
@@ -68,9 +76,8 @@ def remove_axes(func):
 
 class Plots:
     "Make plots from data"
-    def __init__(self, data, settings, output_dir):
+    def __init__(self, data, output_dir):
         self.data = data
-        self.settings = settings
 
         self.barcolor = colors_list[1]
 
@@ -111,7 +118,7 @@ class Plots:
         if self.act_count[u'randonn\xe9e p\xe9destre'] > ACT_MIN:
             self.plot_cot_rando('cot_rando')
 
-        for act in self.settings['ACTIVITIES']:
+        for act in ACTIVITIES:
             if self.act_count[act] > ACT_MIN:
                 fileext = '_' + act.replace(' ', '_').replace(',', '')
                 fileext = fileext.replace(u'randonnée_pédestre', 'rando')

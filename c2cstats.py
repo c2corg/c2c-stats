@@ -36,7 +36,6 @@ import argparse
 import os.path
 from c2cstats.parser import Outings, ParserError
 from c2cstats.plots import Plots
-from c2cstats.settings import read_settings
 from c2cstats.writer import Writer
 
 def main():
@@ -50,8 +49,6 @@ def main():
                         version="%(prog)s " + version)
     args = parser.parse_args()
 
-    settings = read_settings()
-
     print ":: Statistics for user %s ..." % args.user_id
     try:
         data = Outings(args.user_id)
@@ -59,10 +56,10 @@ def main():
         print 'Error while loading page'
         return 1
 
-    plots = Plots(data, settings, settings['OUTPUT_DIR'])
+    plots = Plots(data, '_output')
     plots.plot_all()
 
-    data_dir = os.path.join(settings['OUTPUT_DIR'], str(args.user_id))
+    data_dir = os.path.join('_output', str(args.user_id))
     w = Writer(data_dir, data.user_id, data.nboutings, static=True)
     return 0
 
