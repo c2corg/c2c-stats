@@ -47,6 +47,8 @@ def main():
     parser.add_argument('user_id', help='user id')
     parser.add_argument('--version', action='version',
                         version="%(prog)s " + version)
+    parser.add_argument('--output', '-o', action="store", dest="output_dir",
+                        default="_output", help="Output directory")
     args = parser.parse_args()
 
     print ":: Statistics for user %s ..." % args.user_id
@@ -56,10 +58,10 @@ def main():
         print 'Error while loading page'
         return 1
 
-    plots = Plots(data, '_output')
+    plots = Plots(data, args.output_dir)
     plots.plot_all()
 
-    data_dir = os.path.join('_output', str(args.user_id))
+    data_dir = os.path.join(args.output_dir, str(args.user_id))
     w = Writer(data_dir, data.user_id, data.nboutings, static=True)
     return 0
 
