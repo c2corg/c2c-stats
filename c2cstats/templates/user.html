@@ -10,10 +10,7 @@ Statistiques pour l'utilisateur {{ user_id }}
 <!--   <a href="{{ url_for('index') }}">index</a> -->
 <!-- </nav> -->
 
-<ul>
-  <li>Nombre de sorties: {{ nboutings }}</li>
-  <li>Graphiques générés le {{ date_generated }}</li>
-</ul>
+<p>Graphiques générés le {{ date_generated }}, à partir de {{ nboutings }} sorties.</p>
 
 <div id="images">
   {% for file in files %}

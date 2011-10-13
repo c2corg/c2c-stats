@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import os
+import codecs
 import urlparse
 import locale
 locale.setlocale(locale.LC_ALL, '')
@@ -45,7 +46,13 @@ def show_user_stats(user_id):
         'user_id': user_id,
         }
 
-    if user_id not in os.listdir(data_dir):
+    user_path = os.path.join(data_dir, user_id)
+    index_file = os.path.join(user_path, 'index.html')
+
+    if os.path.isfile(index_file):
+        with codecs.open(index_file, encoding='utf-8', mode='r') as f:
+            page = f.read()
+    else:
         try:
             data = Outings(user_id)
         except ParserError:
@@ -57,13 +64,17 @@ def show_user_stats(user_id):
 
         context['nboutings'] = data.nboutings
 
-    d = datetime.now()
-    context['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
+        d = datetime.now()
+        context['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
 
-    context['files'] = [f for f in os.listdir(os.path.join(data_dir, user_id))
-                        if os.path.splitext(f)[1] in app.config['IMG_EXT']]
+        context['files'] = [f for f in os.listdir(user_path)
+                            if os.path.splitext(f)[1] in app.config['IMG_EXT']]
 
-    return render_template('user.html', **context)
+        page = render_template('user.html', **context)
+        with codecs.open(index_file, encoding='utf-8', mode='w') as f:
+            f.write(page)
+
+    return page
 
 
 @app.route('/query', methods=['POST'])

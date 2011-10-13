@@ -1,9 +1,7 @@
 h1 {
   margin: 1em 0;
-  text-align: center;
 }
 #images, #main_form {
-  text-align: center;
 }
 #main_form input {
   display: inline-block;
