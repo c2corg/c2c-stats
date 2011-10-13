@@ -6,8 +6,20 @@ Statistiques pour l'utilisateur {{ user_id }}
 {% endblock %}
 
 {% block body %}
-{% for file in files %}
-<img src="{{ img_url }}/{{ user_id }}/{{ file }}" />
-{% endfor %}
+<!-- <nav> -->
+<!--   <a href="{{ url_for('index') }}">index</a> -->
+<!-- </nav> -->
+
+<ul>
+  <li>Nombre de sorties: {{ nboutings }}</li>
+  <li>Graphiques générés le {{ date_generated }}</li>
+</ul>
+
+<div id="images">
+  {% for file in files %}
+  <img src="{{ img_url }}/{{ user_id }}/{{ file }}" />
+  {% endfor %}
+</div>
+
 {% endblock %}
 

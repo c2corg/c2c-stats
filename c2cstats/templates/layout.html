@@ -1,26 +1,54 @@
 <!doctype html>
 <html>
   <head>
-    <title>C2C stats</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="utf-8">
+    <title>Statistiques - Camptocamp.org</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+    <!-- Mobile Specific Metas
+         ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!-- CSS
+         ================================================== -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Favicons
+	 ================================================== -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+    <!-- <script src="{{ url_for('static', filename='js/libs/modernizr-2.0.6.min.js') }}"></script> -->
   </head>
   <body>
-    <div class="page">
-      <h1>{% block title %}{% endblock %}</h1>
+    <div class="container">
+      <div class="twelve columns offset-by-two">
+        <h1>{% block title %}{% endblock %}</h1>
 
-      <nav>
-        <a href="{{ url_for('index') }}">index</a>
-      </nav>
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="{{ category }}">{{ message }}</div>
+        {% endfor %}
 
-      {% for category, message in get_flashed_messages(with_categories=true) %}
-      <div class="{{ category }}">{{ message }}</div>
-      {% endfor %}
+        {% block body %}{% endblock %}
 
-      {% block body %}{% endblock %}
-
-      <!-- <footer> -->
-      <!--   plop {% block gentime %}{% endblock %} -->
-      <!-- </footer> -->
+        <!-- <footer> -->
+        <!--   plop {% block gentime %}{% endblock %} -->
+        <!-- </footer> -->
+      </div>
     </div>
+    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script> -->
+    <!-- <script>window.jQuery || document.write('<script src="js/libs/jquery-1.6.2.min.js"><\/script>')</script> -->
+
+    <!-- <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script> -->
+    <!-- <script src="javascripts/tabs.js"></script> -->
   </body>
 </html>
