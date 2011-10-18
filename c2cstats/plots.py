@@ -52,6 +52,36 @@ colors_list = ['#D73027', '#FC8D59', '#FEE090', '#FFFFBF', '#E0F3F8',
 colors_iter = itertools.cycle(colors_list)
 
 
+def barplot(x, values, xlabel, xticklabels, filename, xticks_offset=0.4,
+            color=colors_list[1], remove_axes=True, rotate_xticks=False):
+    "Make a bar plot"
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+
+    ax.bar(x, values, color=color)
+    ax.set_xlabel(xlabel)
+    ax.set_xticks(x + xticks_offset)
+    ax.set_xticklabels(xticklabels)
+
+    if remove_axes:
+        # Remove the surrounding lines from the plot
+        for loc, spine in ax.spines.iteritems():
+            if loc in ['right', 'top']:
+                spine.set_color('none')
+
+        # Display ticks only at the bottom and left
+        ax.xaxis.set_ticks_position('none')
+        ax.yaxis.set_ticks_position('left')
+
+        # Switch the position of the ticks to be outside the axes
+        ax.tick_params(axis='y', direction='out')
+
+    if rotate_xticks:
+        ax.autofmt_xdate(rotation=45)
+
+    plt.savefig(filename, transparent=True)
+
+
 def remove_axes(func):
     "Remove right and top axes and save fig"
     @wraps(func)
@@ -199,12 +229,9 @@ class Plots:
         plt.title(u'Répartition par région')
         plt.savefig(self.get_filepath('regions'), transparent=True)
 
-    @remove_axes
+
     def plot_cot_globale(self, filename, activity=''):
         "Hist plot for cot_globale"
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
 
         xlabel = u'Cotation globale'
         cot = np.copy(self.data.cot_globale)
@@ -222,10 +249,8 @@ class Plots:
         counts = [c[k] for k in COTATION_GLOBALE]
         x = np.arange(len(counts))
 
-        ax.bar(x, counts, color=self.barcolor)
-        ax.set_xlabel(xlabel)
-        ax.set_xticks(x+0.4)
-        ax.set_xticklabels(COTATION_GLOBALE)
+        barplot(x, counts, xlabel, COTATION_GLOBALE, self.get_filepath(filename))
+
 
     @remove_axes
     def plot_cot_globale_per_activity(self, filename):
@@ -280,44 +305,27 @@ class Plots:
         fig = plt.gcf()
         fig.autofmt_xdate(rotation=45)
 
-    @remove_axes
+
     def plot_cot_glace(self, filename):
         "Hist plot for cot_glace"
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
 
         x = np.arange(len(COTATION_GLACE))
         c = Counter(self.data.cot_glace)
         counts = [c[k] for k in COTATION_GLACE]
+        barplot(x, counts, u'Cotation glace', COTATION_GLACE, self.get_filepath(filename))
 
-        ax.bar(x, counts, color=self.barcolor)
-        ax.set_xlabel(u'Cotation glace')
-        ax.set_xticks(x + 0.4)
-        ax.set_xticklabels(COTATION_GLACE)
 
-    @remove_axes
     def plot_cot_rando(self, filename):
         "Hist plot for cot_rando"
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
 
         x = np.arange(len(COTATION_RANDO))
         c = Counter(self.data.cot_rando)
         counts = [c[k] for k in COTATION_RANDO]
+        barplot(x, counts, u'Cotation rando', COTATION_RANDO, self.get_filepath(filename))
 
-        ax.bar(x, counts, color=self.barcolor)
-        ax.set_xlabel(u'Cotation rando')
-        ax.set_xticks(x + 0.4)
-        ax.set_xticklabels(COTATION_RANDO)
 
-    @remove_axes
     def plot_gain(self, filename, activity=''):
         "Hist plot for gain"
-
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
 
         xlabel = u'Dénivelé'
         gain = np.copy(self.data.gain)
@@ -336,13 +344,9 @@ class Plots:
             ind = (year == i)
             counts.append(np.sum(gain[ind]))
 
-        ax.bar(self.year_uniq, counts, color=self.barcolor)
-        ax.set_xlabel(xlabel)
-        ax.set_xticks(self.year_uniq + 0.4)
-        ax.set_xticklabels(self.year_labels)
+        barplot(self.year_uniq, counts, xlabel, self.year_labels,
+                self.get_filepath(filename))
 
-        fig = plt.gcf()
-        fig.autofmt_xdate(rotation=45)
 
     @remove_axes
     def plot_gain_cumul(self, filename, activity=''):
