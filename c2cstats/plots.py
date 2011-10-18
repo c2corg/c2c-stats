@@ -82,6 +82,17 @@ def barplot(x, values, xlabel, xticklabels, filename, xticks_offset=0.4,
     plt.savefig(filename, transparent=True)
 
 
+def pieplot(values, labels, title, filename):
+    "Make a pie plot"
+    explode = np.zeros(len(values)) + 0.05
+    plt.figure()
+    plt.pie(values, labels=labels, explode=explode, shadow=True,
+            autopct='%d', colors=colors_list)
+    plt.title(title)
+    plt.savefig(filename, transparent=True)
+
+
+
 def remove_axes(func):
     "Remove right and top axes and save fig"
     @wraps(func)
@@ -201,15 +212,12 @@ class Plots:
         # plt.plot_date(d, np.ones(100))
         # plt.savefig(self.get_filepath('timeline'), transparent=True)
 
+
     def plot_activity(self):
         "Pie plot for activities"
+        pieplot(self.act_count.values(), self.act_count.keys(),
+                u'Répartition par activité', self.get_filepath('activities'))
 
-        explode = np.zeros(len(self.act_count)) + 0.05
-        plt.figure()
-        plt.pie(self.act_count.values(), labels=self.act_count.keys(),
-                explode=explode, shadow=True, autopct='%d', colors=colors_list)
-        plt.title(u'Répartition par activité')
-        plt.savefig(self.get_filepath('activities'), transparent=True)
 
     def plot_area(self):
         "Pie plot for areas"
@@ -221,13 +229,8 @@ class Plots:
         labels.append(u'Autres')
         counts.append(sum(c.values()) - sum(counts))
 
-        explode = np.zeros(len(counts)) + 0.05
-
-        plt.figure()
-        plt.pie(counts, labels=labels, explode=explode, shadow=True,
-                autopct='%d', colors=colors_list)
-        plt.title(u'Répartition par région')
-        plt.savefig(self.get_filepath('regions'), transparent=True)
+        pieplot(counts, labels, u'Répartition par région',
+                self.get_filepath('regions'))
 
 
     def plot_cot_globale(self, filename, activity=''):
@@ -352,9 +355,6 @@ class Plots:
     def plot_gain_cumul(self, filename, activity=''):
         "Cumulative plot per year for gain"
 
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-
         xlabel = u'Dénivelé'
         gain = np.copy(self.data.gain)
         date = np.copy(self.data.date)
@@ -371,6 +371,9 @@ class Plots:
 
         month = np.array([i.split()[1] for i in date])
         year = np.array([int(i.split()[2]) for i in date])
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
 
         for y in self.year_uniq:
             ind = (year == y)
