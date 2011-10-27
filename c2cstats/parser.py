@@ -37,6 +37,12 @@ class Outings:
         self.user_id = str(user_id)
         self.parse_outings()
 
+    @property
+    def activities(self):
+        acts = np.unique(self.activity)
+        ind = (acts != u'')
+        return acts[ind]
+
     def parse_outings(self):
         pagenb = 1
         url = get_outings_url(self.user_id, pagenb)
