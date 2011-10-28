@@ -92,6 +92,36 @@ def pieplot(values, labels, title, filename):
     plt.savefig(filename, transparent=True)
 
 
+def barstacked(data, bins, labels, xlabel, ylabel, filename):
+    "Barstacked plot."
+    fig = plt.figure()
+    ax = plt.axes([0.1, 0.3, 0.9, 0.7])
+    ax.hist(data, len(bins), histtype='barstacked', label=labels,
+            range=(bins[0]-0.5, bins[-1]+0.5), color=colors_list[0:len(labels)])
+    ax.set_ylabel()
+    ax.set_xticks(bins)
+    ax.set_xticklabels(xlabel)
+
+    # Put a legend below current axis
+    leg = ax.legend(loc='upper center', bbox_to_anchor=(0.45, -0.07),
+                    frameon=False, ncol=2, mode="expand")
+
+    # rotate and align the tick labels so they look better
+    ax.autofmt_xdate(rotation=45)
+
+    # Remove the surrounding lines from the plot
+    for loc, spine in ax.spines.iteritems():
+        if loc in ['right', 'top']:
+            spine.set_color('none')
+
+    # Display ticks only at the bottom and left
+    ax.xaxis.set_ticks_position('none')
+    ax.yaxis.set_ticks_position('left')
+
+    # Switch the position of the ticks to be outside the axes
+    ax.tick_params(axis='y', direction='out')
+    plt.savefig(filename, transparent=True)
+
 
 def remove_axes(func):
     "Remove right and top axes and save fig"
