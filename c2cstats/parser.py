@@ -41,7 +41,7 @@ class Outings:
     def activities(self):
         acts = np.unique(self.activity)
         ind = (acts != u'')
-        return acts[ind]
+        return list(acts[ind])
 
     def parse_outings(self):
         pagenb = 1
