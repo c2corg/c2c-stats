@@ -25,7 +25,7 @@ Statistiques pour l'utilisateur {{ user_id }}
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 <script>
-var jsonurl = "/images/test.json";
+var jsonurl = "{{ json_url }}";
 
 $(document).ready(function(){
     $.getJSON(jsonurl, renderplot);
