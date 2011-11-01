@@ -7,8 +7,6 @@ import urlparse
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
-from datetime import datetime
-
 from c2cstats.parser import Outings, ParserError
 from c2cstats.generators import generate_json
 
@@ -51,11 +49,6 @@ def show_user_stats(user_id):
         except ParserError:
             flash('Error while loading page', 'error')
             return redirect(url_for('index'))
-
-    # context['nboutings'] = data.nboutings
-
-    d = datetime.now()
-    context['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
 
     return render_template('user.html', **context)
 

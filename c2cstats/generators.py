@@ -5,6 +5,7 @@ import os
 import json
 import numpy as np
 from collections import Counter
+from datetime import datetime
 from c2cstats.parser import Outings, ParserError
 
 ACT_SHORT = { u'alpinisme neige, glace, mixte': 'Alpinisme',
@@ -28,7 +29,8 @@ def generate_json(user_id, filename):
     act_long = dict([(v, k) for k,v in ACT_SHORT.items()])
 
     act_list = [ACT_SHORT[i] for i in data.activities]
-    ctx = { 'Activities': act_list }
+    ctx = { 'Activities': act_list,
+            'nb_outings': data.nboutings }
 
     g = Global(data)
     ctx['global'] = { 'count_per_activity': g.count_per_activity,
@@ -39,6 +41,10 @@ def generate_json(user_id, filename):
         d = globals()[act](data)
         ctx[act] = { 'full_name': act_long[act],
                      'cotation': getattr(d, 'cotation', []) }
+
+    d = datetime.now()
+    ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
+    ctx['generation_time'] = 0 # TODO
 
     with open(filename, 'w') as f:
         json.dump(ctx, f)

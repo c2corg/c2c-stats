@@ -26,6 +26,8 @@ function renderplot(data) {
         $("#chart1").html(getLoadText('Error retrieving data', 0));
         return 1;
     }
+    $("#nb_outings").text(data.nb_outings);
+    $("#date_generated").text(data.date_generated);
     plot_cotation(data.Rando, 'cotation_rando');
     plot_cotation(data.Glace, 'cotation_glace');
 }
