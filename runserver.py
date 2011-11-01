@@ -10,8 +10,8 @@ if app.config['DEBUG']:
     from werkzeug import SharedDataMiddleware
     import os
     app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-      app.config['IMG_URL']: os.path.join(os.path.dirname(__file__),
-                                          app.config['IMG_DIR'])
+      app.config['FILES_URL']: os.path.join(os.path.dirname(__file__),
+                                            app.config['FILES_DIR'])
     })
 
 with app.test_request_context():

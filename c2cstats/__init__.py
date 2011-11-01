@@ -15,8 +15,8 @@ from flask import Flask, request, g, redirect, url_for, \
 
 # configuration
 SECRET_KEY = 'development key'
-IMG_DIR = '_output'
-IMG_URL = '/images'
+FILES_DIR = '_output'
+FILES_URL = '/files'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -35,11 +35,11 @@ def user_index():
 def show_user_stats(user_id):
     user_id = str(user_id)
 
-    data_dir = app.config['IMG_DIR']
+    data_dir = app.config['FILES_DIR']
     json_file = os.path.join(data_dir, user_id + '.json')
 
     context = {
-        'json_url': app.config['IMG_URL'] + '/' + user_id + '.json',
+        'json_url': app.config['FILES_URL'] + '/' + user_id + '.json',
         'user_id': user_id,
         }
 
