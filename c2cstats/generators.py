@@ -8,13 +8,13 @@ from collections import Counter
 from datetime import datetime
 from c2cstats.parser import Outings, ParserError
 
-ACT_SHORT = { u'alpinisme neige, glace, mixte': 'Alpinisme',
-              u'cascade de glace': 'Glace',
-              u'escalade': 'Escalade',
-              u'rocher haute montagne': 'Rocher',
-              u'ski, surf': 'Ski',
-              u'raquette': 'Raquette',
-              u'randonnée pédestre': 'Rando'}
+ACT_SHORT = { u'alpinisme neige, glace, mixte': 'alpinisme',
+              u'cascade de glace': 'glace',
+              u'escalade': 'escalade',
+              u'rocher haute montagne': 'rocher',
+              u'ski, surf': 'ski',
+              u'raquette': 'raquette',
+              u'randonnée pédestre': 'rando'}
 
 
 def generate_json(user_id, filename):
@@ -29,7 +29,7 @@ def generate_json(user_id, filename):
     act_long = dict([(v, k) for k,v in ACT_SHORT.items()])
 
     act_list = [ACT_SHORT[i] for i in data.activities]
-    ctx = { 'Activities': act_list,
+    ctx = { 'activities': act_list,
             'nb_outings': data.nboutings }
 
     g = Global(data)
@@ -38,7 +38,7 @@ def generate_json(user_id, filename):
                       'count_per_area': g.count_per_area }
 
     for act in act_list:
-        d = globals()[act](data)
+        d = globals()[act.title()](data)
         ctx[act] = { 'full_name': act_long[act],
                      'cotation': getattr(d, 'cotation', []) }
 

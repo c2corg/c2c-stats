@@ -28,6 +28,6 @@ function renderplot(data) {
     }
     $("#nb_outings").text(data.nb_outings);
     $("#date_generated").text(data.date_generated);
-    plot_cotation(data.Rando, 'cotation_rando');
-    plot_cotation(data.Glace, 'cotation_glace');
+    plot_cotation(data.rando, 'cotation_rando');
+    plot_cotation(data.glace, 'cotation_glace');
 }
