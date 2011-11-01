@@ -30,6 +30,11 @@ def generate_json(user_id, filename):
     act_list = [ACT_SHORT[i] for i in data.activities]
     ctx = { 'Activities': act_list }
 
+    g = Global(data)
+    ctx['global'] = { 'count_per_activity': g.count_per_activity,
+                      'count_per_year_and_activity': g.count_per_year_and_activity,
+                      'count_per_area': g.count_per_area }
+
     for act in act_list:
         d = globals()[act](data)
         ctx[act] = { 'full_name': act_long[act],
@@ -129,6 +134,10 @@ class Escalade(Generator):
         Generator.__init__(self, *args, **kwargs)
 
     @property
+    def cotation(self):
+        return self.cot_libre
+
+    @property
     def cot_libre(self):
         c1 = Counter(self.data.cot_libre)
         return [c1[k] for k in self.COTATION_REF]
@@ -174,9 +183,6 @@ class Rando(Generator):
 
 
 class Alpinisme(Generator):
-    pass
-
-class Escalade(Generator):
     pass
 
 class Raquette(Generator):
