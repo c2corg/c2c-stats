@@ -23,11 +23,17 @@ function plot_cotation(data, chartdiv) {
 
 function renderplot(data) {
     if (data === null || data.length === 0) {
-        $("#chart1").html(getLoadText('Error retrieving data', 0));
+        $("#charts").html('Error retrieving data');
         return 1;
     }
     $("#nb_outings").text(data.nb_outings);
     $("#date_generated").text(data.date_generated);
-    plot_cotation(data.rando, 'cotation_rando');
-    plot_cotation(data.glace, 'cotation_glace');
+
+    $.each(data.activities, function(index, value) {
+        if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {
+            $("#charts").append('<div id="cotation_'+value+'" class="chart" style="margin:20px auto; width:400px; height:300px;"></div>')
+            plot_cotation(data[value], 'cotation_'+value);
+        }
+
+    });
 }
