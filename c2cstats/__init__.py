@@ -7,6 +7,7 @@ import urlparse
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
+from c2cstats.parser import ParserError
 from c2cstats.generators import generate_json
 
 from flask import Flask, request, g, redirect, url_for, \
@@ -43,8 +44,9 @@ def show_user_stats(user_id):
     if not os.path.isfile(json_file):
         try:
             generate_json(user_id, json_file)
+            flash(u'Les statistiques ont été calculées avec succés.')
         except ParserError:
-            flash('Error while loading page', 'error')
+            flash(u'Erreur lors du chargement de la page', 'error')
             return redirect(url_for('index'))
 
     return render_template('user.html', **context)
