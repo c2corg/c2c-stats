@@ -6,3 +6,15 @@ h1 {
 #main_form input {
   display: inline-block;
 }
+
+.chart {
+  margin: 2em auto;
+  width: 400px;
+  height: 300px;
+}
+
+.bigchart {
+  margin: 2em auto;
+  width: 600px;
+  height: 400px;
+}

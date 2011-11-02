@@ -35,7 +35,7 @@ def generate_json(user_id, filename):
     g = Global(data)
     ctx['global'] = { 'count_per_activity': g.count_per_activity,
                       'count_per_year_and_activity': g.count_per_year_and_activity,
-                      'count_per_area': g.count_per_area }
+                      'area': g.area }
 
     for act in act_list:
         d = globals()[act.title()](data)
@@ -114,17 +114,16 @@ class Global(Generator):
         return h
 
     @property
-    def count_per_area(self):
-        "Count number of outings per area"
-
+    def area(self):
+        "Count the number of outings per area"
         c = Counter(self.data.area)
         use = c.most_common(10)
-        labels = [k for k,v in use]
-        counts = [v for k,v in use]
-        labels.append(u'Autres')
-        counts.append(sum(c.values()) - sum(counts))
+        sum_use = sum(zip(*use)[1])
+        use.append((u'Autres', sum(c.values()) - sum_use))
+        print use
 
-        return [counts, labels]
+        return { 'title': u'Répartition par région',
+                 'values': use }
 
 
 class Escalade(Generator):
