@@ -44,7 +44,7 @@ def show_user_stats(user_id):
     if not os.path.isfile(json_file):
         try:
             generate_json(user_id, json_file)
-            flash(u'Les statistiques ont été calculées avec succés.')
+            flash(u'Les statistiques ont été calculées avec succés.', 'success')
         except ParserError:
             flash(u'Erreur lors du chargement de la page', 'error')
             return redirect(url_for('index'))
