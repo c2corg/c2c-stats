@@ -3,8 +3,8 @@
  */
 
 
-function plot_area(data) {
-    var plot1 = jQuery.jqplot ('chart_area', [data.values], {
+function plot_pie(data, chartdiv) {
+    var plot1 = jQuery.jqplot (chartdiv, [data.values], {
         title: data.title,
         seriesDefaults: {
             // Make this a pie chart.
@@ -46,7 +46,8 @@ function renderplot(data) {
     $("#nb_outings").text(data.nb_outings);
     $("#date_generated").text(data.date_generated);
 
-    plot_area(data.global.area);
+    plot_pie(data.global.activities, 'chart_activities');
+    plot_pie(data.global.area, 'chart_area');
 
     $.each(data.activities, function(index, value) {
         if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {

@@ -33,8 +33,8 @@ def generate_json(user_id, filename):
             'nb_outings': data.nboutings }
 
     g = Global(data)
-    ctx['global'] = { 'count_per_activity': g.count_per_activity,
-                      'count_per_year_and_activity': g.count_per_year_and_activity,
+    ctx['global'] = { 'activities': g.activities,
+                      'activities_per_year': g.activities_per_year,
                       'area': g.area }
 
     for act in act_list:
@@ -99,12 +99,14 @@ class Global(Generator):
         Generator.__init__(self, *args, **kwargs)
 
     @property
-    def count_per_activity(self):
+    def activities(self):
         "Count number of outings per activity"
-        return Counter(self.data.activity)
+        c = Counter(self.data.activity)
+        return { 'title': u'Répartition par activité',
+                 'values': c.items() }
 
     @property
-    def count_per_year_and_activity(self):
+    def activities_per_year(self):
         "Compute the number of outings per year and per activity"
         h = []
         for i in self.data.activities:
