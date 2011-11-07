@@ -9,12 +9,12 @@ from datetime import datetime
 from c2cstats.parser import Outings, ParserError
 
 ACT_SHORT = { u'alpinisme neige, glace, mixte': 'alpinisme',
-              u'cascade de glace': 'glace',
               u'escalade': 'escalade',
-              u'rocher haute montagne': 'rocher',
-              u'ski, surf': 'ski',
+              u'cascade de glace': 'glace',
+              u'randonnée pédestre': 'rando',
               u'raquette': 'raquette',
-              u'randonnée pédestre': 'rando'}
+              u'rocher haute montagne': 'rocher',
+              u'ski, surf': 'ski' }
 
 
 def generate_json(user_id, filename):
@@ -29,7 +29,7 @@ def generate_json(user_id, filename):
     act_long = dict([(v, k) for k,v in ACT_SHORT.items()])
 
     act_list = [ACT_SHORT[i] for i in data.activities]
-    ctx = { 'activities': act_list,
+    ctx = { 'activities': sorted(act_list),
             'nb_outings': data.nboutings }
 
     g = Global(data)
@@ -39,7 +39,7 @@ def generate_json(user_id, filename):
 
     for act in act_list:
         d = globals()[act.title()](data)
-        ctx[act] = { 'full_name': act_long[act],
+        ctx[act] = { 'full_name': act_long[act].title(),
                      'cotation': getattr(d, 'cotation', []) }
 
     d = datetime.now()
