@@ -15,7 +15,11 @@ function plot_pie(data, chartdiv) {
                 showDataLabels: true
             }
         },
-        legend: { show:true, location: 'e' }
+        legend: {
+            show:true,
+            location: 'e',
+            placement: 'outside'
+        }
     });
 }
 

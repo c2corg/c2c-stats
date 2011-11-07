@@ -49,10 +49,12 @@ h1 {
 }
 
 /* fixes for bootstrap */
-#charts table {
-  width: auto;
-}
+/* #charts table { width: auto; } */
 #charts table th, #charts table td {
   border: 0;
   padding: 0;
+}
+
+table.jqplot-table-legend {
+  width: 160px;
 }
