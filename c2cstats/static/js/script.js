@@ -11,10 +11,13 @@ function plot_pie(raw, chartdiv) {
 
     $.plot($(chartdiv), data, {
 	series: {
-	    pie: {
-		show: true
-	    }
-	},
+            pie: {
+                show: true,
+	    },
+        },
+        legend: {
+            show: false
+        },
         grid: {
             hoverable: true,
             clickable: true
@@ -28,15 +31,22 @@ function plot_cotation(raw, chartdiv) {
         data.push([index, value]);
     });
 
+    var labels = [];
+    $.each(raw.cotation.labels, function(index, value) {
+        labels.push([index+0.5, value]);
+    });
+
     $.plot($(chartdiv), [data], {
         series: {
             bars: { show: true },
         },
         xaxis: {
-            ticks: raw.cotation.labels
+            show: true,
+            ticks: labels,
         },
         grid: {
-            hoverable: true
+            hoverable: true,
+            backgroundColor: { colors: ["#fff", "#eee"] }
         },
     });
 }
