@@ -3,41 +3,41 @@
  */
 
 
-function plot_pie(data, chartdiv) {
-    var plot1 = jQuery.jqplot (chartdiv, [data.values], {
-        title: data.title,
-        seriesDefaults: {
-            // Make this a pie chart.
-            renderer: jQuery.jqplot.PieRenderer,
-            rendererOptions: {
-                // Put data labels on the pie slices.
-                // By default, labels show the percentage of the slice.
-                showDataLabels: true
-            }
-        },
-        legend: {
-            show:true,
-            location: 'e',
-            placement: 'outside'
+function plot_pie(raw, chartdiv) {
+    var data = [];
+    $.each(raw.values, function(index, value) {
+        data.push({label: value[0],  data: value[1]});
+    });
+
+    $.plot($(chartdiv), data, {
+	series: {
+	    pie: {
+		show: true
+	    }
+	},
+        grid: {
+            hoverable: true,
+            clickable: true
         }
     });
 }
 
-function plot_cotation(data, chartdiv) {
-    plo12 = $.jqplot(chartdiv, [data.cotation.values], {
-        title: data.cotation.title,
-        seriesDefaults:{
-            renderer:$.jqplot.BarRenderer,
-            //pointLabels: { show: true },
-            //showMarker: false
+function plot_cotation(raw, chartdiv) {
+    var data = [];
+    $.each(raw.cotation.values, function(index, value) {
+        data.push([index, value]);
+    });
+
+    $.plot($(chartdiv), [data], {
+        series: {
+            bars: { show: true },
         },
-        axes: {
-            xaxis: {
-                renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: data.cotation.labels
-            }
+        xaxis: {
+            ticks: raw.cotation.labels
         },
-        highlighter: { show: false }
+        grid: {
+            hoverable: true
+        },
     });
 }
 
@@ -50,13 +50,13 @@ function renderplot(data) {
     $("#nb_outings").text(data.nb_outings);
     $("#date_generated").text(data.date_generated);
 
-    plot_pie(data.global.activities, 'chart_activities');
-    plot_pie(data.global.area, 'chart_area');
+    plot_pie(data.global.activities, '#chart_activities');
+    plot_pie(data.global.area, '#chart_area');
 
     $.each(data.activities, function(index, value) {
         if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {
-            $("#charts").append('<div id="cotation_'+value+'" class="chart"></div>')
-            plot_cotation(data[value], 'cotation_'+value);
+            $("#charts").append('<div id="cotation_'+value+'" class="chart"></div>');
+            plot_cotation(data[value], '#cotation_'+value);
         }
 
     });

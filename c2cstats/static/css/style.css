@@ -38,8 +38,8 @@ h1 {
 
 .chart {
   margin: 2em auto;
-  width: 400px;
-  height: 300px;
+  width: 600px;
+  height: 400px;
 }
 
 .bigchart {
@@ -55,6 +55,6 @@ h1 {
   padding: 0;
 }
 
-table.jqplot-table-legend {
-  width: 160px;
+#charts table {
+  width: auto;
 }
