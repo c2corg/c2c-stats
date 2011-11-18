@@ -139,10 +139,8 @@ class Global(Generator):
 
 class Escalade(Generator):
 
-    COTATION_REF = ('3a', '3b', '3c', '4a', '4b', '4c', '5a', '5a+', '5b',
-                '5b+', '5c', '5c+', '6a', '6a+', '6b', '6b+', '6c',
-                '6c+', '7a', '7a+', '7b', '7b+', '7c', '7c+', '8a')
-    # '2', '8a+', '8b', '8b+', '8c', '8c+', '9a', '9a+', '9b', '9b+'
+    COTATION_REF = ('3a', '3b', '3c', '4a', '4b', '4c', '5a', '5b',
+                    '5c', '6a', '6b', '6c', '7a', '7b', '7c', '8a')
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
@@ -157,7 +155,9 @@ class Escalade(Generator):
 
     @property
     def cot_libre(self):
-        c1 = Counter(self.data.cot_libre)
+        remove_plus = lambda x: x.replace('+','')
+        vrem = np.vectorize(remove_plus)
+        c1 = Counter(vrem(self.data.cot_libre))
         return [c1[k] for k in self.COTATION_REF]
 
     @property
