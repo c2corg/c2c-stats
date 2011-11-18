@@ -3,6 +3,7 @@
 
 import os
 import json
+import time
 import numpy as np
 from collections import Counter
 from datetime import datetime
@@ -24,8 +25,11 @@ def generate_json(user_id, filename):
     - `filename`:
     - `user_id`:
     """
+
+    t0 = time.time()
     data = Outings(user_id)
 
+    t1 = time.time()
     act_long = dict([(v, k) for k,v in ACT_SHORT.items()])
 
     act_list = [ACT_SHORT[i] for i in data.activities]
@@ -45,6 +49,11 @@ def generate_json(user_id, filename):
     d = datetime.now()
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
     ctx['generation_time'] = 0 # TODO
+
+    ctx['download_time'] = '{:.2}'.format(data.download_time)
+    ctx['parse_time'] = '{:.2}'.format(data.parse_time)
+    ctx['generation_time'] = '{:.3}'.format(time.time() - t1)
+    ctx['total_time'] = '{:.2}'.format(time.time() - t0)
 
     with open(filename, 'w') as f:
         json.dump(ctx, f)

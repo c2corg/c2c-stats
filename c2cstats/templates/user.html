@@ -7,8 +7,14 @@ Statistiques pour l'utilisateur {{ user_id }}
 
 {% block body %}
 
-<p>Graphiques générés le <span id="date_generated"></span>, à partir
-de <span id="nb_outings"></span> sorties.</p>
+<p>Graphiques générés le <span id="date_generated"></span> à partir de <span
+id="nb_outings"></span> sorties.</p>
+<ul>
+  <li>Temps de téléchargement: <span id="download_time"></span> sec.</li>
+  <li>Temps pour le parser: <span id="parse_time"></span> sec.</li>
+  <li>Temps pour le calcul: <span id="generation_time"></span> sec.</li>
+  <li>Temps total: <span id="total_time"></span> sec.</li>
+</ul>
 
 <div id="charts">
   <div id="chart_activities" class="chart"></div>

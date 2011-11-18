@@ -18,6 +18,7 @@
 # along with this program; If not, see http://www.gnu.org/licenses/
 
 import json
+import time
 import urllib
 import numpy as np
 from BeautifulSoup import BeautifulSoup
@@ -48,7 +49,10 @@ class Outings:
         url = get_outings_url(self.user_id, pagenb)
 
         print "Get %s ..." % url
+        t0 = time.time()
         page, headers = get_page(url)
+        self.download_time = time.time() - t0
+
         soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
         nbout = soup.p.findAll('b')
 
@@ -77,7 +81,9 @@ class Outings:
         self.equipement = np.zeros(self.nboutings, dtype=np.dtype('U2'))
         self.exposition = np.zeros(self.nboutings, dtype=np.dtype('U2'))
 
+        t0 = time.time()
         self.parse_outings_list(page, pagenb)
+        self.parse_time = time.time() - t0
 
         # parse other pages if nboutings > 100
         nbtemp = self.nboutings - 100
@@ -85,9 +91,15 @@ class Outings:
             pagenb += 1
             nbtemp -= 100
             url = get_outings_url(self.user_id, pagenb)
+
             print "Get %s ..." % url
+            t0 = time.time()
             page, headers = get_page(url)
+            self.download_time += time.time() - t0
+
+            t0 = time.time()
             self.parse_outings_list(page, pagenb)
+            self.parse_time += time.time() - t0
 
         self.area = np.array(self.area)
         print "Found %d outings" % self.nboutings
