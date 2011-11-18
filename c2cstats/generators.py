@@ -131,8 +131,6 @@ class Global(Generator):
         use = c.most_common(10)
         sum_use = sum(zip(*use)[1])
         use.append((u'Autres', sum(c.values()) - sum_use))
-        print use
-
         return { 'title': u'Répartition par région',
                  'values': use }
 
