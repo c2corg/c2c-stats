@@ -9,11 +9,10 @@ function plot_pie(raw, chartdiv) {
         data.push({label: value[0],  data: value[1]});
     });
 
+    $(chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
     $.plot($(chartdiv), data, {
 	series: {
-            pie: {
-                show: true,
-	    },
+            pie: { show: true },
         },
         legend: {
             show: false
@@ -36,6 +35,7 @@ function plot_cotation(raw, chartdiv) {
         labels.push([index+0.5, value]);
     });
 
+    $(chartdiv).before('<h2 class="chart_title">'+raw.cotation.title+'</h2>');
     $.plot($(chartdiv), [data], {
         series: {
             bars: { show: true },
