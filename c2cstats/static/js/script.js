@@ -82,7 +82,8 @@ function plot_cotation_globale_per_activity(data) {
         },
         grid: {
             hoverable: true,
-            clickable: true
+            clickable: true,
+            backgroundColor: { colors: ["#fff", "#eee"] }
         }
     });
 
