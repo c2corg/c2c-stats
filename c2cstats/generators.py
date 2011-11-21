@@ -17,6 +17,9 @@ ACT_SHORT = { u'alpinisme neige, glace, mixte': 'alpinisme',
               u'rocher haute montagne': 'rocher',
               u'ski, surf': 'ski' }
 
+COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
+                    'D+', 'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+')
+
 
 def generate_json(user_id, filename):
     """Generate a json file with all computed data.
@@ -39,7 +42,8 @@ def generate_json(user_id, filename):
     g = Global(data)
     ctx['global'] = { 'activities': g.activities,
                       'activities_per_year': g.activities_per_year,
-                      'area': g.area }
+                      'area': g.area,
+                      'cotation_globale': g.cotation_globale }
 
     for act in act_list:
         d = globals()[act.title()](data)
@@ -60,8 +64,10 @@ def generate_json(user_id, filename):
 
 
 class Generator:
+
     def __init__(self, data):
         self.data = data
+        self.activity = ''
 
         self.year = np.array([int(i.split()[2]) for i in self.data.date])
         self.year_uniq = np.unique(self.year)
@@ -75,15 +81,19 @@ class Generator:
         return arr_filtered
 
 
-    def cot_globale(self, activity=''):
+    @property
+    def cotation_globale(self):
         "Count number of outings per bin of cot_globale"
 
-        if activity:
-            c = Counter(filter_activity(self.data.cot_globale, activity))
+        if self.activity:
+            c = Counter(self.filter_activity(self.data.cot_globale,
+                                             self.activity))
         else:
             c = Counter(self.data.cot_globale)
 
-        return [c[k] for k in COTATION_GLOBALE]
+        return { 'title': u'Cotation globale',
+                 'labels': COTATION_GLOBALE,
+                 'values': [c[k] for k in COTATION_GLOBALE] }
 
 
     def gain_per_year(self):
@@ -104,6 +114,7 @@ class Generator:
 
 
 class Global(Generator):
+
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
 
@@ -142,14 +153,13 @@ class Escalade(Generator):
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
+        self.activity = 'escalade'
 
     @property
     def cotation(self):
-        return {
-            'title': u'Cotation escalade',
-            'labels': self.COTATION_REF,
-            'values': self.cot_libre
-            }
+        return { 'title': u'Cotation escalade',
+                 'labels': self.COTATION_REF,
+                 'values': self.cot_libre }
 
     @property
     def cot_libre(self):
@@ -170,15 +180,14 @@ class Glace(Generator):
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
+        self.activity = u'cascade de glace'
 
     @property
     def cotation(self):
         c = Counter(self.data.cot_glace)
-        return {
-            'title': u'Cotation glace',
-            'labels': self.COTATION_REF,
-            'values': [c[k] for k in self.COTATION_REF]
-            }
+        return { 'title': u'Cotation glace',
+                 'labels': self.COTATION_REF,
+                 'values': [c[k] for k in self.COTATION_REF] }
 
 
 class Rando(Generator):
@@ -187,15 +196,14 @@ class Rando(Generator):
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
+        self.activity = u'randonnée pédestre'
 
     @property
     def cotation(self):
         c = Counter(self.data.cot_rando)
-        return {
-            'title': u'Cotation rando',
-            'labels': self.COTATION_REF,
-            'values': [c[k] for k in self.COTATION_REF]
-            }
+        return { 'title': u'Cotation rando',
+                 'labels': self.COTATION_REF,
+                 'values': [c[k] for k in self.COTATION_REF] }
 
 
 class Alpinisme(Generator):

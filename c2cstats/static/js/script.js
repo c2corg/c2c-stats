@@ -26,16 +26,16 @@ function plot_pie(raw, chartdiv) {
 
 function plot_cotation(raw, chartdiv) {
     var data = [];
-    $.each(raw.cotation.values, function(index, value) {
+    $.each(raw.values, function(index, value) {
         data.push([index, value]);
     });
 
     var labels = [];
-    $.each(raw.cotation.labels, function(index, value) {
+    $.each(raw.labels, function(index, value) {
         labels.push([index+0.5, value]);
     });
 
-    $(chartdiv).before('<h2 class="chart_title">'+raw.cotation.title+'</h2>');
+    $(chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
     $.plot($(chartdiv), [data], {
         series: {
             bars: { show: true },
@@ -66,12 +66,12 @@ function renderplot(data) {
 
     plot_pie(data.global.activities, '#chart_activities');
     plot_pie(data.global.area, '#chart_area');
+    plot_cotation(data.global.cotation_globale, '#chart_cot_globale');
 
     $.each(data.activities, function(index, value) {
         if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {
             $("#charts").append('<div id="cotation_'+value+'" class="chart"></div>');
-            plot_cotation(data[value], '#cotation_'+value);
+            plot_cotation(data[value].cotation, '#cotation_'+value);
         }
-
     });
 }
