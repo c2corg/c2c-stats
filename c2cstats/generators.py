@@ -43,7 +43,8 @@ def generate_json(user_id, filename):
     ctx['global'] = { 'activities': g.activities,
                       'activities_per_year': g.activities_per_year,
                       'area': g.area,
-                      'cotation_globale': g.cotation_globale }
+                      # 'cotation_globale': g.cotation_globale
+                      }
 
     cotg_per_act = { 'title': u'Cotation globale par activité',
                      'xlabels': COTATION_GLOBALE,
@@ -74,11 +75,20 @@ def generate_json(user_id, filename):
         json.dump(ctx, f)
 
 
+def remove_plus(nparray):
+    "Remove '+' for all elements of the numpy array `nparray`"
+    l = lambda x: x.replace('+','')
+    vrem = np.vectorize(l)
+    return vrem(nparray)
+
+
 class Generator:
 
     def __init__(self, data):
         self.data = data
         self.activity = ''
+        self.cotation_values = []
+        self.cotation_title = ''
 
         self.year = np.array([int(i.split()[2]) for i in self.data.date])
         self.year_uniq = np.unique(self.year)
@@ -90,6 +100,14 @@ class Generator:
         ind = (self.data.activity == activity)
         arr_filtered = arr_filtered[ind]
         return arr_filtered
+
+
+    @property
+    def cotation(self):
+        c = Counter(self.cotation_values)
+        return { 'title': self.cotation_title,
+                 'labels': self.COTATION_REF,
+                 'values': [c[k] for k in self.COTATION_REF] }
 
 
     @property
@@ -165,24 +183,8 @@ class Escalade(Generator):
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.activity = 'escalade'
-
-    @property
-    def cotation(self):
-        return { 'title': u'Cotation escalade',
-                 'labels': self.COTATION_REF,
-                 'values': self.cot_libre }
-
-    @property
-    def cot_libre(self):
-        remove_plus = lambda x: x.replace('+','')
-        vrem = np.vectorize(remove_plus)
-        c1 = Counter(vrem(self.data.cot_libre))
-        return [c1[k] for k in self.COTATION_REF]
-
-    @property
-    def cot_oblige(self):
-        c2 = Counter(self.data.cot_oblige)
-        return [c2[k] for k in self.COTATION_REF]
+        self.cotation_values = remove_plus(self.data.cot_libre)
+        self.cotation_title = u'Cotation escalade'
 
 
 class Glace(Generator):
@@ -192,13 +194,8 @@ class Glace(Generator):
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.activity = u'cascade de glace'
-
-    @property
-    def cotation(self):
-        c = Counter(self.data.cot_glace)
-        return { 'title': u'Cotation glace',
-                 'labels': self.COTATION_REF,
-                 'values': [c[k] for k in self.COTATION_REF] }
+        self.cotation_values = self.data.cot_glace
+        self.cotation_title = u'Cotation glace'
 
 
 class Rando(Generator):
@@ -208,13 +205,8 @@ class Rando(Generator):
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.activity = u'randonnée pédestre'
-
-    @property
-    def cotation(self):
-        c = Counter(self.data.cot_rando)
-        return { 'title': u'Cotation rando',
-                 'labels': self.COTATION_REF,
-                 'values': [c[k] for k in self.COTATION_REF] }
+        self.cotation_values = self.data.cot_rando
+        self.cotation_title = u'Cotation rando'
 
 
 class Alpinisme(Generator):
@@ -228,5 +220,3 @@ class Rocher(Generator):
 
 class Ski(Generator):
     pass
-
-
