@@ -2,6 +2,7 @@
 
  */
 
+barWidth = 0.6;
 
 function plot_pie(raw, chartdiv) {
     var data = [];
@@ -14,9 +15,7 @@ function plot_pie(raw, chartdiv) {
 	series: {
             pie: { show: true },
         },
-        legend: {
-            show: false
-        },
+        legend: { show: false },
         grid: {
             hoverable: true,
             clickable: true
@@ -32,13 +31,13 @@ function plot_cotation(raw, chartdiv) {
 
     var labels = [];
     $.each(raw.labels, function(index, value) {
-        labels.push([index+0.5, value]);
+        labels.push([index + barWidth/2., value]);
     });
 
     $(chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
     $.plot($(chartdiv), [data], {
         series: {
-            bars: { show: true },
+            bars: { show: true, barWidth: barWidth },
         },
         xaxis: {
             show: true,
@@ -49,6 +48,44 @@ function plot_cotation(raw, chartdiv) {
             backgroundColor: { colors: ["#fff", "#eee"] }
         },
     });
+}
+
+
+function plot_cotation_globale_per_activity(data) {
+    var d = [];
+    $.each(data.values, function(index, value) {
+        val = [];
+        $.each(value, function(index2, value2) {
+            val.push([index2, value2]);
+        });
+        d.push({
+            label: data.labels[index],
+            data: val
+        });
+    });
+
+    var labels = [];
+    $.each(data.xlabels, function(index, value) {
+        labels.push([index + barWidth/2., value]);
+    });
+
+    $('#chart_cot_globale').before('<h2 class="chart_title">'+data.title+'</h2>');
+    $.plot($('#chart_cot_globale'), d,  {
+	series: {
+            stack: true,
+            bars: { show: true, barWidth: barWidth }
+        },
+        legend: { show: true },
+        xaxis: {
+            show: true,
+            ticks: labels,
+        },
+        grid: {
+            hoverable: true,
+            clickable: true
+        }
+    });
+
 }
 
 function renderplot(data) {
@@ -66,7 +103,8 @@ function renderplot(data) {
 
     plot_pie(data.global.activities, '#chart_activities');
     plot_pie(data.global.area, '#chart_area');
-    plot_cotation(data.global.cotation_globale, '#chart_cot_globale');
+    // plot_cotation(data.global.cotation_globale, '#chart_cot_globale');
+    plot_cotation_globale_per_activity(data.global.cotation_per_activity);
 
     $.each(data.activities, function(index, value) {
         if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {

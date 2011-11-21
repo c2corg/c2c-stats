@@ -27,6 +27,7 @@ id="nb_outings"></span> sorties.</p>
 {% block footer %}
 <script src="{{ url_for('static', filename='js/libs/jquery.flot.js') }}"></script>
 <script src="{{ url_for('static', filename='js/libs/jquery.flot.pie.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/jquery.flot.stack.js') }}"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 <script>
@@ -37,3 +38,5 @@ $(document).ready(function(){
 });
 </script>
 {% endblock %}
+
+

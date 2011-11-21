@@ -45,10 +45,21 @@ def generate_json(user_id, filename):
                       'area': g.area,
                       'cotation_globale': g.cotation_globale }
 
-    for act in act_list:
+    cotg_per_act = { 'title': u'Cotation globale par activité',
+                     'xlabels': COTATION_GLOBALE,
+                     'labels': [],
+                     'values': [] }
+
+    for i, act in enumerate(act_list):
+        # call the class for the current activity
         d = globals()[act.title()](data)
         ctx[act] = { 'full_name': act_long[act].title(),
                      'cotation': getattr(d, 'cotation', []) }
+
+        cotg_per_act['values'].append(getattr(d, 'cotation_globale', [])['values'])
+        cotg_per_act['labels'].append(act_long[act].title())
+
+    ctx['global']['cotation_per_activity'] = cotg_per_act
 
     d = datetime.now()
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
