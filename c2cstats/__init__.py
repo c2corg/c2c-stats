@@ -48,6 +48,12 @@ def show_user_stats(user_id):
         except ParserError:
             flash(u'Erreur lors du chargement de la page', 'error')
             return redirect(url_for('index'))
+        except:
+            flash(u'Erreur, il y a un truc qui va pas ;-).', 'error')
+            if app.debug:
+                raise
+            else:
+                return redirect(url_for('index'))
 
     return render_template('user.html', **context)
 

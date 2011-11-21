@@ -130,7 +130,9 @@ class Outings:
             self.altitude[n] = t[4].text
             if t[5].text:
                 self.gain[n] = int(t[5].text[:-1])
-            self.area.append(t[9].a.text)
+
+            if t[9].text:
+                self.area.append(t[9].a.text)
 
             # keep only the first one for now
             if t[3].find('span', "printonly"):
