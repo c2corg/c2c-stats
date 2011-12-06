@@ -189,7 +189,7 @@ class Escalade(Generator):
 
 class Glace(Generator):
 
-    COTATION_REF = ('2', '3', '3+', '4', '4+', '5', '5+', '6', '6+', '7', '7+')
+    COTATION_REF = ('2', '3', '3+', '4', '4+', '5', '5+', '6', '6+')
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
