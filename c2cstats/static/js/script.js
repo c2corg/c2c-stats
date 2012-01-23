@@ -33,35 +33,28 @@ function plot_pie(raw, chartdiv) {
     });
 }
 
-/*
+
 function plot_cotation(raw, chartdiv) {
-    var data = [];
-    $.each(raw.values, function(index, value) {
-        data.push([index, value]);
-    });
 
     var labels = [];
     $.each(raw.labels, function(index, value) {
         labels.push([index + barWidth/2., value]);
     });
 
-    $(chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
-    $.plot($(chartdiv), [data], {
-        series: {
-            bars: { show: true, barWidth: barWidth },
-        },
-        xaxis: {
-            show: true,
-            ticks: labels,
-        },
-        grid: {
-            hoverable: true,
-            backgroundColor: { colors: ["#fff", "#eee"] }
-        },
-    });
+    $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
+
+    var r = Raphael(chartdiv);
+    var fin = function () {
+        this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
+    };
+    var fout = function () {
+        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+    };
+
+    r.barchart(40, 10, 320, 220, [raw.values], {legend: raw.labels, type: "soft", axis: "0 0 1 1"}).hover(fin, fout);
 }
 
-
+/*
 function plot_cotation_globale_per_activity(data) {
     var d = [];
     $.each(data.values, function(index, value) {
@@ -121,12 +114,12 @@ function renderplot(data) {
     /*
     // plot_cotation(data.global.cotation_globale, '#chart_cot_globale');
     plot_cotation_globale_per_activity(data.global.cotation_per_activity);
+    */
 
     $.each(data.activities, function(index, value) {
         if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {
             $("#charts").append('<div id="cotation_'+value+'" class="chart"></div>');
-            plot_cotation(data[value].cotation, '#cotation_'+value);
+            plot_cotation(data[value].cotation, 'cotation_'+value);
         }
     });
-    */
 }
