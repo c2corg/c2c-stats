@@ -1,3 +1,4 @@
 *.pyc
 *.svg
+.ropeproject/
 _output/
