@@ -1,21 +1,20 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 
-import os
 import json
 import time
 import numpy as np
 from collections import Counter
 from datetime import datetime
-from c2cstats.parser import Outings, ParserError
+from c2cstats.parser import Outings
 
-ACT_SHORT = { u'alpinisme neige, glace, mixte': 'alpinisme',
-              u'escalade': 'escalade',
-              u'cascade de glace': 'glace',
-              u'randonnée pédestre': 'rando',
-              u'raquette': 'raquette',
-              u'rocher haute montagne': 'rocher',
-              u'ski, surf': 'ski' }
+ACT_SHORT = {u'alpinisme neige, glace, mixte': 'alpinisme',
+             u'escalade': 'escalade',
+             u'cascade de glace': 'glace',
+             u'randonnée pédestre': 'rando',
+             u'raquette': 'raquette',
+             u'rocher haute montagne': 'rocher',
+             u'ski, surf': 'ski'}
 
 COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
                     'D+', 'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+')
@@ -33,29 +32,29 @@ def generate_json(user_id, filename):
     data = Outings(user_id)
 
     t1 = time.time()
-    act_long = dict([(v, k) for k,v in ACT_SHORT.items()])
+    act_long = dict([(v, k) for k, v in ACT_SHORT.items()])
 
     act_list = [ACT_SHORT[i] for i in data.activities]
-    ctx = { 'activities': sorted(act_list),
-            'nb_outings': data.nboutings }
+    ctx = {'activities': sorted(act_list),
+           'nb_outings': data.nboutings}
 
     g = Global(data)
-    ctx['global'] = { 'activities': g.activities,
-                      'activities_per_year': g.activities_per_year,
-                      'area': g.area,
-                      # 'cotation_globale': g.cotation_globale
-                      }
+    ctx['global'] = {'activities': g.activities,
+                     'activities_per_year': g.activities_per_year,
+                     'area': g.area,
+                     # 'cotation_globale': g.cotation_globale
+                     }
 
-    cotg_per_act = { 'title': u'Cotation globale par activité',
-                     'xlabels': COTATION_GLOBALE,
-                     'labels': [],
-                     'values': [] }
+    cotg_per_act = {'title': u'Cotation globale par activité',
+                    'xlabels': COTATION_GLOBALE,
+                    'labels': [],
+                    'values': []}
 
     for i, act in enumerate(act_list):
         # call the class for the current activity
         d = globals()[act.title()](data)
-        ctx[act] = { 'full_name': act_long[act].title(),
-                     'cotation': getattr(d, 'cotation', []) }
+        ctx[act] = {'full_name': act_long[act].title(),
+                    'cotation': getattr(d, 'cotation', [])}
 
         cotg_per_act['values'].append(getattr(d, 'cotation_globale', [])['values'])
         cotg_per_act['labels'].append(act_long[act].title())
@@ -64,8 +63,6 @@ def generate_json(user_id, filename):
 
     d = datetime.now()
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
-    ctx['generation_time'] = 0 # TODO
-
     ctx['download_time'] = '{:.2}'.format(data.download_time)
     ctx['parse_time'] = '{:.2}'.format(data.parse_time)
     ctx['generation_time'] = '{:.3}'.format(time.time() - t1)
@@ -105,9 +102,9 @@ class Generator:
     @property
     def cotation(self):
         c = Counter(self.cotation_values)
-        return { 'title': self.cotation_title,
-                 'labels': self.COTATION_REF,
-                 'values': [c[k] for k in self.COTATION_REF] }
+        return {'title': self.cotation_title,
+                'labels': self.COTATION_REF,
+                'values': [c[k] for k in self.COTATION_REF]}
 
 
     @property
@@ -120,16 +117,16 @@ class Generator:
         else:
             c = Counter(self.data.cot_globale)
 
-        return { 'title': u'Cotation globale',
-                 'labels': COTATION_GLOBALE,
-                 'values': [c[k] for k in COTATION_GLOBALE] }
+        return {'title': u'Cotation globale',
+                'labels': COTATION_GLOBALE,
+                'values': [c[k] for k in COTATION_GLOBALE]}
 
 
     def gain_per_year(self):
 
-        if activity:
-            gain = filter_activity(self.data.gain, activity)
-            year = filter_activity(self.data.year, activity)
+        if self.activity:
+            gain = self.filter_activity(self.data.gain, self.activity)
+            year = self.filter_activity(self.data.year, self.activity)
         else:
             gain = self.data.gain
             year = self.year
@@ -151,8 +148,8 @@ class Global(Generator):
     def activities(self):
         "Count number of outings per activity"
         c = Counter(self.data.activity)
-        return { 'title': u'Répartition par activité',
-                 'values': c.items() }
+        return {'title': u'Répartition par activité',
+                'values': c.items()}
 
     @property
     def activities_per_year(self):
@@ -171,8 +168,8 @@ class Global(Generator):
         use = c.most_common(10)
         sum_use = sum(zip(*use)[1])
         use.append((u'Autres', sum(c.values()) - sum_use))
-        return { 'title': u'Répartition par région',
-                 'values': use }
+        return {'title': u'Répartition par région',
+                'values': use}
 
 
 class Escalade(Generator):
