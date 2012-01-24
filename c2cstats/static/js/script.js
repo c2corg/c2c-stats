@@ -2,19 +2,18 @@
 
  */
 
-barWidth = 0.6;
-
 function plot_pie(raw, chartdiv) {
-    var data = {labels: [], values: []};
+    var labels = [];
+    var values = [];
     $.each(raw.values, function(index, value) {
-        data.labels.push(value[0]+' ('+value[1]+')');
-        data.values.push(value[1]);
+        labels.push(value[0]+' ('+value[1]+' - %%)');
+        values.push(value[1]);
     });
 
     $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
 
     var r = Raphael(chartdiv);
-    var pie = r.piechart(150, 150, 120, data.values, { legend: data.labels, legendpos: "east"});
+    var pie = r.g.piechart(150, 150, 120, values, { legend: labels, legendpos: "east"});
     // r.text(320, 100, "Interactive Pie Chart").attr({ font: "20px sans-serif" });
     pie.hover(function () {
         this.sector.stop();
@@ -25,7 +24,8 @@ function plot_pie(raw, chartdiv) {
             this.label[1].attr({ "font-weight": 800 });
         }
     }, function () {
-        this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
+        // this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
+        this.sector.scale(1, 1, this.cx, this.cy);
         if (this.label) {
             this.label[0].animate({ r: 5 }, 500, "bounce");
             this.label[1].attr({ "font-weight": 400 });
@@ -35,23 +35,19 @@ function plot_pie(raw, chartdiv) {
 
 
 function plot_cotation(raw, chartdiv) {
-
-    var labels = [];
-    $.each(raw.labels, function(index, value) {
-        labels.push([index + barWidth/2., value]);
-    });
-
     $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
 
     var r = Raphael(chartdiv);
     var fin = function () {
-        this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
+        this.flag = r.g.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
     };
     var fout = function () {
         this.flag.animate({opacity: 0}, 300, function () {this.remove();});
     };
 
-    r.barchart(40, 10, 320, 220, [raw.values], {legend: raw.labels, type: "soft", axis: "0 0 1 1"}).hover(fin, fout);
+    chart = r.g.barchart(10, 10, 320, 220, [raw.values], {type: "soft"}).hover(fin, fout);
+    r.g.txtattr = {font:"12px Fontin-Sans, Arial, sans-serif", fill:"#000", "font-weight": "bold"};
+    chart.label([raw.labels], true);
 }
 
 /*
