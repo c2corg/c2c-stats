@@ -36,7 +36,8 @@ def generate_json(user_id, filename):
 
     act_list = [ACT_SHORT[i] for i in data.activities]
     ctx = {'activities': sorted(act_list),
-           'nb_outings': data.nboutings}
+           'nb_outings': data.nboutings,
+           'url': "http://www.camptocamp.org/outings/list/users/%s" % user_id}
 
     g = Global(data)
     ctx['global'] = {'activities': g.activities,
