@@ -57,7 +57,7 @@ function plot_cotation(raw, chartdiv) {
     data = raw.values,
     // axisy = raw.values,
     axisx = raw.labels;
-    r.dotchart(10, 10, 620, 260, xs, ys, data, {
+    r.dotchart(10, 10, 420, 260, xs, ys, data, {
         symbol: "o",
         max: 10,
         heat: true,
