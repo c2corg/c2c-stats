@@ -2,25 +2,28 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Statistiques pour l'utilisateur {{ user_id }}
+<header class="page-header">
+  <h1>Statistiques pour l'utilisateur {{ user_id }}</h1>
+</header>
 {% endblock %}
 
 {% block body %}
+<section id="summary" class="well">
+  <p>Graphiques générés le <b><span id="date_generated"></span></b> à partir de <b><span
+id="nb_outings"></span> sorties</b>.</p>
+  <ul>
+    <li>Temps de téléchargement: <span id="download_time"></span> sec.</li>
+    <li>Temps pour le parser: <span id="parse_time"></span> sec.</li>
+    <li>Temps pour le calcul: <span id="generation_time"></span> sec.</li>
+    <li>Temps total: <span id="total_time"></span> sec.</li>
+  </ul>
+</section>
 
-<p>Graphiques générés le <span id="date_generated"></span> à partir de <span
-id="nb_outings"></span> sorties.</p>
-<ul>
-  <li>Temps de téléchargement: <span id="download_time"></span> sec.</li>
-  <li>Temps pour le parser: <span id="parse_time"></span> sec.</li>
-  <li>Temps pour le calcul: <span id="generation_time"></span> sec.</li>
-  <li>Temps total: <span id="total_time"></span> sec.</li>
-</ul>
-
-<div id="charts">
+<section id="charts">
   <div id="chart_activities" class="chart"></div>
   <div id="chart_area" class="chart"></div>
   <div id="chart_cot_globale" class="chart"></div>
-</div>
+</section>
 
 {% endblock %}
 
