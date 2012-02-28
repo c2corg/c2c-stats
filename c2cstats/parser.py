@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 # c2cstats - Compute statistics for camptocamp.org
-# Copyright (C) 2009, 2010, 2011 - saimon.org
+# Copyright (C) 2011-2012 - saimon.org
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; If not, see http://www.gnu.org/licenses/
 
-import json
 import time
 import urllib
 import numpy as np
@@ -144,17 +143,6 @@ class Outings:
                         self.__dict__[c][n] = i.text
 
             n += 1
-
-
-class Username:
-    "Retrieve the name of user_id"
-    def __init__(self, user_id):
-        self.name = 'Anonyme'
-        url = "http://www.camptocamp.org/users/fr/%s.json" % str(user_id)
-        p, headers = get_page(url)
-        if headers['Content-Type'] == 'application/json':
-            j = json.loads(p)
-            self.name = j[u'properties'][u'name']
 
 
 def get_page(url):

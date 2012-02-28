@@ -2,8 +2,6 @@
 # -*- coding:utf-8 -*-
 
 import os
-import codecs
-import urlparse
 import locale
 locale.setlocale(locale.LC_ALL, '')
 

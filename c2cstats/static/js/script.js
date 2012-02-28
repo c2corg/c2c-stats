@@ -123,6 +123,7 @@ function renderplot(data) {
     $("#parse_time").text(data.parse_time);
     $("#generation_time").text(data.generation_time);
     $("#total_time").text(data.total_time);
+    $("#origin-link").attr({href: data.url});
 
     plot_pie(data.global.activities, 'chart_activities');
     plot_pie(data.global.area, 'chart_area');
