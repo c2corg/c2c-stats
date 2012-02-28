@@ -1,9 +1,8 @@
 Calcul de statistiques pour camptocamp.org
 ==========================================
 
-c2cstats est une application web développée avec Flask et qui permet de
-calculer des statistiques pour la liste de sorties d'un utilisateur de
-http://camptocamp.org.
+c2cstats est une application web qui permet de calculer des statistiques pour la
+liste de sorties d'un utilisateur de http://camptocamp.org.
 
 Pour tester en local:
 
@@ -12,11 +11,8 @@ Pour tester en local:
 Dépendances
 ~~~~~~~~~~~
 
+* Flask
 * BeautilfulSoup
 * Numpy
 * Jinja2
 
-Historique
-~~~~~~~~~~
-
-La version 0.1 utilisait matplotlib.
