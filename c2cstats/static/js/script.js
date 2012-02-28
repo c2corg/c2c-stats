@@ -36,22 +36,39 @@ function plot_pie(raw, chartdiv) {
 
 function plot_cotation(raw, chartdiv) {
 
-    var labels = [];
-    $.each(raw.labels, function(index, value) {
-        labels.push([index + barWidth/2., value]);
-    });
-
     $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
 
     var r = Raphael(chartdiv);
-    var fin = function () {
-        this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
-    };
-    var fout = function () {
-        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-    };
+    // var fin = function () {
+    //     this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
+    // };
+    // var fout = function () {
+    //     this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+    // };
+    // r.barchart(40, 10, 320, 220, [raw.values], {legend: raw.labels, type: "soft", axis: "0 0 1 1"}).hover(fin, fout);
 
-    r.barchart(40, 10, 320, 220, [raw.values], {legend: raw.labels, type: "soft", axis: "0 0 1 1"}).hover(fin, fout);
+    var labels_ind = [];
+    for(var i=0; i<raw.values.length; i++){
+        labels_ind.push(i);
+    }
+
+    xs = labels_ind,
+    ys = raw.values,
+    data = raw.values,
+    // axisy = raw.values,
+    axisx = raw.labels;
+    r.dotchart(10, 10, 620, 260, xs, ys, data, {
+        symbol: "o",
+        max: 10,
+        heat: true,
+        axis: "0 0 1 0", axisxstep: raw.labels.length-1, axisxlabels: axisx,
+        axisxtype: " "
+    }).hover(function () {
+        this.marker = this.marker || r.tag(this.x, this.y, this.value, 0, this.r + 2).insertBefore(this);
+        this.marker.show();
+    }, function () {
+        this.marker && this.marker.hide();
+    });
 }
 
 /*
