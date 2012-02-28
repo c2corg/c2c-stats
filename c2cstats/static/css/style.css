@@ -14,13 +14,3 @@
   height: 400px;
 }
 
-/* fixes for bootstrap */
-/* #charts table { width: auto; } */
-#charts table th, #charts table td {
-  border: 0;
-  padding: 0;
-}
-
-#charts table {
-  width: auto;
-}
