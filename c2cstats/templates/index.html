@@ -1,14 +1,19 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Statistiques pour Camptocamp.org
+<header class="page-header">
+  <h1>Statistiques pour Camptocamp.org</h1>
+</header>
 {% endblock %}
 
 {% block body %}
-<form action="{{ url_for('query_user') }}" method="post" placeholder="user_id" id="main_form">
-  <input type="text" name="user_id" placeholder="N° d'utilisateur (user_id)" autofocus>
-  <input type="submit" value="Valider" class="btn">
-</form>
+<section id="main_form">
+  <form action="{{ url_for('query_user') }}" method="post" class="well form-inline">
+    <legend>Entrez un numéro d'utilisateur pour calculer les statistiques:</legend>
+    <input type="text" name="user_id" placeholder="N° d'utilisateur (user_id)" autofocus>
+    <button type="submit" class="btn btn-primary">Valider</button>
+  </form>
+</section>
 
 <script>
   window.onload = function() {

@@ -28,21 +28,13 @@
   </head>
   <body>
     <div class="container">
-      <div class="content">
-        <div class="page-header">
-          <h1>{% block title %}{% endblock %}</h1>
-        </div>
+      {% block title %}{% endblock %}
 
-        {% for category, message in get_flashed_messages(with_categories=true) %}
-        <div class="alert-message {{ category }}">{{ message }}</div>
-        {% endfor %}
+      {% for category, message in get_flashed_messages(with_categories=true) %}
+      <div class="alert {{ category }}">{{ message }}</div>
+      {% endfor %}
 
-        <div class="row">
-          <div class="span12 offset1">
-            {% block body %}{% endblock %}
-          </div>
-        </div>
-      </div>
+      {% block body %}{% endblock %}
 
       <!-- <footer> -->
       <!--   {% block gentime %}{% endblock %} -->
