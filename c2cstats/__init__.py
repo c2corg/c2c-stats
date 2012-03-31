@@ -2,19 +2,18 @@
 # -*- coding:utf-8 -*-
 
 import os
+import json
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
 from c2cstats.parser import ParserError
 from c2cstats.generators import generate_json
 
-from flask import Flask, request, g, redirect, url_for, \
-     render_template, flash
+from flask import Flask, request, redirect, url_for, render_template, json
 
 # configuration
 SECRET_KEY = 'development key'
 FILES_DIR = '_output'
-FILES_URL = '/files'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -25,33 +24,38 @@ app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
 def index():
     return render_template('index.html')
 
+
 @app.route('/user/')
 def user_index():
     return redirect(url_for('index'))
 
-@app.route('/user/<int:user_id>')
-def show_user_stats(user_id):
+
+@app.route('/user/<int:user_id>/json')
+def get_user_stats(user_id):
     user_id = str(user_id)
     json_file = os.path.join(app.config['FILES_DIR'], user_id + '.json')
-
-    context = {
-        'json_url': app.config['FILES_URL'] + '/' + user_id + '.json',
-        'user_id': user_id,
-        }
 
     if not os.path.isfile(json_file):
         try:
             generate_json(user_id, json_file)
-            flash(u'Les statistiques ont été calculées avec succés.', 'alert-success')
         except ParserError:
-            flash(u'Erreur lors du chargement de la page', 'alert-error')
-            return redirect(url_for('index'))
+            data = { 'error': u'Erreur lors du chargement de la page' }
         except:
-            flash(u'Erreur, il y a un truc qui va pas ;-).', 'alert-error')
-            if app.debug:
-                raise
-            else:
-                return redirect(url_for('index'))
+            data = { 'error': u'Erreur, il y a un truc qui va pas ;-)' }
+
+    with open(json_file, 'r') as f:
+        data = json.load(f)
+    return json.dumps(data)
+
+
+@app.route('/user/<int:user_id>')
+def show_user_stats(user_id):
+    user_id = str(user_id)
+
+    context = {
+        'json_url': url_for('get_user_stats', user_id=user_id),
+        'user_id': user_id
+        }
 
     return render_template('user.html', **context)
 
@@ -60,3 +64,4 @@ def show_user_stats(user_id):
 def query_user():
     return redirect(url_for('show_user_stats',
                             user_id=int(request.form['user_id'])))
+
