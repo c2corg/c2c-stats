@@ -3,6 +3,7 @@
  */
 
 barWidth = 0.6;
+mainFont = "inherit";
 
 function plot_pie(raw, chartdiv) {
     var data = {labels: [], values: []};
@@ -14,8 +15,7 @@ function plot_pie(raw, chartdiv) {
     $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
 
     var r = Raphael(chartdiv);
-    var pie = r.piechart(150, 150, 120, data.values, { legend: data.labels, legendpos: "east"});
-    // r.text(320, 100, "Interactive Pie Chart").attr({ font: "20px sans-serif" });
+    var pie = r.piechart(150, 150, 120, data.values, { legend: data.labels, legendpos: "east"}).attr({ font: mainFont });
     pie.hover(function () {
         this.sector.stop();
         this.sector.scale(1.1, 1.1, this.cx, this.cy);
@@ -68,7 +68,7 @@ function plot_cotation(raw, chartdiv) {
         this.marker.show();
     }, function () {
         this.marker && this.marker.hide();
-    });
+    }).attr({ font: mainFont });
 }
 
 /*
