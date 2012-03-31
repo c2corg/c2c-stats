@@ -119,10 +119,10 @@ function renderplot(data) {
 
     $("#nb_outings").text(data.nb_outings);
     $("#date_generated").text(data.date_generated);
-    $("#download_time").text(data.download_time);
-    $("#parse_time").text(data.parse_time);
-    $("#generation_time").text(data.generation_time);
-    $("#total_time").text(data.total_time);
+    $("#download_time").text(data.time.download);
+    $("#parse_time").text(data.time.parse);
+    $("#generation_time").text(data.time.generation);
+    $("#total_time").text(data.time.total);
     $("#origin-link").attr({href: data.url});
 
     plot_pie(data.global.activities, 'chart_activities');

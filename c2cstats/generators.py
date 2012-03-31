@@ -64,10 +64,12 @@ def generate_json(user_id, filename):
 
     d = datetime.now()
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
-    ctx['download_time'] = '{:.2}'.format(data.download_time)
-    ctx['parse_time'] = '{:.2}'.format(data.parse_time)
-    ctx['generation_time'] = '{:.3}'.format(time.time() - t1)
-    ctx['total_time'] = '{:.2}'.format(time.time() - t0)
+    ctx['time'] = {
+        'download': '{:.2}'.format(data.download_time),
+        'parse': '{:.2}'.format(data.parse_time),
+        'generation': '{:.3}'.format(time.time() - t1),
+        'total': '{:.2}'.format(time.time() - t0)
+    }
 
     with open(filename, 'w') as f:
         json.dump(ctx, f)
