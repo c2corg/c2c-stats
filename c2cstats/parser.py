@@ -35,6 +35,23 @@ class Outings:
     "Parse the list of outings of user user_id"
     def __init__(self, user_id):
         self.user_id = str(user_id)
+
+        self.cotations = {
+                u'Cotation glace': 'cot_glace',
+                u'Cotation mixte': 'cot_mixte',
+                u'Cotation globale': 'cot_globale',
+                u'Cotation globale ski': 'cot_globale',
+                u'Cotation libre': 'cot_libre',
+                u'Cotation libre obligatoire': 'cot_oblige',
+                u'Cotation libre et libre obligatoire': 'cot_libre',
+                u'Cotation escalade artificielle': 'cot_artif',
+                u'Cotation randonnée': 'cot_rando',
+                u'Cotation technique': 'cot_skitech',
+                u'Cotation ponctuelle ski': 'cot_skiponc',
+                u'Engagement': 'engagement',
+                u'Exposition': 'exposition',
+                u"Qualité de l'équipement en place": 'equipement' }
+
         self.parse_outings()
 
     @property
@@ -70,15 +87,17 @@ class Outings:
         self.area = []
 
         self.cot_globale = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.cot_libre = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.cot_oblige = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.cot_libre   = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.cot_oblige  = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.cot_artif   = np.zeros(self.nboutings, dtype=np.dtype('U2'))
         self.cot_skitech = np.zeros(self.nboutings, dtype=np.dtype('U3'))
         self.cot_skiponc = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.cot_glace = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.cot_rando = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.engagement = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.equipement = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.exposition = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.cot_glace   = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.cot_mixte   = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.cot_rando   = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.engagement  = np.zeros(self.nboutings, dtype=np.dtype('U3'))
+        self.equipement  = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        self.exposition  = np.zeros(self.nboutings, dtype=np.dtype('U2'))
 
         t0 = time.time()
         self.parse_outings_list(page, pagenb, soup=soup)
@@ -112,18 +131,6 @@ class Outings:
     
         lines = soup.table.tbody.findAll('tr')
 
-        cotations = {'cot_globale': u'Cotation globale',
-                     'engagement': u'Engagement',
-                     'equipement': u'Qualité de l\'équipement',
-                     'exposition': u'Exposition',
-                     'cot_oblige': u'Cotation libre obligatoire\xa0:',
-                     'cot_libre': u'Cotation libre\xa0:',
-                     'cot_skitech': u'Cotation technique',
-                     'cot_skiponc': u'Exposition',
-                     'cot_glace': u'Cotation glace',
-                     'cot_rando': u'Cotation randonnée'
-                     }
-
         n = (pagenb-1)*100
         for l in lines:
             t = l.contents
@@ -140,9 +147,9 @@ class Outings:
                 self.gain[n] = int(t[5].text[:-1])
 
             for i in t[6].findAll('span'):
-                for c in cotations.keys():
-                    if i['title'].startswith(cotations[c]):
-                        self.__dict__[c][n] = i.text
+                cot_title = i['title'].split(u'\xa0:')[0]
+                cot_name = self.cotations[cot_title]
+                self.__dict__[cot_name][n] = i.text
 
             if t[9].text:
                 self.area.append(t[9].a.text)
