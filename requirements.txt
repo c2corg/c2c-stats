@@ -1,4 +1,5 @@
 Flask
 Flask-DebugToolbar
 numpy
-BeautifulSoup
+beautifulsoup4
+lxml

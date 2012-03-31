@@ -20,7 +20,7 @@
 import time
 import urllib
 import numpy as np
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 NB_ITEMS = 100
 BASE_URL = "http://www.camptocamp.org/outings/list/layout/light/users/%s/npp/%d/page/%d"
@@ -52,7 +52,7 @@ class Outings:
         page, headers = get_page(url)
         self.download_time = time.time() - t0
 
-        soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        soup = BeautifulSoup(page, 'lxml')
         nbout = soup.p.findAll('b')
 
         if len(nbout) == 0:
@@ -81,7 +81,7 @@ class Outings:
         self.exposition = np.zeros(self.nboutings, dtype=np.dtype('U2'))
 
         t0 = time.time()
-        self.parse_outings_list(page, pagenb)
+        self.parse_outings_list(page, pagenb, soup=soup)
         self.parse_time = time.time() - t0
 
         # parse other pages if nboutings > 100
@@ -94,19 +94,22 @@ class Outings:
             print "Get %s ..." % url
             t0 = time.time()
             page, headers = get_page(url)
-            self.download_time += time.time() - t0
+            t1 = time.time()
+            self.download_time += t1 - t0
 
             t0 = time.time()
             self.parse_outings_list(page, pagenb)
-            self.parse_time += time.time() - t0
+            self.parse_time += time.time() - t1
 
         self.area = np.array(self.area)
         print "Found %d outings" % self.nboutings
 
-    def parse_outings_list(self, page, pagenb):
+    def parse_outings_list(self, page, pagenb, soup=False):
         "Get the content of each line of the table"
 
-        soup = BeautifulSoup(page, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        if not soup:
+            soup = BeautifulSoup(page, 'lxml')
+    
         lines = soup.table.tbody.findAll('tr')
 
         cotations = {'cot_globale': u'Cotation globale',
@@ -126,21 +129,23 @@ class Outings:
             t = l.contents
             # self.title.append(t[1].a.text)
             self.date[n] = t[2].time.text
-            self.altitude[n] = t[4].text
-            if t[5].text:
-                self.gain[n] = int(t[5].text[:-1])
-
-            if t[9].text:
-                self.area.append(t[9].a.text)
-
+            
             # keep only the first one for now
             if t[3].find('span', "printonly"):
                 self.activity[n] = t[3].find('span', "printonly").text
+
+            self.altitude[n] = t[4].text
+
+            if t[5].text:
+                self.gain[n] = int(t[5].text[:-1])
 
             for i in t[6].findAll('span'):
                 for c in cotations.keys():
                     if i['title'].startswith(cotations[c]):
                         self.__dict__[c][n] = i.text
+
+            if t[9].text:
+                self.area.append(t[9].a.text)
 
             n += 1
 
