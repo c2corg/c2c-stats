@@ -43,7 +43,7 @@ def generate_json(user_id, filename):
     ctx['global'] = {'activities': g.activities,
                      'activities_per_year': g.activities_per_year,
                      'area': g.area,
-                     # 'cotation_globale': g.cotation_globale
+                     'cotation_globale': g.cotation
                      }
 
     cotg_per_act = {'title': u'Cotation globale par activité',
@@ -144,8 +144,12 @@ class Generator:
 
 class Global(Generator):
 
+    COTATION_REF = COTATION_GLOBALE
+
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
+        self.cotation_values = self.data.cot_globale
+        self.cotation_title = u'Cotation globale'
 
     @property
     def activities(self):
@@ -224,7 +228,7 @@ class Ski(Generator):
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
-        self.activity = u'ski de randonnée'
+        self.activity = u'ski, surf'
         self.cotation_values = self.data.cot_skiponc
         self.cotation_title = u'Cotation ponctuelle ski'
 

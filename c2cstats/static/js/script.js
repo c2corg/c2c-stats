@@ -47,22 +47,19 @@ function plot_cotation(raw, chartdiv) {
     // };
     // r.barchart(40, 10, 320, 220, [raw.values], {legend: raw.labels, type: "soft", axis: "0 0 1 1"}).hover(fin, fout);
 
-    var labels_ind = [];
+    var xs = [];
     for(var i=0; i<raw.values.length; i++){
-        labels_ind.push(i);
+        xs.push(i);
     }
 
-    xs = labels_ind,
     ys = raw.values,
-    data = raw.values,
     // axisy = raw.values,
-    axisx = raw.labels;
-    r.dotchart(10, 10, 420, 260, xs, ys, data, {
+    r.dotchart(10, 10, 420, 260, xs, ys, raw.values, {
         symbol: "o",
         max: 10,
         heat: true,
-        axis: "0 0 1 0", axisxstep: raw.labels.length-1, axisxlabels: axisx,
-        axisxtype: " "
+        axis: "0 0 1 0", 
+        axisxstep: raw.labels.length-1, axisxlabels: raw.labels, axisxtype: " "
     }).hover(function () {
         this.marker = this.marker || r.tag(this.x, this.y, this.value, 0, this.r + 2).insertBefore(this);
         this.marker.show();
@@ -128,10 +125,8 @@ function renderplot(data) {
     plot_pie(data.global.activities, 'chart_activities');
     plot_pie(data.global.area, 'chart_area');
 
-    /*
-    // plot_cotation(data.global.cotation_globale, '#chart_cot_globale');
-    plot_cotation_globale_per_activity(data.global.cotation_per_activity);
-    */
+    plot_cotation(data.global.cotation_globale, 'chart_cot_globale');
+    // plot_cotation_globale_per_activity(data.global.cotation_per_activity);
 
     $.each(data.activities, function(index, value) {
         if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {
