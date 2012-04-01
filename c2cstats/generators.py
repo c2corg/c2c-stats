@@ -219,4 +219,12 @@ class Rocher(Generator):
     pass
 
 class Ski(Generator):
-    pass
+
+    COTATION_REF = ('S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7')
+
+    def __init__(self, *args, **kwargs):
+        Generator.__init__(self, *args, **kwargs)
+        self.activity = u'ski de randonnée'
+        self.cotation_values = self.data.cot_skiponc
+        self.cotation_title = u'Cotation ponctuelle ski'
+
