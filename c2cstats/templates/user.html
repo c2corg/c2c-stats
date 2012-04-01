@@ -8,6 +8,13 @@
 {% endblock %}
 
 {% block body %}
+<div id="loading">
+  <p>Chargement ...</p>
+  <div class="progress progress-striped active">
+    <div class="bar" style="width: 100%;"></div>
+  </div>
+</div>
+
 <section id="summary" class="well">
   <p>Graphiques générés le <b><span id="date_generated"></span></b> à partir de <b><span
 id="nb_outings"></span> sorties</b>.</p>
@@ -40,7 +47,19 @@ id="nb_outings"></span> sorties</b>.</p>
 var jsonurl = "{{ json_url }}";
 
 $(document).ready(function(){
-    $.getJSON(jsonurl, renderplot);
+  $summary = $('#summary');
+  $('#loading')
+    .hide()  // hide it initially
+    .ajaxStart(function() {
+      $summary.hide();
+      $(this).show();
+    })
+    .ajaxStop(function() {
+      $(this).hide();
+      $summary.show();
+    });
+
+  $.getJSON(jsonurl, renderplot);
 });
 </script>
 {% endblock %}

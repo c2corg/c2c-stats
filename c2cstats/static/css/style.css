@@ -16,3 +16,9 @@
   /* height: 400px; */
 }
 
+#loading {
+  text-align: center;
+  width: 40%;
+  margin: 0 auto;
+}
+
