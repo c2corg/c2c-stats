@@ -2,8 +2,7 @@
 
  */
 
-barWidth = 0.6;
-mainFont = "inherit";
+txtattr = { font: "inherit" };
 
 function plot_pie(raw, chartdiv) {
     var data = {labels: [], values: []};
@@ -15,7 +14,7 @@ function plot_pie(raw, chartdiv) {
     $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
 
     var r = Raphael(chartdiv);
-    var pie = r.piechart(150, 150, 120, data.values, { legend: data.labels, legendpos: "east"}).attr({ font: mainFont });
+    var pie = r.piechart(150, 150, 120, data.values, { legend: data.labels, legendpos: "east"}).attr(txtattr);
     pie.hover(function () {
         this.sector.stop();
         this.sector.scale(1.1, 1.1, this.cx, this.cy);
@@ -34,11 +33,11 @@ function plot_pie(raw, chartdiv) {
 }
 
 
-function plot_cotation(raw, chartdiv) {
+function plot_cotation(raw, chartdiv, width, height) {
 
     $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
 
-    var r = Raphael(chartdiv);
+    var r = Raphael(chartdiv, width+50, height+20);
 
     var fin = function () {
       this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
@@ -47,7 +46,7 @@ function plot_cotation(raw, chartdiv) {
       this.flag.animate({opacity: 0}, 300, function () {this.remove();});
     };
 
-    r.barchart(10, 10, 420, 260, [raw.values], {type: "soft"})
+    r.barchart(50, 10, width, height, [raw.values], {type: "soft"})
     .hover(fin, fout)
     .label([raw.labels], true);
 
@@ -68,48 +67,32 @@ function plot_cotation(raw, chartdiv) {
     //     this.marker.show();
     // }, function () {
     //     this.marker && this.marker.hide();
-    // }).attr({ font: mainFont });
+    // }).attr(txtattr);
 }
 
-/*
-function plot_cotation_globale_per_activity(data) {
-    var d = [];
-    $.each(data.values, function(index, value) {
-        val = [];
-        $.each(value, function(index2, value2) {
-            val.push([index2, value2]);
-        });
-        d.push({
-            label: data.labels[index],
-            data: val
-        });
-    });
+function plot_cotation_globale_per_activity(data, chartdiv) {
 
-    var labels = [];
-    $.each(data.xlabels, function(index, value) {
-        labels.push([index + barWidth/2., value]);
-    });
+  $('#'+chartdiv).before('<h2 class="chart_title">'+data.title+'</h2>');
+  var r = Raphael(chartdiv);
 
-    $('#chart_cot_globale').before('<h2 class="chart_title">'+data.title+'</h2>');
-    $.plot($('#chart_cot_globale'), d,  {
-	series: {
-            stack: true,
-            bars: { show: true, barWidth: barWidth }
-        },
-        legend: { show: true },
-        xaxis: {
-            show: true,
-            ticks: labels,
-        },
-        grid: {
-            hoverable: true,
-            clickable: true,
-            backgroundColor: { colors: ["#fff", "#eee"] }
-        }
-    });
+  var fin2 = function () {
+    var y = [], res = [];
+    for (var i = this.bars.length; i--;) {
+      y.push(this.bars[i].y);
+      if (this.bars[i].value) {
+        res.push(data.labels[i] + " : " + this.bars[i].value);
+      }
+    }
+    this.flag = r.popup(this.bars[0].x, Math.min.apply(Math, y), res.join("\n ")).insertBefore(this);
+  };
+  var fout2 = function () {
+    this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+  };
 
+  r.barchart(50, 50, 420, 260, data.values, {stacked: true, type: "soft"})
+    .hoverColumn(fin2, fout2)
+    .label(data.xlabels, true);
 }
-*/
 
 function renderplot(data) {
     if (data === null || data.length === 0) {
@@ -128,13 +111,14 @@ function renderplot(data) {
     plot_pie(data.global.activities, 'chart_activities');
     plot_pie(data.global.area, 'chart_area');
 
-    plot_cotation(data.global.cotation_globale, 'chart_cot_globale');
-    // plot_cotation_globale_per_activity(data.global.cotation_per_activity);
+    // plot_cotation(data.global.cotation_globale, 'chart_cot_globale');
+    plot_cotation_globale_per_activity(data.global.cotation_per_activity, 'chart_cot_globale');
 
     $.each(data.activities, function(index, value) {
         if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {
             $("#charts").append('<div id="cotation_'+value+'" class="chart"></div>');
-            plot_cotation(data[value].cotation, 'cotation_'+value);
+            plot_cotation(data[value].cotation, 'cotation_'+value,
+                          30*data[value].cotation.labels.length, 250);
         }
     });
 }
