@@ -37,21 +37,22 @@ class Outings:
         self.user_id = str(user_id)
 
         self.cotations = {
-                u'Cotation glace': 'cot_glace',
-                u'Cotation mixte': 'cot_mixte',
-                u'Cotation globale': 'cot_globale',
-                u'Cotation globale ski': 'cot_globale',
-                u'Cotation libre': 'cot_libre',
-                u'Cotation libre obligatoire': 'cot_oblige',
-                u'Cotation libre et libre obligatoire': 'cot_libre',
-                u'Cotation escalade artificielle': 'cot_artif',
-                u'Cotation randonnée': 'cot_rando',
-                u'Cotation raquette': 'cot_raquette',
-                u'Cotation technique': 'cot_skitech',
-                u'Cotation ponctuelle ski': 'cot_skiponc',
-                u'Engagement': 'engagement',
-                u'Exposition': 'exposition',
-                u"Qualité de l'équipement en place": 'equipement' }
+            u'Cotation glace': { 'name': 'cot_glace', 'format': 'U2' },
+            u'Cotation mixte': { 'name': 'cot_mixte', 'format': 'U2' },
+            u'Cotation globale': { 'name': 'cot_globale', 'format': 'U3' },
+            u'Cotation globale ski': { 'name': 'cot_globale', 'format': 'U3' },
+            u'Cotation libre': { 'name': 'cot_libre', 'format': 'U3' },
+            u'Cotation libre obligatoire': { 'name': 'cot_oblige', 'format': 'U3' },
+            u'Cotation libre et libre obligatoire': { 'name': 'cot_libre', 'format': 'U3' },
+            u'Cotation escalade artificielle': { 'name': 'cot_artif', 'format': 'U2' },
+            u'Cotation randonnée': { 'name': 'cot_rando', 'format': 'U2' },
+            u'Cotation raquette': { 'name': 'cot_raquette', 'format': 'U2' },
+            u'Cotation technique': { 'name': 'cot_skitech', 'format': 'U3' },
+            u'Cotation ponctuelle ski': { 'name': 'cot_skiponc', 'format': 'U2' },
+            u'Engagement': { 'name': 'engagement', 'format': 'U3' },
+            u'Exposition': { 'name': 'exposition', 'format': 'U2' },
+            u'Qualité de l\'équipement en place': { 'name': 'equipement', 'format': 'U2' }
+            }
 
         self.parse_outings()
 
@@ -87,19 +88,11 @@ class Outings:
         self.altitude = np.zeros(self.nboutings, dtype=np.dtype('U6'))
         self.gain     = np.zeros(self.nboutings, dtype=np.dtype('I6'))
 
-        self.cot_globale  = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.cot_libre    = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.cot_oblige   = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.cot_artif    = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.cot_skitech  = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.cot_skiponc  = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.cot_glace    = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.cot_mixte    = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.cot_rando    = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.cot_raquette = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.engagement   = np.zeros(self.nboutings, dtype=np.dtype('U3'))
-        self.equipement   = np.zeros(self.nboutings, dtype=np.dtype('U2'))
-        self.exposition   = np.zeros(self.nboutings, dtype=np.dtype('U2'))
+        # initialize cotation arrays
+        for c in self.cotations.itervalues():
+            if not hasattr(self, c['name']):
+                setattr(self, c['name'],
+                        np.zeros(self.nboutings, dtype=np.dtype(c['format'])))
 
         t0 = time.time()
         self.parse_outings_list(page, pagenb, soup=soup)
@@ -151,8 +144,8 @@ class Outings:
             for i in t[6].findAll('span'):
                 cot_title = i['title'].split(u'\xa0:')[0]
                 try:
-                    cot_name = self.cotations[cot_title]
-                    self.__dict__[cot_name][n] = i.text
+                    cot = getattr(self, self.cotations[cot_title]['name'])
+                    cot[n] = i.text
                 except KeyError:
                     # TODO: add logging
                     pass
