@@ -39,33 +39,36 @@ function plot_cotation(raw, chartdiv) {
     $('#'+chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
 
     var r = Raphael(chartdiv);
-    // var fin = function () {
-    //     this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
-    // };
-    // var fout = function () {
-    //     this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-    // };
-    // r.barchart(40, 10, 320, 220, [raw.values], {legend: raw.labels, type: "soft", axis: "0 0 1 1"}).hover(fin, fout);
 
-    var xs = [];
-    for(var i=0; i<raw.values.length; i++){
-        xs.push(i);
-    }
+    var fin = function () {
+      this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
+    };
+    var fout = function () {
+      this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+    };
 
-    ys = raw.values,
-    // axisy = raw.values,
-    r.dotchart(10, 10, 420, 260, xs, ys, raw.values, {
-        symbol: "o",
-        max: 10,
-        heat: true,
-        axis: "0 0 1 0", 
-        axisxstep: raw.labels.length-1, axisxlabels: raw.labels, axisxtype: " "
-    }).hover(function () {
-        this.marker = this.marker || r.tag(this.x, this.y, this.value, 0, this.r + 2).insertBefore(this);
-        this.marker.show();
-    }, function () {
-        this.marker && this.marker.hide();
-    }).attr({ font: mainFont });
+    r.barchart(10, 10, 420, 260, [raw.values], {type: "soft"})
+    .hover(fin, fout)
+    .label([raw.labels], true);
+
+    // var xs = [];
+    // for(var i=0; i<raw.values.length; i++){
+    //     xs.push(i);
+    // }
+    // ys = raw.values,
+    // // axisy = raw.values,
+    // r.dotchart(10, 10, 420, 260, xs, ys, raw.values, {
+    //     symbol: "o",
+    //     max: 10,
+    //     heat: true,
+    //     axis: "0 0 1 0",
+    //     axisxstep: raw.labels.length-1, axisxlabels: raw.labels, axisxtype: " "
+    // }).hover(function () {
+    //     this.marker = this.marker || r.tag(this.x, this.y, this.value, 0, this.r + 2).insertBefore(this);
+    //     this.marker.show();
+    // }, function () {
+    //     this.marker && this.marker.hide();
+    // }).attr({ font: mainFont });
 }
 
 /*
