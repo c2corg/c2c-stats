@@ -4,13 +4,11 @@
   }
 }
 
-.chart {
-  margin: 2em auto;
-  /* width: 600px; */
-  /* height: 400px; */
+#summary {
+  display: none;
 }
 
-.bigchart {
+.chart {
   margin: 2em auto;
   /* width: 600px; */
   /* height: 400px; */

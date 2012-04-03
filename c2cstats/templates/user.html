@@ -56,11 +56,15 @@ $(document).ready(function(){
       $summary.hide();
       $(this).show();
     })
-    .ajaxStop(function() {
+    .ajaxSuccess(function() {
       $(this).hide();
       $summary.show();
+    })
+    .ajaxError(function() {
+      $summary.hide();
+      $(this).hide();
+      $(this).after('<div class="alert alert-error">Erreur lors du chargement des données</div>');
     });
-
   $.getJSON(jsonurl, renderplot);
 });
 </script>
