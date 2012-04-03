@@ -156,7 +156,8 @@ class Global(Generator):
         "Count number of outings per activity"
         c = Counter(self.data.activity)
         return {'title': u'Répartition par activité',
-                'values': c.items()}
+                'labels': c.keys(),
+                'values': c.values()}
 
     @property
     def activities_per_year(self):
@@ -175,8 +176,10 @@ class Global(Generator):
         use = c.most_common(10)
         sum_use = sum(zip(*use)[1])
         use.append((u'Autres', sum(c.values()) - sum_use))
+        use = zip(*use)
         return {'title': u'Répartition par région',
-                'values': use}
+                'labels': use[0],
+                'values': use[1]}
 
 
 class Escalade(Generator):
