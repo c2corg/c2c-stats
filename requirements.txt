@@ -2,3 +2,4 @@ Flask
 numpy
 beautifulsoup4
 lxml
+gunicorn
