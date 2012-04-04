@@ -2,14 +2,13 @@
 # -*- coding:utf-8 -*-
 
 import os
-import json
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
 from c2cstats.parser import ParserError
 from c2cstats.generators import generate_json
 
-from flask import Flask, request, redirect, url_for, render_template, json
+from flask import Flask, request, redirect, url_for, render_template, json, jsonify
 
 # configuration
 SECRET_KEY = 'development key'
@@ -45,7 +44,7 @@ def get_user_stats(user_id):
 
     with open(json_file, 'r') as f:
         data = json.load(f)
-    return json.dumps(data)
+    return jsonify(**data)
 
 
 @app.route('/user/<int:user_id>')
@@ -64,4 +63,3 @@ def show_user_stats(user_id):
 def query_user():
     return redirect(url_for('show_user_stats',
                             user_id=int(request.form['user_id'])))
-
