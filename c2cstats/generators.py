@@ -20,62 +20,6 @@ COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
                     'D+', 'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+')
 
 
-def generate_json(user_id, filename):
-    "Generate a json file with all computed data."
-
-    t0 = time.time()
-    data = Outings(user_id)
-    t1 = time.time()
-
-    ctx = {'activities': [ACT_SHORT[i] for i in data.activities],
-           'nb_outings': data.nboutings,
-           'url': "http://www.camptocamp.org/outings/list/users/%s" % user_id,
-           'user_url': "http://www.camptocamp.org/users/%s" % user_id
-           }
-
-    # global attributes
-    g = Global(data)
-    ctx['global'] = {}
-    for attr in ['activities', 'activities_per_year', 'area', 'cotation']:
-        ctx['global'][attr] = getattr(g, attr, [])
-
-    ctx['global']['cotation_per_activity'] = {
-        'title': u'Cotation globale par activité',
-        'xlabels': COTATION_GLOBALE,
-        'labels': [act.title() for act in data.activities],
-        'values': [g.cotation_globale_per_act(act)['values'] for act in data.activities]
-        }
-
-    # attributes for subclasses (activities)
-    for cls in Generator.__subclasses__():
-        d = cls(data)
-        act = d.activity
-
-        # test act to filter out the Global class
-        if act:
-            ctx[ACT_SHORT[act]] = {'full_name': act.title(),
-                                   'cotation': getattr(d, 'cotation', [])}
-
-    d = datetime.now()
-    ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
-    ctx['time'] = {
-        'download': '{:.2}'.format(data.download_time),
-        'parse': '{:.2}'.format(data.parse_time),
-        'generation': '{:.3}'.format(time.time() - t1),
-        'total': '{:.2}'.format(time.time() - t0)
-    }
-
-    with open(filename, 'w') as f:
-        json.dump(ctx, f)
-
-
-def remove_plus(nparray):
-    "Remove '+' for all elements of the numpy array `nparray`"
-    l = lambda x: x.replace('+','')
-    vrem = np.vectorize(l)
-    return vrem(nparray)
-
-
 class Generator(object):
 
     def __init__(self, data):
@@ -89,20 +33,20 @@ class Generator(object):
         self.year_labels = [str(i) for i in self.year_uniq]
 
 
-    def filter_activity(self, arr, activity):
-        "Return a sub array of `arr` with only data for `activity`"
-        arr_filtered = np.copy(arr)
-        ind = (self.data.activity == activity)
-        arr_filtered = arr_filtered[ind]
-        return arr_filtered
-
-
     @property
     def cotation(self):
         c = Counter(self.cotation_values)
         return {'title': self.cotation_title,
                 'labels': self.COTATION_REF,
                 'values': [c[k] for k in self.COTATION_REF]}
+
+
+    def filter_activity(self, arr, activity):
+        "Return a sub array of `arr` with only data for `activity`"
+        arr_filtered = np.copy(arr)
+        ind = (self.data.activity == activity)
+        arr_filtered = arr_filtered[ind]
+        return arr_filtered
 
 
     def gain_per_year(self):
@@ -207,11 +151,14 @@ class Rando(Generator):
 class Alpinisme(Generator):
     pass
 
+
 class Raquette(Generator):
     pass
 
+
 class Rocher(Generator):
     pass
+
 
 class Ski(Generator):
 
@@ -222,3 +169,59 @@ class Ski(Generator):
         self.activity = u'ski, surf'
         self.cotation_values = self.data.cot_skiponc
         self.cotation_title = u'Cotation ponctuelle ski'
+
+
+def remove_plus(nparray):
+    "Remove '+' for all elements of the numpy array `nparray`"
+    l = lambda x: x.replace('+','')
+    vrem = np.vectorize(l)
+    return vrem(nparray)
+
+
+def generate_json(user_id, filename):
+    "Generate a json file with all computed data."
+
+    t0 = time.time()
+    data = Outings(user_id)
+    t1 = time.time()
+
+    ctx = {'activities': [ACT_SHORT[i] for i in data.activities],
+           'nb_outings': data.nboutings,
+           'url': "http://www.camptocamp.org/outings/list/users/%s" % user_id,
+           'user_url': "http://www.camptocamp.org/users/%s" % user_id
+           }
+
+    # global attributes
+    g = Global(data)
+    ctx['global'] = {}
+    for attr in ['activities', 'activities_per_year', 'area', 'cotation']:
+        ctx['global'][attr] = getattr(g, attr, [])
+
+    ctx['global']['cotation_per_activity'] = {
+        'title': u'Cotation globale par activité',
+        'xlabels': COTATION_GLOBALE,
+        'labels': [act.title() for act in data.activities],
+        'values': [g.cotation_globale_per_act(act)['values'] for act in data.activities]
+        }
+
+    # attributes for subclasses (activities)
+    for cls in Generator.__subclasses__():
+        d = cls(data)
+        act = d.activity
+
+        # test act to filter out the Global class
+        if act:
+            ctx[ACT_SHORT[act]] = {'full_name': act.title(),
+                                   'cotation': getattr(d, 'cotation', [])}
+
+    d = datetime.now()
+    ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
+    ctx['time'] = {
+        'download': '{:.2}'.format(data.download_time),
+        'parse': '{:.2}'.format(data.parse_time),
+        'generation': '{:.3}'.format(time.time() - t1),
+        'total': '{:.2}'.format(time.time() - t0)
+    }
+
+    with open(filename, 'w') as f:
+        json.dump(ctx, f)
