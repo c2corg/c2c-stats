@@ -113,14 +113,15 @@ function renderplot(data) {
     plot_pie(data.global.activities, 'chart_activities');
     plot_pie(data.global.area, 'chart_area');
 
-    // plot_cotation(data.global.cotation_globale, 'chart_cot_globale');
+    // plot_cotation(data.global.cotation, 'chart_cot_globale');
     plot_cotation_globale_per_activity(data.global.cotation_per_activity, 'chart_cot_globale');
 
     $.each(data.activities, function(index, value) {
-        if (data[value].cotation.values != null && data[value].cotation.values.length > 0) {
+        if (data[value] &&
+            data[value].cotation.values != null &&
+            data[value].cotation.values.length > 0) {
             $("#charts").append('<div id="cotation_'+value+'" class="chart"></div>');
             plot_cotation(data[value].cotation, 'cotation_'+value);
         }
     });
 }
-

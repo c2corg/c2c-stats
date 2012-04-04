@@ -21,46 +21,40 @@ COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
 
 
 def generate_json(user_id, filename):
-    """Generate a json file with all computed data.
-
-    Arguments:
-    - `filename`:
-    - `user_id`:
-    """
+    "Generate a json file with all computed data."
 
     t0 = time.time()
     data = Outings(user_id)
-
     t1 = time.time()
-    act_long = dict([(v, k) for k, v in ACT_SHORT.items()])
 
-    act_list = [ACT_SHORT[i] for i in data.activities]
-    ctx = {'activities': sorted(act_list),
+    ctx = {'activities': [ACT_SHORT[i] for i in data.activities],
            'nb_outings': data.nboutings,
-           'url': "http://www.camptocamp.org/outings/list/users/%s" % user_id}
+           'url': "http://www.camptocamp.org/outings/list/users/%s" % user_id,
+           'user_url': "http://www.camptocamp.org/users/%s" % user_id
+           }
 
+    # global attributes
     g = Global(data)
-    ctx['global'] = {'activities': g.activities,
-                     'activities_per_year': g.activities_per_year,
-                     'area': g.area,
-                     'cotation_globale': g.cotation
-                     }
+    ctx['global'] = {}
+    for attr in ['activities', 'activities_per_year', 'area', 'cotation']:
+        ctx['global'][attr] = getattr(g, attr, [])
 
-    cotg_per_act = {'title': u'Cotation globale par activité',
-                    'xlabels': COTATION_GLOBALE,
-                    'labels': [],
-                    'values': []}
+    ctx['global']['cotation_per_activity'] = {
+        'title': u'Cotation globale par activité',
+        'xlabels': COTATION_GLOBALE,
+        'labels': [act.title() for act in data.activities],
+        'values': [g.cotation_globale_per_act(act)['values'] for act in data.activities]
+        }
 
-    for i, act in enumerate(act_list):
-        # call the class for the current activity
-        d = globals()[act.title()](data)
-        ctx[act] = {'full_name': act_long[act].title(),
-                    'cotation': getattr(d, 'cotation', [])}
+    # attributes for subclasses (activities)
+    for cls in Generator.__subclasses__():
+        d = cls(data)
+        act = d.activity
 
-        cotg_per_act['values'].append(getattr(d, 'cotation_globale', [])['values'])
-        cotg_per_act['labels'].append(act_long[act].title())
-
-    ctx['global']['cotation_per_activity'] = cotg_per_act
+        # test act to filter out the Global class
+        if act:
+            ctx[ACT_SHORT[act]] = {'full_name': act.title(),
+                                   'cotation': getattr(d, 'cotation', [])}
 
     d = datetime.now()
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
@@ -82,7 +76,7 @@ def remove_plus(nparray):
     return vrem(nparray)
 
 
-class Generator:
+class Generator(object):
 
     def __init__(self, data):
         self.data = data
@@ -96,6 +90,7 @@ class Generator:
 
 
     def filter_activity(self, arr, activity):
+        "Return a sub array of `arr` with only data for `activity`"
         arr_filtered = np.copy(arr)
         ind = (self.data.activity == activity)
         arr_filtered = arr_filtered[ind]
@@ -108,21 +103,6 @@ class Generator:
         return {'title': self.cotation_title,
                 'labels': self.COTATION_REF,
                 'values': [c[k] for k in self.COTATION_REF]}
-
-
-    @property
-    def cotation_globale(self):
-        "Count number of outings per bin of cot_globale"
-
-        if self.activity:
-            c = Counter(self.filter_activity(self.data.cot_globale,
-                                             self.activity))
-        else:
-            c = Counter(self.data.cot_globale)
-
-        return {'title': u'Cotation globale',
-                'labels': COTATION_GLOBALE,
-                'values': [c[k] for k in COTATION_GLOBALE]}
 
 
     def gain_per_year(self):
@@ -182,6 +162,14 @@ class Global(Generator):
                 'values': use[1]}
 
 
+    def cotation_globale_per_act(self, activity):
+        "Count number of outings per bin of cot_globale"
+        c = Counter(self.filter_activity(self.data.cot_globale, activity))
+        return {'title': u'Cotation globale',
+                'labels': COTATION_GLOBALE,
+                'values': [c[k] for k in COTATION_GLOBALE]}
+
+
 class Escalade(Generator):
 
     COTATION_REF = ('3a', '3b', '3c', '4a', '4b', '4c', '5a', '5b',
@@ -234,4 +222,3 @@ class Ski(Generator):
         self.activity = u'ski, surf'
         self.cotation_values = self.data.cot_skiponc
         self.cotation_title = u'Cotation ponctuelle ski'
-
