@@ -17,13 +17,32 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; If not, see http://www.gnu.org/licenses/
 
+import requests
 import time
-import urllib
 import numpy as np
 from bs4 import BeautifulSoup
 
 NB_ITEMS = 100
 BASE_URL = "http://www.camptocamp.org/outings/list/layout/light/users/%s/npp/%d/page/%d"
+
+COTATIONS = {
+    u'Cotation glace': { 'name': 'cot_glace', 'format': 'U2' },
+    u'Cotation mixte': { 'name': 'cot_mixte', 'format': 'U2' },
+    u'Cotation globale': { 'name': 'cot_globale', 'format': 'U3' },
+    u'Cotation globale ski': { 'name': 'cot_globale', 'format': 'U3' },
+    u'Cotation libre': { 'name': 'cot_libre', 'format': 'U3' },
+    u'Cotation libre obligatoire': { 'name': 'cot_oblige', 'format': 'U3' },
+    u'Cotation libre et libre obligatoire': { 'name': 'cot_libre', 'format': 'U3' },
+    u'Cotation escalade artificielle': { 'name': 'cot_artif', 'format': 'U2' },
+    u'Cotation randonnée': { 'name': 'cot_rando', 'format': 'U2' },
+    u'Cotation raquette': { 'name': 'cot_raquette', 'format': 'U2' },
+    u'Cotation technique': { 'name': 'cot_skitech', 'format': 'U3' },
+    u'Cotation ponctuelle ski': { 'name': 'cot_skiponc', 'format': 'U2' },
+    u'Engagement': { 'name': 'engagement', 'format': 'U3' },
+    u'Exposition': { 'name': 'exposition', 'format': 'U2' },
+    u'Qualité de l\'équipement en place': { 'name': 'equipement', 'format': 'U2' }
+    }
+
 
 class ParserError(Exception):
     def __init__(self, msg):
@@ -31,29 +50,13 @@ class ParserError(Exception):
     def __str__(self):
         return self.msg
 
+
 class Outings:
-    "Parse the list of outings of user user_id"
+    "Get and parse the list of outings of user `user_id``"
+
     def __init__(self, user_id):
         self.user_id = str(user_id)
-
-        self.cotations = {
-            u'Cotation glace': { 'name': 'cot_glace', 'format': 'U2' },
-            u'Cotation mixte': { 'name': 'cot_mixte', 'format': 'U2' },
-            u'Cotation globale': { 'name': 'cot_globale', 'format': 'U3' },
-            u'Cotation globale ski': { 'name': 'cot_globale', 'format': 'U3' },
-            u'Cotation libre': { 'name': 'cot_libre', 'format': 'U3' },
-            u'Cotation libre obligatoire': { 'name': 'cot_oblige', 'format': 'U3' },
-            u'Cotation libre et libre obligatoire': { 'name': 'cot_libre', 'format': 'U3' },
-            u'Cotation escalade artificielle': { 'name': 'cot_artif', 'format': 'U2' },
-            u'Cotation randonnée': { 'name': 'cot_rando', 'format': 'U2' },
-            u'Cotation raquette': { 'name': 'cot_raquette', 'format': 'U2' },
-            u'Cotation technique': { 'name': 'cot_skitech', 'format': 'U3' },
-            u'Cotation ponctuelle ski': { 'name': 'cot_skiponc', 'format': 'U2' },
-            u'Engagement': { 'name': 'engagement', 'format': 'U3' },
-            u'Exposition': { 'name': 'exposition', 'format': 'U2' },
-            u'Qualité de l\'équipement en place': { 'name': 'equipement', 'format': 'U2' }
-            }
-
+        self.session = requests.session()
         self.parse_outings()
 
     @property
@@ -62,13 +65,28 @@ class Outings:
         ind = (acts != u'')
         return list(acts[ind])
 
+    def outings_url(self, page):
+        return BASE_URL % (self.user_id, NB_ITEMS, page)
+
+    def get_page(self, url):
+        "Return the HTML source of the page 'url'"
+        r = self.session.get(url)
+        r.encoding = 'utf-8'
+
+        if r.text == "Not Found" or r.status_code != 200:
+            raise ParserError('Page not found')
+
+        # Remove linebreaks & tabulations
+        page_content = r.text.replace("\n","").replace("\t","").replace("\r","")
+        return page_content
+
     def parse_outings(self):
         pagenb = 1
-        url = get_outings_url(self.user_id, pagenb)
+        url = self.outings_url(pagenb)
 
         print "Get %s ..." % url
         t0 = time.time()
-        page, headers = get_page(url)
+        page = self.get_page(url)
         self.download_time = time.time() - t0
 
         soup = BeautifulSoup(page, 'lxml')
@@ -89,7 +107,7 @@ class Outings:
         self.gain     = np.zeros(self.nboutings, dtype=np.dtype('I6'))
 
         # initialize cotation arrays
-        for c in self.cotations.itervalues():
+        for c in COTATIONS.itervalues():
             if not hasattr(self, c['name']):
                 setattr(self, c['name'],
                         np.zeros(self.nboutings, dtype=np.dtype(c['format'])))
@@ -103,11 +121,11 @@ class Outings:
         while nbtemp > 0:
             pagenb += 1
             nbtemp -= 100
-            url = get_outings_url(self.user_id, pagenb)
+            url = self.outings_url(pagenb)
 
             print "Get %s ..." % url
             t0 = time.time()
-            page, headers = get_page(url)
+            page = self.get_page(url)
             t1 = time.time()
             self.download_time += t1 - t0
 
@@ -123,7 +141,7 @@ class Outings:
 
         if not soup:
             soup = BeautifulSoup(page, 'lxml')
-    
+
         lines = soup.table.tbody.findAll('tr')
 
         n = (pagenb-1)*100
@@ -131,7 +149,7 @@ class Outings:
             t = l.contents
             # self.title.append(t[1].a.text)
             self.date[n] = t[2].time.text
-            
+
             # keep only the first one for now
             if t[3].find('span', "printonly"):
                 self.activity[n] = t[3].find('span', "printonly").text
@@ -144,7 +162,7 @@ class Outings:
             for i in t[6].findAll('span'):
                 cot_title = i['title'].split(u'\xa0:')[0]
                 try:
-                    cot = getattr(self, self.cotations[cot_title]['name'])
+                    cot = getattr(self, COTATIONS[cot_title]['name'])
                     cot[n] = i.text
                 except KeyError:
                     # TODO: add logging
@@ -154,22 +172,3 @@ class Outings:
                 self.area.append(t[9].a.text)
 
             n += 1
-
-
-def get_page(url):
-    "Return the HTML source of the page 'url'"
-    page = urllib.urlopen(url)
-    page_content = page.read()
-    page_code = page.getcode()
-
-    if page_content == "Not Found" or page_code == 404:
-        raise ParserError('Page not found')
-
-    # Remove linebreaks & tabulations
-    page_content = page_content.replace("\n","").replace("\t","").replace("\r","")
-    return page_content, page.headers
-    # return page.decode('utf-8')
-
-def get_outings_url(user_id, page):
-    return BASE_URL % (user_id, NB_ITEMS, page)
-
