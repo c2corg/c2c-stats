@@ -30,8 +30,9 @@ class Generator(object):
 
         self.year = np.array([int(i.split()[2]) for i in self.data.date])
         self.year_uniq = np.unique(self.year)
-        self.year_labels = [str(i) for i in self.year_uniq]
-
+        self.year_range = np.arange(np.min(self.year_uniq),
+                                    np.max(self.year_uniq)+1)
+        self.year_labels = [str(i) for i in self.year_range]
 
     @property
     def cotation(self):
@@ -40,14 +41,18 @@ class Generator(object):
                 'labels': self.COTATION_REF,
                 'values': [c[k] for k in self.COTATION_REF]}
 
-
     def filter_activity(self, arr, activity):
         "Return a sub array of `arr` with only data for `activity`"
-        arr_filtered = np.copy(arr)
         ind = (self.data.activity == activity)
-        arr_filtered = arr_filtered[ind]
-        return arr_filtered
+        return arr[ind]
 
+    @property
+    def outings_per_year(self):
+        "Count number of outings per bin of year"
+        c = Counter(self.filter_activity(self.year, self.activity))
+        return {'title': u'Nombre de sorties par an',
+                'labels': self.year_labels,
+                'values': [c.get(y, 0) for y in self.year_range]}
 
     def gain_per_year(self):
 
@@ -82,16 +87,6 @@ class Global(Generator):
         return {'title': u'Répartition par activité',
                 'labels': c.keys(),
                 'values': c.values()}
-
-    @property
-    def activities_per_year(self):
-        "Compute the number of outings per year and per activity"
-        h = []
-        for i in self.data.activities:
-            ind = (self.data.activity == i)
-            h.append(list(self.year[ind]))
-
-        return h
 
     @property
     def area(self):
@@ -194,7 +189,7 @@ def generate_json(user_id, filename):
     # global attributes
     g = Global(data)
     ctx['global'] = {}
-    for attr in ['activities', 'activities_per_year', 'area', 'cotation']:
+    for attr in ['activities', 'area', 'cotation']:
         ctx['global'][attr] = getattr(g, attr, [])
 
     ctx['global']['cotation_per_activity'] = {
@@ -210,8 +205,9 @@ def generate_json(user_id, filename):
         act = d.activity
 
         # test act to filter out the Global class
-        if act:
+        if act and act in data.activities:
             ctx[ACT_SHORT[act]] = {'full_name': act.title(),
+                                   'outings_per_year': getattr(d, 'outings_per_year', []),
                                    'cotation': getattr(d, 'cotation', [])}
 
     d = datetime.now()
