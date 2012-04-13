@@ -4,7 +4,7 @@
 
 txtattr = { font: "inherit" };
 
-function   pieplot(data, chartdiv) {
+function pieplot(data, chartdiv) {
     var labels = [];
     $.each(data.labels, function(index, label) {
         labels.push(label+' ('+data.values[index]+')');
@@ -32,7 +32,7 @@ function   pieplot(data, chartdiv) {
 }
 
 
-function   barplot(data, chartdiv) {
+function barplot(data, chartdiv) {
 
     $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
 
@@ -105,10 +105,9 @@ function renderplot(data) {
     $("#nb_outings").text(data.nb_outings);
     $("#date_generated").text(data.date_generated);
     $("#download_time").text(data.time.download);
-    $("#parse_time").text(data.time.parse);
-    $("#generation_time").text(data.time.generation);
     $("#total_time").text(data.time.total);
     $("#origin-link").attr({href: data.url});
+    $("#origin-profile").attr({href: data.user_url});
 
     pieplot(data.global.activities, 'chart_activities');
     pieplot(data.global.area, 'chart_area');

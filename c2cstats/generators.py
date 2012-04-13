@@ -195,7 +195,7 @@ def generate_json(user_id, filename):
     ctx['global']['cotation_per_activity'] = {
         'title': u'Cotation globale par activité',
         'xlabels': COTATION_GLOBALE,
-        'labels': [act.title() for act in data.activities],
+        'labels': data.activities,
         'values': [g.cotation_globale_per_act(act)['values'] for act in data.activities]
         }
 
