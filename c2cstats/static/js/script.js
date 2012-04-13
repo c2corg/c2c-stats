@@ -34,7 +34,7 @@ function   pieplot(data, chartdiv) {
 
 function   barplot(data, chartdiv) {
 
-    $('#'+chartdiv).before('<h3>'+data.title+'</h3>');
+    $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
 
     var width = 30*data.labels.length,
         height = 250;
@@ -121,8 +121,8 @@ function renderplot(data) {
           data[value].cotation.values != null &&
           data[value].cotation.values.length > 0)
       {
-        $("#charts").append('<div id="'+value+'"></div>');
-        $("#"+value).append('<h2>'+data[value].full_name+'</h2>');
+        $(".nav").append('<li><a href="#'+value+'" data-toggle="pill">'+data[value].full_name+'</a></li>');
+        $("#tabs").append('<div id="'+value+'" class="tab-pane fade"></div>');
 
         $("#"+value).append('<div id="cotation_'+value+'" class="chart"></div>');
         barplot(data[value].cotation, 'cotation_'+value);

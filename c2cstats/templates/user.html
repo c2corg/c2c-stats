@@ -31,10 +31,15 @@ id="nb_outings"></span> sorties</b>.</p>
 </section>
 
 <section id="charts">
-  <div id="global">
-    <div id="chart_activities" class="chart"></div>
-    <div id="chart_area" class="chart"></div>
-    <div id="chart_cot_globale" class="chart"></div>
+  <ul class="nav nav-pills">
+    <li class="active"><a href="#global" data-toggle="pill">Général</a></li>
+  </ul>
+  <div id="tabs" class="tab-content">
+    <div id="global" class="tab-pane fade active in">
+      <div id="chart_activities" class="chart"></div>
+      <div id="chart_area" class="chart"></div>
+      <div id="chart_cot_globale" class="chart"></div>
+    </div>
   </div>
 </section>
 
@@ -45,6 +50,8 @@ id="nb_outings"></span> sorties</b>.</p>
 <script src="{{ url_for('static', filename='js/libs/g.raphael-min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/libs/g.pie-min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/libs/g.bar-min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/bootstrap-transition.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/bootstrap-tab.js') }}"></script>
 <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
 <script>
@@ -52,18 +59,23 @@ var jsonurl = "{{ json_url }}";
 
 $(document).ready(function(){
   $summary = $('#summary');
+  $nav = $('.nav');
+
   $('#loading')
     .hide()  // hide it initially
     .ajaxStart(function() {
       $summary.hide();
+      $nav.hide();
       $(this).show();
     })
     .ajaxSuccess(function() {
       $(this).hide();
       $summary.show();
+      $nav.show();
     })
     .ajaxError(function() {
       $summary.hide();
+      $nav.hide();
       $(this).hide();
       $(this).after('<div class="alert alert-error">Erreur lors du chargement des données</div>');
     });
