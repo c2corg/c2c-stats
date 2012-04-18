@@ -145,7 +145,15 @@ class Rando(Generator):
 
 
 class Alpinisme(Generator):
-    pass
+
+    COTATION_REF = ('M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9',
+                    'M10', 'M11', 'M12')
+
+    def __init__(self, *args, **kwargs):
+        Generator.__init__(self, *args, **kwargs)
+        self.activity = u'alpinisme neige, glace, mixte'
+        self.cotation_values = remove_plus(self.data.cot_mixte)
+        self.cotation_title = u'Cotation mixte'
 
 
 class Raquette(Generator):
@@ -224,7 +232,8 @@ def generate_json(user_id, filename):
         if act and act in data.activities:
             ctx[ACT_SHORT[act]] = {'full_name': act.title(),
                                    'outings_per_year': getattr(d, 'outings_per_year', []),
-                                   'cotation': getattr(d, 'cotation', [])}
+                                   'cotation': getattr(d, 'cotation', []),
+                                   'cotation_globale': g.cotation_globale_per_act(act)}
 
     d = datetime.now()
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')

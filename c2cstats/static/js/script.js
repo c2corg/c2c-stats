@@ -53,6 +53,9 @@ function renderplot(data) {
         $("#"+value).append('<div id="cotation_'+value+'" class="chart"></div>');
         barplot(data[value].cotation, 'cotation_'+value);
 
+        $("#"+value).append('<div id="cotation_globale_'+value+'" class="chart"></div>');
+        barplot(data[value].cotation_globale, 'cotation_globale_'+value);
+
         $("#"+value).append('<div id="outings_'+value+'" class="chart"></div>');
         hbarplot(data[value].outings_per_year, 'outings_'+value);
       }
