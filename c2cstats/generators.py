@@ -117,7 +117,8 @@ class Escalade(Generator):
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.activity = 'escalade'
-        self.cotation_values = remove_plus(self.data.cot_libre)
+        self.cotation_values = self.filter_activity(self.data.cot_libre, self.activity)
+        self.cotation_values = remove_plus(self.cotation_values)
         self.cotation_title = u'Cotation escalade'
 
 
@@ -152,7 +153,15 @@ class Raquette(Generator):
 
 
 class Rocher(Generator):
-    pass
+
+    COTATION_REF = Escalade.COTATION_REF
+
+    def __init__(self, *args, **kwargs):
+        Generator.__init__(self, *args, **kwargs)
+        self.activity = 'rocher haute montagne'
+        self.cotation_values = self.filter_activity(self.data.cot_libre, self.activity)
+        self.cotation_values = remove_plus(self.cotation_values)
+        self.cotation_title = u'Cotation escalade'
 
 
 class Ski(Generator):
