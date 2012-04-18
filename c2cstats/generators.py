@@ -149,7 +149,14 @@ class Alpinisme(Generator):
 
 
 class Raquette(Generator):
-    pass
+
+    COTATION_REF = ('R1', 'R2', 'R3', 'R4', 'R5')
+
+    def __init__(self, *args, **kwargs):
+        Generator.__init__(self, *args, **kwargs)
+        self.activity = u'raquette'
+        self.cotation_values = self.data.cot_raquette
+        self.cotation_title = u'Cotation raquette'
 
 
 class Rocher(Generator):
