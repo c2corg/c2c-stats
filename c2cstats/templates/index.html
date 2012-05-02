@@ -15,6 +15,27 @@
   </form>
 </section>
 
+<section id="about">
+  <div class="thumbnail">
+    <img src="{{ url_for('static', filename='images/screenshot.png') }}" alt="screenshot">
+  </div>
+
+  <h2>À propos</h2>
+  <p>Ce site permet de calculer des statistiques à partir de la liste de sorties d'un
+    utilisateur de <a href="http://www.camptocamp.org/">Camptocamp.org</a>. Le code
+    permettant de calculer ces statistiques est
+    <a href="https://github.com/saimn/c2c-stats">disponible</a>.</p>
+
+  <h3>Réutilisation des statistiques</h3>
+  <p>Il est possible de récupérer les statistiques produites au format JSON pour les
+    intégrer dans un autre site, avec une requête
+    sur <code>/user/&lt;user_id&gt;/json</code>.</p>
+  <p>Pour afficher les graphiques avec <a href="http://g.raphaeljs.com/">gRaphaël</a>
+    comme sur ce site, des fonctions sont disponibles dans le fichier <a href="https://github.com/saimn/c2c-stats/blob/master/c2cstats/static/js/c2cstats.js">c2cstats.js</a>.
+    Le fichier <a href="https://github.com/saimn/c2c-stats/blob/master/c2cstats/static/js/script.js">script.js</a>
+    donne un exemple de l'utilisation de ces fonctions.</p>
+</section>
+
 <script>
   window.onload = function() {
     if (!("autofocus" in document.createElement("input"))) {
