@@ -47,7 +47,7 @@ function renderplot(data) {
           data[value].cotation.values != null &&
           data[value].cotation.values.length > 0)
       {
-        $(".nav").append('<li><a href="#'+value+'" data-toggle="pill">'+data[value].full_name+'</a></li>');
+        $(".nav").append('<li><a href="#'+value+'" data-toggle="pill">'+value+'</a></li>');
         $("#tabs").append('<div id="'+value+'" class="tab-pane fade"></div>');
 
         $("#"+value).append('<div id="cotation_'+value+'" class="chart"></div>');

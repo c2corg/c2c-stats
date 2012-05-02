@@ -11,6 +11,10 @@
   display: none;
 }
 
+.nav > li > a {
+  text-transform: capitalize;
+}
+
 .chart {
   margin: 2em auto;
   /* width: 600px; */
