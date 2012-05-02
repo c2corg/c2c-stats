@@ -54,21 +54,20 @@ class Generator(object):
                 'labels': self.year_labels,
                 'values': [c.get(y, 0) for y in self.year_range]}
 
+    @property
     def gain_per_year(self):
 
-        if self.activity:
-            gain = self.filter_activity(self.data.gain, self.activity)
-            year = self.filter_activity(self.data.year, self.activity)
-        else:
-            gain = self.data.gain
-            year = self.year
+        gain = self.filter_activity(self.data.gain, self.activity)
+        year = self.filter_activity(self.year, self.activity)
 
         counts = []
-        for i in self.year_uniq:
+        for i in self.year_range:
             ind = (year == i)
             counts.append(np.sum(gain[ind]))
 
-        return counts
+        return {'title': u'Dénivelé par an',
+                'labels': self.year_labels,
+                'values': [int(c) for c in counts]}
 
 
 class Global(Generator):
@@ -232,6 +231,7 @@ def generate_json(user_id, filename):
         if act and act in data.activities:
             ctx[ACT_SHORT[act]] = {'full_name': act.title(),
                                    'outings_per_year': getattr(d, 'outings_per_year', []),
+                                   'gain_per_year': getattr(d, 'gain_per_year', []),
                                    'cotation': getattr(d, 'cotation', []),
                                    'cotation_globale': g.cotation_globale_per_act(act)}
 

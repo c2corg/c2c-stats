@@ -58,6 +58,9 @@ function renderplot(data) {
 
         $("#"+value).append('<div id="outings_'+value+'" class="chart"></div>');
         hbarplot(data[value].outings_per_year, 'outings_'+value);
+
+        $("#"+value).append('<div id="gain_'+value+'" class="chart"></div>');
+        hbarplot(data[value].gain_per_year, 'gain_'+value);
       }
     });
 }
