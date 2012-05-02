@@ -244,5 +244,8 @@ def generate_json(user_id, filename):
         'total': '{:.2}'.format(time.time() - t0)
     }
 
-    with open(filename, 'w') as f:
-        json.dump(ctx, f)
+    try:
+        with open(filename, 'w') as f:
+            json.dump(ctx, f)
+    except IOError:
+        print "Erreur lors de la serialiasation du json"

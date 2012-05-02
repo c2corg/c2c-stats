@@ -42,8 +42,12 @@ def get_user_stats(user_id):
         except:
             data = { 'error': u'Erreur, il y a un truc qui va pas ;-)' }
 
-    with open(json_file, 'r') as f:
-        data = json.load(f)
+    try:
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+    except IOError:
+        data = { 'error': u'Erreur lors du calcul des stats' }
+
     return jsonify(**data)
 
 
