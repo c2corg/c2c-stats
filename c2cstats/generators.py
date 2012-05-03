@@ -49,41 +49,46 @@ class Generator(object):
         ind = (self.data.activity == activity)
         return arr[ind]
 
-    @property
-    def outings_per_year(self):
-        "Count number of outings per bin of year"
-        c = Counter(self.filter_activity(self.year, self.activity))
-        return {'title': u'Nombre de sorties par an',
-                'labels': self.year_labels,
-                'values': [c.get(y, 0) for y in self.year_range]}
-
-    @property
-    def gain_per_year(self):
+    def count_per_year(self):
 
         gain = self.filter_activity(self.data.gain, self.activity)
         year = self.filter_activity(self.year, self.activity)
 
-        counts_year = []
-        counts_month = []
+        self.gain_year = []
+        self.gain_month = []
+        self.outings_year = []
 
         for i in self.year_range:
             ind = (year == i)
             gain_y = gain[ind]
-            counts_year.append(int(np.sum(gain_y)))
+
+            self.outings_year.append(len(year[ind]))
+            self.gain_year.append(int(np.sum(gain_y)))
 
             month_y = self.month[ind]
-            counts_m = np.zeros(12, dtype=int)
+            gain_m = np.zeros(12, dtype=int)
 
             for m in self.months_idx:
                 sel = (month_y == MONTHS[m])
                 if sel.any():
-                    counts_m[m] = np.sum(gain_y[sel])
-            counts_month.append(list(counts_m.cumsum()))
+                    gain_m[m] = np.sum(gain_y[sel])
+            self.gain_month.append(list(gain_m.cumsum()))
+
+    @property
+    def outings_per_year(self):
+        "Count number of outings per bin of year"
+
+        return {'title': u'Nombre de sorties par an',
+                'labels': self.year_labels,
+                'values': self.outings_year}
+
+    @property
+    def gain_per_year(self):
 
         return {'title': u'Dénivelé par an',
                 'labels': self.year_labels,
-                'values': counts_year,
-                'values_per_month': counts_month}
+                'values': self.gain_year,
+                'values_per_month': self.gain_month}
 
 
 class Global(Generator):
