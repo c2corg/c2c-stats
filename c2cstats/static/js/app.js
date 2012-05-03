@@ -1,21 +1,22 @@
 $(document).ready(function(){
-  $summary = $('#summary');
+  $tohide = $('.hide');
   $nav = $('.nav');
 
   $('#loading')
     .hide()  // hide it initially
     .ajaxStart(function() {
-      $summary.hide();
+      $tohide.hide();
       $nav.hide();
       $(this).show();
     })
     .ajaxSuccess(function() {
       $(this).hide();
-      $summary.show();
+      $tohide.show();
       $nav.show();
+      $.sparkline_display_visible();
     })
     .ajaxError(function() {
-      $summary.hide();
+      $tohide.hide();
       $nav.hide();
       $(this).hide();
       $(this).after('<div class="alert alert-error">Erreur lors du chargement des données</div>');
@@ -66,4 +67,16 @@ function renderplot(data) {
         lineplot(data[value].gain_per_year, 'gain_cumul_'+value);
       }
     });
+
+    var spark_data = [],
+        bar_width = 4;
+
+    $.each(data.global.outings_per_month.values, function(index, value) {
+      spark_data = spark_data.concat(value);
+    });
+    if (spark_data.length*5 > 680) {
+      bar_width = Math.max(Math.floor(680 / spark_data.length) - 1, 2);
+    }
+    $('#sparkline').sparkline(spark_data,
+                              { type: 'bar', barColor: '#0088cc', barWidth: bar_width });
 }

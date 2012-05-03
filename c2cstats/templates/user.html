@@ -10,20 +10,23 @@
 {% block body %}
 <p>⇦ Retour à l'<a href="{{ url_for('index') }}">accueil</a>.</p>
 
-<div id="loading">
-  <p>Chargement ...</p>
-  <div class="progress progress-striped active">
-    <div class="bar" style="width: 100%;"></div>
-  </div>
-</div>
-
 <section id="summary" class="well">
-  <p>Graphiques générés le <b><span id="date_generated"></span></b> à partir de <b><span
-id="nb_outings"></span> sorties</b>.</p>
-  <p><span class="label">Liens C2C</span> <a id="origin-profile" href="">profil</a>,
-  <a id="origin-link" href="">liste des sorties</a>.</p>
+  <p><span id="sparkline"></span></p>
 
-  <ul>
+  <div id="loading">
+    <p>Chargement ...</p>
+    <div class="progress progress-striped active">
+      <div class="bar" style="width: 100%;"></div>
+    </div>
+  </div>
+
+  <p class="hide">Graphiques générés le <b><span id="date_generated"></span></b>
+    à partir de <b><span id="nb_outings"></span> sorties</b>.</p>
+  <p class="hide"><span class="label">Liens C2C</span>
+    <a id="origin-profile" href="">profil</a>,
+    <a id="origin-link" href="">liste des sorties</a>.</p>
+
+  <ul class="hide">
     <li>Temps de téléchargement: <span id="download_time"></span> sec.</li>
     <li>Temps total: <span id="total_time"></span> sec.</li>
   </ul>
