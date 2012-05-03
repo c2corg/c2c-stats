@@ -44,18 +44,24 @@ function renderplot(data) {
     // plot_cotation_globale_per_activity(data.global.cotation_per_activity, 'chart_cot_globale');
 
     $.each(data.activities, function(index, value) {
-      if (data[value] &&
-          data[value].cotation.values != null &&
-          data[value].cotation.values.length > 0)
+      if (data[value])
       {
         $(".nav").append('<li><a href="#'+value+'" data-toggle="pill">'+value+'</a></li>');
         $("#tabs").append('<div id="'+value+'" class="tab-pane fade"></div>');
 
-        $("#"+value).append('<div id="cotation_'+value+'" class="chart"></div>');
-        barplot(data[value].cotation, 'cotation_'+value);
+        if (data[value].cotation != null &&
+            data[value].cotation.values.length > 0)
+        {
+          $("#"+value).append('<div id="cotation_'+value+'" class="chart"></div>');
+          barplot(data[value].cotation, 'cotation_'+value);
+        }
 
-        $("#"+value).append('<div id="cotation_globale_'+value+'" class="chart"></div>');
-        barplot(data[value].cotation_globale, 'cotation_globale_'+value);
+        if (data[value].cotation_globale != null &&
+            data[value].cotation_globale.values.length > 0)
+        {
+          $("#"+value).append('<div id="cotation_globale_'+value+'" class="chart"></div>');
+          barplot(data[value].cotation_globale, 'cotation_globale_'+value);
+        }
 
         $("#"+value).append('<div id="outings_'+value+'" class="chart"></div>');
         hbarplot(data[value].outings_per_year, 'outings_'+value);
