@@ -261,12 +261,12 @@ def generate_json(user_id, filename):
     for attr in ['activities', 'area', 'cotation', 'outings_per_month']:
         ctx['global'][attr] = getattr(g, attr, [])
 
-    ctx['global']['cotation_per_activity'] = {
-        'title': u'Cotation globale par activité',
-        'xlabels': COTATION_GLOBALE,
-        'labels': data.activities,
-        'values': [g.cotation_globale_per_act(act)['values'] for act in data.activities]
-        }
+    # ctx['global']['cotation_per_activity'] = {
+    #     'title': u'Cotation globale par activité',
+    #     'xlabels': COTATION_GLOBALE,
+    #     'labels': data.activities,
+    #     'values': [g.cotation_globale_per_act(act)['values'] for act in data.activities]
+    #     }
 
     # attributes for subclasses (activities)
     for cls in Generator.__subclasses__():
