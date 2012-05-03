@@ -22,7 +22,11 @@
   </head>
   <body>
     <div class="container">
-      {% block title %}{% endblock %}
+      {% block title %}
+      <header class="page-header">
+        <h1>Statistiques pour Camptocamp.org</h1>
+      </header>
+      {% endblock %}
 
       {% for category, message in get_flashed_messages(with_categories=true) %}
       <div class="alert {{ category }}">{{ message }}</div>

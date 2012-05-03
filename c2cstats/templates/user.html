@@ -1,16 +1,11 @@
 
 {% extends "layout.html" %}
 
-{% block title %}
-<header class="page-header">
-  <h1>Statistiques pour l'utilisateur {{ user_id }}</h1>
-</header>
-{% endblock %}
-
 {% block body %}
 <p>⇦ Retour à l'<a href="{{ url_for('index') }}">accueil</a>.</p>
 
 <section id="summary" class="well">
+  <h2>Utilisateur {{ user_id }}</h2>
   <p><span id="sparkline"></span></p>
 
   <div id="loading">

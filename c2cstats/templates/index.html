@@ -1,11 +1,5 @@
 {% extends "layout.html" %}
 
-{% block title %}
-<header class="page-header">
-  <h1>Statistiques pour Camptocamp.org</h1>
-</header>
-{% endblock %}
-
 {% block body %}
 <section id="main_form">
   <form action="{{ url_for('query_user') }}" method="post" class="well form-inline">
