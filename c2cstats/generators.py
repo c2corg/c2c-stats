@@ -51,12 +51,17 @@ class Generator(object):
 
     def count_per_year(self):
 
-        gain = self.filter_activity(self.data.gain, self.activity)
-        year = self.filter_activity(self.year, self.activity)
+        if self.activity:
+           gain = self.filter_activity(self.data.gain, self.activity)
+           year = self.filter_activity(self.year, self.activity)
+        else:
+           gain = self.data.gain
+           year = self.year
 
         self.gain_year = []
         self.gain_month = []
         self.outings_year = []
+        self.outings_month = []
 
         for i in self.year_range:
             ind = (year == i)
@@ -67,11 +72,15 @@ class Generator(object):
 
             month_y = self.month[ind]
             gain_m = np.zeros(12, dtype=int)
+            outings_m = np.zeros(12, dtype=int)
 
             for m in self.months_idx:
                 sel = (month_y == MONTHS[m])
                 if sel.any():
+                    outings_m[m] = len(month_y[sel])
                     gain_m[m] = np.sum(gain_y[sel])
+
+            self.outings_month.append(list(outings_m))
             self.gain_month.append(list(gain_m.cumsum()))
 
     @property
@@ -99,6 +108,7 @@ class Global(Generator):
         Generator.__init__(self, *args, **kwargs)
         self.cotation_values = self.data.cot_globale
         self.cotation_title = u'Cotation globale'
+        self.count_per_year()
 
     @property
     def activities(self):
@@ -120,6 +130,14 @@ class Global(Generator):
                 'labels': use[0],
                 'values': use[1]}
 
+    @property
+    def outings_per_month(self):
+        "Count number of outings per month"
+
+        return {'title': u'Nombre de sorties par mois',
+                'labels': self.year_labels,
+                'values': self.outings_month}
+
 
     def cotation_globale_per_act(self, activity):
         "Count number of outings per bin of cot_globale"
@@ -140,6 +158,7 @@ class Escalade(Generator):
         self.cotation_values = self.filter_activity(self.data.cot_libre, self.activity)
         self.cotation_values = remove_plus(self.cotation_values)
         self.cotation_title = u'Cotation escalade'
+        self.count_per_year()
 
 
 class Glace(Generator):
@@ -151,6 +170,7 @@ class Glace(Generator):
         self.activity = u'cascade de glace'
         self.cotation_values = self.data.cot_glace
         self.cotation_title = u'Cotation glace'
+        self.count_per_year()
 
 
 class Rando(Generator):
@@ -162,6 +182,7 @@ class Rando(Generator):
         self.activity = u'randonnée pédestre'
         self.cotation_values = self.data.cot_rando
         self.cotation_title = u'Cotation rando'
+        self.count_per_year()
 
 
 class Alpinisme(Generator):
@@ -174,6 +195,7 @@ class Alpinisme(Generator):
         self.activity = u'alpinisme neige, glace, mixte'
         self.cotation_values = remove_plus(self.data.cot_mixte)
         self.cotation_title = u'Cotation mixte'
+        self.count_per_year()
 
 
 class Raquette(Generator):
@@ -185,6 +207,7 @@ class Raquette(Generator):
         self.activity = u'raquette'
         self.cotation_values = self.data.cot_raquette
         self.cotation_title = u'Cotation raquette'
+        self.count_per_year()
 
 
 class Rocher(Generator):
@@ -197,6 +220,7 @@ class Rocher(Generator):
         self.cotation_values = self.filter_activity(self.data.cot_libre, self.activity)
         self.cotation_values = remove_plus(self.cotation_values)
         self.cotation_title = u'Cotation escalade'
+        self.count_per_year()
 
 
 class Ski(Generator):
@@ -208,6 +232,7 @@ class Ski(Generator):
         self.activity = u'ski, surf'
         self.cotation_values = self.data.cot_skiponc
         self.cotation_title = u'Cotation ponctuelle ski'
+        self.count_per_year()
 
 
 def remove_plus(nparray):
@@ -233,7 +258,7 @@ def generate_json(user_id, filename):
     # global attributes
     g = Global(data)
     ctx['global'] = {}
-    for attr in ['activities', 'area', 'cotation']:
+    for attr in ['activities', 'area', 'cotation', 'outings_per_month']:
         ctx['global'][attr] = getattr(g, attr, [])
 
     ctx['global']['cotation_per_activity'] = {
