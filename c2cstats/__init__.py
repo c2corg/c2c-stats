@@ -8,7 +8,8 @@ locale.setlocale(locale.LC_ALL, '')
 from c2cstats.parser import ParserError
 from c2cstats.generators import generate_json
 
-from flask import Flask, request, redirect, url_for, render_template, json, jsonify
+from flask import Flask, request, redirect, url_for, render_template, \
+    json, jsonify
 
 # configuration
 SECRET_KEY = 'development key'
@@ -22,6 +23,11 @@ app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 @app.route('/user/')
