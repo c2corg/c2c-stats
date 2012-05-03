@@ -225,13 +225,16 @@ class Rocher(Generator):
 
 class Ski(Generator):
 
-    COTATION_REF = ('S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7')
+    # COTATION_REF = ('S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7')
+    COTATION_REF = ('1.1', '1.2', '1.3', '2.1', '2.2', '2.3', '3.1', '3.2',
+                    '3.3', '4.1', '4.2', '4.3', '5.1', '5.2', '5.3', '5.4',
+                    '5.5', '5.6')
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.activity = u'ski, surf'
-        self.cotation_values = self.data.cot_skiponc
-        self.cotation_title = u'Cotation ponctuelle ski'
+        self.cotation_values = self.data.cot_skitech
+        self.cotation_title = u'Cotation technique ski'
         self.count_per_year()
 
 
