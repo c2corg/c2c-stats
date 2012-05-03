@@ -61,6 +61,9 @@ function renderplot(data) {
 
         $("#"+value).append('<div id="gain_'+value+'" class="chart"></div>');
         hbarplot(data[value].gain_per_year, 'gain_'+value);
+
+        $("#"+value).append('<div id="gain_cumul_'+value+'" class="chart"></div>');
+        lineplot(data[value].gain_per_year, 'gain_cumul_'+value);
       }
     });
 }

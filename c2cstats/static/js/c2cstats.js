@@ -92,3 +92,22 @@ function plot_cotation_globale_per_activity(data, chartdiv) {
     .hoverColumn(fin2, fout2)
     .label(data.xlabels, true);
 }
+
+function lineplot(data, chartdiv) {
+  $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
+
+  var width = 600,
+      height = 250,
+      r = Raphael(chartdiv, width+90, height+50);
+
+  var lines = r.linechart(30, 20, width, height, [1,2,3,4,5,6,7,8,9,10,11,12], data.values_per_month, { nostroke: false, axis: "0 0 1 1", symbol: "circle", smooth: true })
+    .hoverColumn(function () {
+      this.tags = r.set();
+
+      for (var i = 0, ii = this.y.length; i < ii; i++) {
+        this.tags.push(r.tag(this.x, this.y[i], data.labels[i] + " : " + this.values[i], 160, 10).insertBefore(this).attr([{ fill: "#fff" }, { fill: this.symbols[i].attr("fill") }]));
+      }
+    }, function () {
+      this.tags && this.tags.remove();
+    });
+}

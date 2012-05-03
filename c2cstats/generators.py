@@ -19,6 +19,8 @@ ACT_SHORT = {u'alpinisme neige, glace, mixte': 'alpinisme',
 COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
                     'D+', 'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+')
 
+MONTHS = (u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', u'juillet',
+          u'août', u'septembre', u'octobre', u'novembre', u'décembre')
 
 class Generator(object):
 
@@ -29,10 +31,11 @@ class Generator(object):
         self.cotation_title = ''
 
         self.year = np.array([int(i.split()[2]) for i in self.data.date])
-        self.year_uniq = np.unique(self.year)
-        self.year_range = np.arange(np.min(self.year_uniq),
-                                    np.max(self.year_uniq)+1)
+        self.year_range = np.arange(np.min(self.year), np.max(self.year)+1)
         self.year_labels = [str(i) for i in self.year_range]
+
+        self.month = np.array([i.split()[1] for i in data.date])
+        self.months_idx = np.arange(12)
 
     @property
     def cotation(self):
@@ -60,14 +63,27 @@ class Generator(object):
         gain = self.filter_activity(self.data.gain, self.activity)
         year = self.filter_activity(self.year, self.activity)
 
-        counts = []
+        counts_year = []
+        counts_month = []
+
         for i in self.year_range:
             ind = (year == i)
-            counts.append(np.sum(gain[ind]))
+            gain_y = gain[ind]
+            counts_year.append(int(np.sum(gain_y)))
+
+            month_y = self.month[ind]
+            counts_m = np.zeros(12, dtype=int)
+
+            for m in self.months_idx:
+                sel = (month_y == MONTHS[m])
+                if sel.any():
+                    counts_m[m] = np.sum(gain_y[sel])
+            counts_month.append(list(counts_m.cumsum()))
 
         return {'title': u'Dénivelé par an',
                 'labels': self.year_labels,
-                'values': [int(c) for c in counts]}
+                'values': counts_year,
+                'values_per_month': counts_month}
 
 
 class Global(Generator):
