@@ -40,7 +40,7 @@ function renderplot(data) {
     pieplot(data.global.area, 'chart_area');
 
     // plot_cotation(data.global.cotation, 'chart_cot_globale');
-    plot_cotation_globale_per_activity(data.global.cotation_per_activity, 'chart_cot_globale');
+    // plot_cotation_globale_per_activity(data.global.cotation_per_activity, 'chart_cot_globale');
 
     $.each(data.activities, function(index, value) {
       if (data[value] &&
