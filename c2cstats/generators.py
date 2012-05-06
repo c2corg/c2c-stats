@@ -284,9 +284,9 @@ def generate_json(user_id, filename):
                                    'cotation': getattr(d, 'cotation', []),
                                    'cotation_globale': g.cotation_globale_per_act(act)}
 
-        # no cotation_globale for rando
-        if act == u'randonnée pédestre':
-            del ctx[ACT_SHORT[act]]['cotation_globale']
+            # no cotation_globale for rando
+            if act == u'randonnée pédestre':
+                del ctx[ACT_SHORT[act]]['cotation_globale']
 
     d = datetime.now()
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
