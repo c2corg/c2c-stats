@@ -37,8 +37,8 @@ function renderplot(data) {
     $("#origin-link").attr({href: data.url});
     $("#origin-profile").attr({href: data.user_url});
 
-    pieplot(data.global.activities, 'chart_activities');
-    pieplot(data.global.area, 'chart_area');
+    pieplot(data.global.activities, '#chart_activities');
+    pieplot(data.global.area, '#chart_area');
 
     // plot_cotation(data.global.cotation, 'chart_cot_globale');
     // plot_cotation_globale_per_activity(data.global.cotation_per_activity, 'chart_cot_globale');
@@ -53,24 +53,24 @@ function renderplot(data) {
             data[value].cotation.values.length > 0)
         {
           $("#"+value).append('<div id="cotation_'+value+'" class="chart"></div>');
-          barplot(data[value].cotation, 'cotation_'+value);
+          barplot(data[value].cotation, '#cotation_'+value);
         }
 
         if (data[value].cotation_globale != null &&
             data[value].cotation_globale.values.length > 0)
         {
           $("#"+value).append('<div id="cotation_globale_'+value+'" class="chart"></div>');
-          barplot(data[value].cotation_globale, 'cotation_globale_'+value);
+          barplot(data[value].cotation_globale, '#cotation_globale_'+value);
         }
 
         $("#"+value).append('<div id="outings_'+value+'" class="chart"></div>');
-        hbarplot(data[value].outings_per_year, 'outings_'+value);
+        barplot(data[value].outings_per_year, '#outings_'+value);
 
         $("#"+value).append('<div id="gain_'+value+'" class="chart"></div>');
-        hbarplot(data[value].gain_per_year, 'gain_'+value);
+        barplot(data[value].gain_per_year, '#gain_'+value);
 
-        $("#"+value).append('<div id="gain_cumul_'+value+'" class="chart"></div>');
-        lineplot(data[value].gain_per_year, 'gain_cumul_'+value);
+        // $("#"+value).append('<div id="gain_cumul_'+value+'" class="chart"></div>');
+        // lineplot(data[value].gain_per_year, 'gain_cumul_'+value);
       }
     });
 

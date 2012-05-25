@@ -2,112 +2,50 @@
 
  */
 
-txtattr = { font: "inherit" };
+barWidth = 0.6;
 
-function pieplot(data, chartdiv) {
+function pieplot(raw, chartdiv) {
+  var data = [];
+  $.each(raw.values, function(index, value) {
+    data.push({label: raw.labels[index],  data: value});
+  });
+
+  $(chartdiv).before('<h2>'+raw.title+'</h2>');
+  $.plot($(chartdiv), data, {
+    series: {
+      pie: { show: true },
+    },
+    legend: { show: false },
+    grid: {
+      hoverable: true,
+      clickable: true
+    }
+  });
+}
+
+function barplot(raw, chartdiv) {
+  var data = [];
+  $.each(raw.values, function(index, value) {
+    data.push([index, value]);
+  });
+
   var labels = [];
-  $.each(data.labels, function(index, label) {
-    labels.push(label+' ('+data.values[index]+')');
+  $.each(raw.labels, function(index, value) {
+    labels.push([index + barWidth/2., value]);
   });
 
-  $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
-
-  var r = Raphael(chartdiv, 700, 300);
-  var pie = r.piechart(150, 150, 120, data.values, { legend: labels, legendpos: "east"}).attr(txtattr);
-  pie.hover(function () {
-    this.sector.stop();
-    this.sector.scale(1.1, 1.1, this.cx, this.cy);
-    if (this.label) {
-      this.label[0].stop();
-      this.label[0].attr({ r: 7.5 });
-      this.label[1].attr({ "font-weight": 800 });
-    }
-  }, function () {
-    this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
-    if (this.label) {
-      this.label[0].animate({ r: 5 }, 500, "bounce");
-      this.label[1].attr({ "font-weight": 400 });
-    }
+  $(chartdiv).before('<h2 class="chart_title">'+raw.title+'</h2>');
+  $.plot($(chartdiv), [data], {
+    series: {
+      bars: { show: true, barWidth: barWidth },
+    },
+    xaxis: {
+      show: true,
+      ticks: labels,
+    },
+    grid: {
+      hoverable: true,
+      backgroundColor: { colors: ["#fff", "#eee"] }
+    },
   });
-}
-
-function barplot(data, chartdiv) {
-  $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
-
-  var width = 30*data.labels.length,
-      height = 250,
-      r = Raphael(chartdiv, width+90, height+20);
-
-  var fin = function () {
-    this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
-  };
-  var fout = function () {
-    this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-  };
-
-  r.barchart(10, 10, width, height, [data.values], {type: "soft"})
-    .hover(fin, fout)
-    .label([data.labels], true);
-}
-
-function hbarplot(data, chartdiv) {
-  $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
-
-  var width = 300,
-      height = 30*data.labels.length,
-      r = Raphael(chartdiv, width+80, height+40);
-
-  var fin = function () {
-    this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
-  };
-  var fout = function () {
-    this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-  };
-
-  r.hbarchart(10, 10, width, height, [data.values], {type: "soft"})
-    .hover(fin, fout)
-    .label([data.labels]);
-}
-
-function plot_cotation_globale_per_activity(data, chartdiv) {
-
-  $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
-  var r = Raphael(chartdiv);
-
-  var fin2 = function () {
-    var y = [], res = [];
-    for (var i = this.bars.length; i--;) {
-      y.push(this.bars[i].y);
-      if (this.bars[i].value) {
-        res.push(data.labels[i] + " : " + this.bars[i].value);
-      }
-    }
-    this.flag = r.popup(this.bars[0].x, Math.min.apply(Math, y), res.join("\n ")).insertBefore(this);
-  };
-  var fout2 = function () {
-    this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-  };
-
-  r.barchart(80, 80, 420, 260, data.values, {stacked: true, type: "soft"})
-    .hoverColumn(fin2, fout2)
-    .label(data.xlabels, true);
-}
-
-function lineplot(data, chartdiv) {
-  $('#'+chartdiv).before('<h2>'+data.title+'</h2>');
-
-  var width = 600,
-      height = 250,
-      r = Raphael(chartdiv, width+90, height+50);
-
-  var lines = r.linechart(30, 20, width, height, [1,2,3,4,5,6,7,8,9,10,11,12], data.values_per_month, { nostroke: false, axis: "0 0 1 1", symbol: "circle", smooth: true })
-    .hoverColumn(function () {
-      this.tags = r.set();
-
-      for (var i = 0, ii = this.y.length; i < ii; i++) {
-        this.tags.push(r.tag(this.x, this.y[i], data.labels[i] + " : " + this.values[i], 160, 10).insertBefore(this).attr([{ fill: "#fff" }, { fill: this.symbols[i].attr("fill") }]));
-      }
-    }, function () {
-      this.tags && this.tags.remove();
-    });
 }

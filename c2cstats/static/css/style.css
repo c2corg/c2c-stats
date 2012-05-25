@@ -5,10 +5,22 @@
 
 .nav, .hide   { display: none; }
 .nav > li > a { text-transform: capitalize; }
-.chart        { margin: 2em auto; }
 
 #loading {
   text-align: center;
   width: 40%;
   margin: 0 auto;
 }
+
+.chart {
+  margin: 2em auto;
+  width: 600px;
+  height: 400px;
+}
+
+.bigchart {
+  margin: 2em auto;
+  width: 600px;
+  height: 400px;
+}
+
