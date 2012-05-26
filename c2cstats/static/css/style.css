@@ -1,8 +1,14 @@
+html, body {
+  /* make the percentage height on placeholder work */
+  height: 100%;
+}
+
 @media (min-width: 768px) {
   .container { width: 724px; }
   .thumbnail { float: right; }
 }
 
+.tab-content  { overflow: hidden; }
 .nav, .hide   { display: none; }
 .nav > li > a { text-transform: capitalize; }
 
@@ -13,9 +19,10 @@
 }
 
 .chart {
-  margin: 2em auto;
+  margin: 2em 0;
   width: 600px;
-  height: 400px;
+  max-width: 100%;
+  height: 300px;
 }
 
 .bigchart {
@@ -23,4 +30,3 @@
   width: 600px;
   height: 400px;
 }
-
