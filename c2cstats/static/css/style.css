@@ -30,3 +30,10 @@ html, body {
   width: 600px;
   height: 400px;
 }
+
+.legend table {
+    color: inherit !important;
+    font-size: small !important;
+    position: absolute !important;
+    width: 40%;
+}

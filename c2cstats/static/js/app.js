@@ -85,4 +85,6 @@ function renderplot(data) {
     }
     $('#sparkline').sparkline(spark_data,
                               { type: 'bar', barColor: '#0088cc', barWidth: bar_width });
+
+    $('.legendLabel span').tooltip();
 }

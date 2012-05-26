@@ -3,6 +3,7 @@
  */
 
 barWidth = 0.8;
+colors = ['#4575B4', '#D73027', '#91BFDB', '#FC8D59', '#E0F3F8', '#FEE090', '#FFFFBF'];
 
 function pieplot(raw, chartdiv) {
   var data = [];
@@ -17,9 +18,14 @@ function pieplot(raw, chartdiv) {
     series: {
       pie: { show: true },
     },
+    colors: colors,
     legend: {
       show: true,
-      labelBoxBorderColor: null
+      labelBoxBorderColor: null,
+      labelFormatter: function(label, series) {
+        // series is the series object for the label
+        return '<span rel="tooltip" data-original-title="' + series.data[0][1] + ' sorties (' + Math.round(series.percent) + ' %)">' + label + '</span>';
+      }
     },
     grid: {
       hoverable: true,
@@ -55,7 +61,7 @@ function barplot(raw, chartdiv) {
         show: true,
         barWidth: barWidth,
         lineWidth: 0,
-        fillColor: "rgba(0, 0, 255, 0.8)",
+        fillColor: colors[0],
         horizontal: false
       },
     },
@@ -65,7 +71,6 @@ function barplot(raw, chartdiv) {
     },
     grid: {
       hoverable: true,
-      // backgroundColor: { colors: ["#fff", "#eee"] }
       backgroundColor: null,
       borderWidth: 0
     },
