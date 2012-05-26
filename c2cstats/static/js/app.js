@@ -22,6 +22,39 @@ $(document).ready(function(){
       $(this).after('<div class="alert alert-error">Erreur lors du chargement des données</div>');
     });
   $.getJSON(jsonurl, renderplot);
+
+  // fix sub nav on scroll
+  var $win = $(window)
+  , $subnav = $('.subnav')
+  , navTop = $('.subnav').length && $('.subnav').offset().top
+  , tabsTop = $('#tabs').offset().top
+  , isFixed = 0
+
+  processScroll()
+
+  // hack sad times - holdover until rewrite for 2.1
+  $subnav.on('click', function () {
+    if (!isFixed) {
+      setTimeout(function () {  $win.scrollTop($win.scrollTop()) }, 10)
+    } else
+    {
+      $win.scrollTop(tabsTop - 50)
+    }
+  })
+
+  $win.on('scroll', processScroll)
+
+  function processScroll() {
+    var i, scrollTop = $win.scrollTop()
+    if (scrollTop >= navTop && !isFixed) {
+      isFixed = 1
+      $subnav.addClass('subnav-fixed')
+    } else if (scrollTop <= navTop && isFixed) {
+      isFixed = 0
+      $subnav.removeClass('subnav-fixed')
+    }
+  }
+
 });
 
 function renderplot(data) {
