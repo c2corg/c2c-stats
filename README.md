@@ -8,8 +8,7 @@ Pour tester en local:
 
     python2 runserver.py
 
-Dépendances
-~~~~~~~~~~~
+## Dépendances
 
 - Flask
 - numpy
