@@ -33,9 +33,7 @@ class Generator(object):
         self.year = np.array([int(i.split()[2]) for i in self.data.date])
         self.year_range = np.arange(np.min(self.year), np.max(self.year)+1)
         self.year_labels = [str(i) for i in self.year_range]
-
         self.month = np.array([i.split()[1] for i in data.date])
-        self.months_idx = np.arange(12)
 
     @property
     def cotation(self):
@@ -54,9 +52,11 @@ class Generator(object):
         if self.activity:
            gain = self.filter_activity(self.data.gain, self.activity)
            year = self.filter_activity(self.year, self.activity)
+           month = self.filter_activity(self.month, self.activity)
         else:
            gain = self.data.gain
            year = self.year
+           month = self.month
 
         self.gain_year = []
         self.gain_month = []
@@ -66,19 +66,19 @@ class Generator(object):
         for i in self.year_range:
             ind = (year == i)
             gain_y = gain[ind]
+            month_y = month[ind]
 
             self.outings_year.append(len(year[ind]))
             self.gain_year.append(int(np.sum(gain_y)))
 
-            month_y = self.month[ind]
             gain_m = np.zeros(12, dtype=int)
             outings_m = np.zeros(12, dtype=int)
 
-            for m in self.months_idx:
-                sel = (month_y == MONTHS[m])
+            for idx, m in enumerate(MONTHS):
+                sel = (month_y == m)
                 if sel.any():
-                    outings_m[m] = len(month_y[sel])
-                    gain_m[m] = np.sum(gain_y[sel])
+                    outings_m[idx] = len(month_y[sel])
+                    gain_m[idx] = np.sum(gain_y[sel])
 
             self.outings_month.append(list(outings_m))
             self.gain_month.append(list(gain_m.cumsum()))
