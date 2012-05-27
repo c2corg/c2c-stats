@@ -1,6 +1,7 @@
-/* Author:
-
- */
+/*
+# Copyright (c) 2012 Simon C. <contact at saimon.org>
+# see https://github.com/saimn/c2c-stats/LICENSE
+*/
 
 barWidth = 0.8;
 colors = ['#4575B4', '#D73027', '#91BFDB', '#FC8D59', '#E0F3F8', '#FEE090', '#FFFFBF'];
