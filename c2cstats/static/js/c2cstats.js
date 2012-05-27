@@ -65,14 +65,12 @@ function barplot(raw, chartdiv) {
         horizontal: false
       },
     },
-    xaxis: {
-      show: true,
-      ticks: labels,
-    },
+    xaxis: { ticks: labels },
+    yaxis: { tickDecimals: 0 },
     grid: {
-      hoverable: true,
-      backgroundColor: null,
-      borderWidth: 0
+      // hoverable: true,
+      // backgroundColor: null,
+      borderWidth: 0,
     },
   });
 }
@@ -93,7 +91,8 @@ function lineplot(raw, chartdiv) {
     });
   });
 
-  var months = ["jan", "fev", "mar", "avr", "mai", "jui", "jui", "aou", "sep", "oct", "nov", "dec"];
+  var months = ["jan", "fev", "mar", "avr", "mai", "jui",
+                "jui", "aou", "sep", "oct", "nov", "dec"];
   var labels = [];
   $.each(months, function(index, value) {
     labels.push([index, value]);
@@ -111,13 +110,11 @@ function lineplot(raw, chartdiv) {
     grid: {
       hoverable: true,
       backgroundColor: null,
-      borderWidth: 0
+      borderWidth: 0,
     },
     xaxis: {
       show: true,
       ticks: labels
-      // ticks: [[0, "jan"] [1, "feb"] [2, "mar"] [3, "apr"] [4, "maj"] [5, "jun"]
-      //         [6, "jul"] [7, "aug"] [8, "sep"] [9, "okt"] [10, "nov"] [11, "dec"]]
     },
   });
 }
