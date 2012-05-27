@@ -35,7 +35,7 @@ html, body {
   color: inherit !important;
   font-size: small !important;
   position: absolute !important;
-  width: 40%;
+  max-width: 40%;
 }
 
 .subnav {

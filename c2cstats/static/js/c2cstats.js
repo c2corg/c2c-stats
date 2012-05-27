@@ -50,7 +50,7 @@ function barplot(raw, chartdiv) {
   });
 
   var $chartdiv = $(chartdiv);
-  $chartdiv.before('<h2 class="chart_title">'+raw.title+'</h2>');
+  $chartdiv.before('<h2>'+raw.title+'</h2>');
 
   var width = 30*raw.labels.length;
   $chartdiv.width(width)
@@ -73,6 +73,51 @@ function barplot(raw, chartdiv) {
       hoverable: true,
       backgroundColor: null,
       borderWidth: 0
+    },
+  });
+}
+
+function lineplot(raw, chartdiv) {
+  var $chartdiv = $(chartdiv);
+  $($chartdiv).before('<h2>'+raw.title+'</h2>');
+
+  var data = [];
+  $.each(raw.values_per_month, function(i, year) {
+    var d = [];
+    $.each(year, function(j, value) {
+      d.push([j, value]);
+    });
+    data.push({
+      data: d,
+      label: raw.labels[i],
+    });
+  });
+
+  var months = ["jan", "fev", "mar", "avr", "mai", "jui", "jui", "aou", "sep", "oct", "nov", "dec"];
+  var labels = [];
+  $.each(months, function(index, value) {
+    labels.push([index, value]);
+  });
+
+  $.plot($chartdiv, data, {
+    series: {
+      lines: { show: true },
+      points: { show: true }
+    },
+    legend: {
+      labelBoxBorderColor: null,
+      position: "nw"
+    },
+    grid: {
+      hoverable: true,
+      backgroundColor: null,
+      borderWidth: 0
+    },
+    xaxis: {
+      show: true,
+      ticks: labels
+      // ticks: [[0, "jan"] [1, "feb"] [2, "mar"] [3, "apr"] [4, "maj"] [5, "jun"]
+      //         [6, "jul"] [7, "aug"] [8, "sep"] [9, "okt"] [10, "nov"] [11, "dec"]]
     },
   });
 }

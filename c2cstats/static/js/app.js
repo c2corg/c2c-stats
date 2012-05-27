@@ -21,6 +21,7 @@ $(document).ready(function(){
       $(this).hide();
       $(this).after('<div class="alert alert-error">Erreur lors du chargement des données</div>');
     });
+
   $.getJSON(jsonurl, renderplot);
 
   // fix sub nav on scroll
@@ -102,8 +103,8 @@ function renderplot(data) {
         $("#"+value).append('<div id="gain_'+value+'" class="chart"></div>');
         barplot(data[value].gain_per_year, '#gain_'+value);
 
-        // $("#"+value).append('<div id="gain_cumul_'+value+'" class="chart"></div>');
-        // lineplot(data[value].gain_per_year, 'gain_cumul_'+value);
+        $("#"+value).append('<div id="gain_cumul_'+value+'" class="chart"></div>');
+        lineplot(data[value].gain_per_year, '#gain_cumul_'+value);
       }
     });
 
