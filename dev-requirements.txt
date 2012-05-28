@@ -1,7 +1,0 @@
-Flask
-Flask-DebugToolbar
-numpy
-beautifulsoup4
-lxml
-gunicorn
-requests
