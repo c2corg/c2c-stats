@@ -1,8 +1,8 @@
 Flask==0.8
 Jinja2==2.6
 Werkzeug==0.8.3
-beautifulsoup4==4.0.5
+gevent==0.13.7
+grequests==0.1.0
 gunicorn==0.14.3
-lxml==2.3.4
 numpy==1.6.2
 requests==0.12.1
