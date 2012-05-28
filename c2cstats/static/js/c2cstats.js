@@ -23,14 +23,19 @@ function pieplot(raw, chartdiv) {
     legend: {
       show: true,
       labelBoxBorderColor: null,
-      labelFormatter: function(label, series) {
-        // series is the series object for the label
-        return '<span rel="tooltip" data-original-title="' + series.data[0][1] + ' sorties (' + Math.round(series.percent) + ' %)">' + label + '</span>';
-      }
     },
     grid: {
       hoverable: true,
       // clickable: true
+    },
+    tooltip: true,
+    tooltipOpts: {
+      content: "%s, %y sorties (%p.0%)",
+      shifts: {
+        x: 20,
+        y: 0
+      },
+      defaultTheme: false
     }
   });
   $chartdiv.resize(function () {
@@ -69,10 +74,18 @@ function barplot(raw, chartdiv) {
     xaxis: { ticks: labels },
     yaxis: { tickDecimals: 0 },
     grid: {
-      // hoverable: true,
-      // backgroundColor: null,
+      hoverable: true,
       borderWidth: 0,
     },
+    tooltip: true,
+    tooltipOpts: {
+      content: "%y",
+      shifts: {
+        x: 0,
+        y: 20
+      },
+      defaultTheme: false
+    }
   });
 }
 
@@ -110,12 +123,20 @@ function lineplot(raw, chartdiv) {
     },
     grid: {
       hoverable: true,
-      backgroundColor: null,
       borderWidth: 0,
     },
     xaxis: {
       show: true,
       ticks: labels
     },
+    tooltip: true,
+    tooltipOpts: {
+      content: "%x/%s : %y m",
+      shifts: {
+        x: -50,
+        y: 20
+      },
+      defaultTheme: false
+    }
   });
 }
