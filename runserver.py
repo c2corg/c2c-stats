@@ -27,4 +27,4 @@ except ImportError:
 #     print url_for('show_user_stats', user_id=1000)
 #     print url_for('static', filename='css/style.css')
 
-app.run()
+app.run(extra_files=['c2cstats/generators.py', 'c2cstats/parser.py'])
