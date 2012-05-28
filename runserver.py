@@ -1,7 +1,10 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 
+import logging
 from c2cstats import app
+
+app.logger.setLevel(logging.DEBUG)
 
 # the toolbar is only enabled in debug mode
 app.debug = True

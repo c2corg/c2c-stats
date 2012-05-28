@@ -22,6 +22,9 @@
 # DEALINGS IN THE SOFTWARE.
 
 import os
+import logging
+import sys
+
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
@@ -39,6 +42,9 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
 
+# logging config
+app.logger.setLevel(logging.INFO)
+# app.logger.addHandler(logging.StreamHandler(sys.stdout))
 
 @app.route('/')
 def index():
@@ -64,15 +70,22 @@ def get_user_stats(user_id):
         try:
             generate_json(user_id, json_file)
         except ParserError:
-            data = { 'error': u'Erreur lors du chargement de la page' }
+            msg = u'Error while generating statistics'
+            app.logger.error(msg)
+            data = { 'error': msg }
         except:
-            data = { 'error': u'Erreur, il y a un truc qui va pas ;-)' }
+            import pdb; pdb.set_trace()
+            msg = u'Something went wrong ...'
+            app.logger.error(msg)
+            data = { 'error': msg }
 
     try:
         with open(json_file, 'r') as f:
             data = json.load(f)
     except IOError:
-        data = { 'error': u'Erreur lors du calcul des stats' }
+        msg = u'No json file with statistics'
+        app.logger.error(msg)
+        data = { 'error': msg }
 
     return jsonify(**data)
 

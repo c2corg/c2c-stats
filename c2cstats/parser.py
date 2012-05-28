@@ -63,7 +63,7 @@ class Outings:
 
     def __init__(self, user_id):
         self.user_id = str(user_id)
-        self.session = requests.session()
+        self._session = requests.session()
         self.get_outings()
         self.parse()
 
@@ -79,7 +79,7 @@ class Outings:
     def get_page(self, url):
         "Download `url` and return the json converted to dict"
 
-        r = self.session.get(url)
+        r = self._session.get(url)
         r.encoding = 'utf-8'
 
         if r.status_code != 200:
@@ -97,10 +97,10 @@ class Outings:
         return resp
 
     def get_outings(self):
-        url = self.outings_url()
 
-        print "Get %s ..." % url
         t0 = time.time()
+        url = self.outings_url()
+        print "Get %s ..." % url
         self.content = self.get_page(url)
         self.download_time = time.time() - t0
 
@@ -114,6 +114,7 @@ class Outings:
             for p in xrange(2, nb_page+1):
                 t0 = time.time()
                 url = self.outings_url(page=p)
+                print "Get %s ..." % url
                 content = self.get_page(url)
                 t1 = time.time()
                 self.download_time += t1 - t0
