@@ -12,7 +12,7 @@ Pour tester en local:
 
 - Flask
 - numpy
-- beautifulsoup4
-- lxml
 - gunicorn
 - requests
+- grequests
+- gevent
