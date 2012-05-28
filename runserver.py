@@ -3,6 +3,7 @@
 
 import logging
 from c2cstats import app
+from gevent import monkey; monkey.patch_all()
 
 app.logger.setLevel(logging.DEBUG)
 
