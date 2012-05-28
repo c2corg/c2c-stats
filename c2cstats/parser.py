@@ -23,10 +23,11 @@
 
 import json
 import requests
+import grequests
 import time
 import numpy as np
 
-NB_ITEMS = 100
+NB_ITEMS = 50
 BASE_URL = "http://www.camptocamp.org/outings/list/users/%s/format/json/npp/%d/page/%d"
 
 ACTIVITIES = ['', u'ski, surf', u'alpinisme neige, glace, mixte',
@@ -63,7 +64,6 @@ class Outings:
 
     def __init__(self, user_id):
         self.user_id = str(user_id)
-        self._session = requests.session()
         self.get_outings()
         self.parse()
 
@@ -79,14 +79,16 @@ class Outings:
     def get_page(self, url):
         "Download `url` and return the json converted to dict"
 
-        r = self._session.get(url)
+        r = requests.get(url)
         r.encoding = 'utf-8'
 
         if r.status_code != 200:
             raise ParserError('Page not found')
+        return self.page_to_json(r.text)
 
+    def page_to_json(self, page):
         # Fix errors in the json : hasTrack & conditions miss values
-        content = r.text.replace('"hasTrack": ,','')
+        content = page.replace('"hasTrack": ,','')
         content = content.replace('"conditions": ,', '')
 
         try:
@@ -109,16 +111,22 @@ class Outings:
             raise ParserError('No items')
 
         print "Get the %d outings" % self.nboutings
-        nb_page = (self.nboutings / 100) + 1
+        nb_page = (self.nboutings / NB_ITEMS) + 1
+
         if nb_page > 1:
+            urls = []
             for p in xrange(2, nb_page+1):
-                t0 = time.time()
-                url = self.outings_url(page=p)
-                print "Get %s ..." % url
-                content = self.get_page(url)
-                t1 = time.time()
-                self.download_time += t1 - t0
+                urls.append(self.outings_url(page=p))
+
+            t0 = time.time()
+            rs = (grequests.get(u) for u in urls)
+            resp = grequests.map(rs)
+
+            for r in resp:
+                content = self.page_to_json(r.text)
                 self.content['items'].extend(content['items'])
+            t1 = time.time()
+            self.download_time += t1 - t0
 
         if len(self.content['items']) != self.nboutings:
             raise ParserError('Missing items')
