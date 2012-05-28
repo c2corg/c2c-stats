@@ -21,30 +21,33 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+import json
 import requests
 import time
 import numpy as np
-from bs4 import BeautifulSoup
 
 NB_ITEMS = 100
-BASE_URL = "http://www.camptocamp.org/outings/list/layout/light/users/%s/npp/%d/page/%d"
+BASE_URL = "http://www.camptocamp.org/outings/list/users/%s/format/json/npp/%d/page/%d"
+
+ACTIVITIES = ['', u'ski, surf', u'alpinisme neige, glace, mixte',
+              u'rocher haute montagne', u'escalade', u'cascade de glace',
+              u'randonnée pédestre', u'raquette']
 
 COTATIONS = {
-    u'Cotation glace': { 'name': 'cot_glace', 'format': 'U2' },
-    u'Cotation mixte': { 'name': 'cot_mixte', 'format': 'U2' },
-    u'Cotation globale': { 'name': 'cot_globale', 'format': 'U3' },
-    u'Cotation globale ski': { 'name': 'cot_globale', 'format': 'U3' },
-    u'Cotation libre': { 'name': 'cot_libre', 'format': 'U3' },
-    u'Cotation libre obligatoire': { 'name': 'cot_oblige', 'format': 'U3' },
-    u'Cotation libre et libre obligatoire': { 'name': 'cot_libre', 'format': 'U3' },
-    u'Cotation escalade artificielle': { 'name': 'cot_artif', 'format': 'U2' },
-    u'Cotation randonnée': { 'name': 'cot_rando', 'format': 'U2' },
-    u'Cotation raquette': { 'name': 'cot_raquette', 'format': 'U2' },
-    u'Cotation technique': { 'name': 'cot_skitech', 'format': 'U3' },
-    u'Cotation ponctuelle ski': { 'name': 'cot_skiponc', 'format': 'U2' },
-    u'Engagement': { 'name': 'engagement', 'format': 'U3' },
-    u'Exposition': { 'name': 'exposition', 'format': 'U2' },
-    u'Qualité de l\'équipement en place': { 'name': 'equipement', 'format': 'U2' }
+    'ice_rating'                 :  {'name': 'cot_glace'   , 'format': 'U2'},
+    'mixed_rating'               :  {'name': 'cot_mixte'   , 'format': 'U2'},
+    'global_rating'              :  {'name': 'cot_globale' , 'format': 'U3'},
+    'labande_global_rating'      :  {'name': 'cot_globale' , 'format': 'U3'},
+    'rock_free_rating'           :  {'name': 'cot_libre'   , 'format': 'U3'},
+    'rock_required_rating'       :  {'name': 'cot_oblige'  , 'format': 'U3'},
+    'aid_rating'                 :  {'name': 'cot_artif'   , 'format': 'U2'},
+    'hiking_rating'              :  {'name': 'cot_rando'   , 'format': 'U2'},
+    'snowshoeing_rating'         :  {'name': 'cot_raquette', 'format': 'U2'},
+    'toponeige_technical_rating' :  {'name': 'cot_skitech' , 'format': 'U3'},
+    'labande_ski_rating'         :  {'name': 'cot_skiponc' , 'format': 'U2'},
+    'engagement_rating'          :  {'name': 'engagement'  , 'format': 'U3'},
+    'toponeige_exposition_rating':  {'name': 'exposition'  , 'format': 'U2'},
+    'equipment_rating'           :  {'name': 'equipement'  , 'format': 'U2'}
     }
 
 
@@ -61,7 +64,8 @@ class Outings:
     def __init__(self, user_id):
         self.user_id = str(user_id)
         self.session = requests.session()
-        self.parse_outings()
+        self.get_outings()
+        self.parse()
 
     @property
     def activities(self):
@@ -69,41 +73,58 @@ class Outings:
         ind = (acts != u'')
         return list(acts[ind])
 
-    def outings_url(self, page):
+    def outings_url(self, page=1):
         return BASE_URL % (self.user_id, NB_ITEMS, page)
 
     def get_page(self, url):
-        "Return the HTML source of the page 'url'"
+        "Download `url` and return the json converted to dict"
+
         r = self.session.get(url)
         r.encoding = 'utf-8'
 
-        if r.text == "Not Found" or r.status_code != 200:
+        if r.status_code != 200:
             raise ParserError('Page not found')
 
-        # Remove linebreaks & tabulations
-        page_content = r.text.replace("\n","").replace("\t","").replace("\r","")
-        return page_content
+        # Fix errors in the json : hasTrack & conditions miss values
+        content = r.text.replace('"hasTrack": ,','')
+        content = content.replace('"conditions": ,', '')
 
-    def parse_outings(self):
-        pagenb = 1
-        url = self.outings_url(pagenb)
+        try:
+            resp = json.loads(content)
+        except ValueError:
+            raise ParserError("Error while loading the json data")
+
+        return resp
+
+    def get_outings(self):
+        url = self.outings_url()
 
         print "Get %s ..." % url
         t0 = time.time()
-        page = self.get_page(url)
+        self.content = self.get_page(url)
         self.download_time = time.time() - t0
 
-        soup = BeautifulSoup(page, 'lxml')
-        nbout = soup.p.findAll('b')
+        self.nboutings = self.content.get('totalItems', 0)
+        if self.nboutings == 0:
+            raise ParserError('No items')
 
-        if len(nbout) == 0:
-            raise ParserError('Invalid page')
-        elif len(nbout) == 1:
-            self.nboutings = int(nbout[0].text)
-        else:
-            self.nboutings = int(nbout[2].text)
+        print "Get the %d outings" % self.nboutings
+        nb_page = (self.nboutings / 100) + 1
+        if nb_page > 1:
+            for p in xrange(2, nb_page+1):
+                t0 = time.time()
+                url = self.outings_url(page=p)
+                content = self.get_page(url)
+                t1 = time.time()
+                self.download_time += t1 - t0
+                self.content['items'].extend(content['items'])
 
-        # self.title = []
+        if len(self.content['items']) != self.nboutings:
+            raise ParserError('Missing items')
+
+    def parse(self):
+        "Get the content of each line of the table"
+
         self.area = []
         self.date     = np.zeros(self.nboutings, dtype=np.dtype('U20'))
         self.activity = np.zeros(self.nboutings, dtype=np.dtype('U30'))
@@ -116,63 +137,20 @@ class Outings:
                 setattr(self, c['name'],
                         np.zeros(self.nboutings, dtype=np.dtype(c['format'])))
 
-        t0 = time.time()
-        self.parse_outings_list(page, pagenb, soup=soup)
-        self.parse_time = time.time() - t0
+        for n, item in enumerate(self.content['items']):
+            # self.title.append(t[1].a.text)
+            self.date[n] = item['date']
+            # keep only the first activity
+            act = item['activities'][0]
+            if act:
+                self.activity[n] = ACTIVITIES[int(act)]
+            self.altitude[n] = item.get('maxElevation', 0)
+            self.gain[n] = item.get('heightDiffUp', 0)
+            self.area.append(item['linkedAreas'][0]['name'])
 
-        # parse other pages if nboutings > 100
-        nbtemp = self.nboutings - 100
-        while nbtemp > 0:
-            pagenb += 1
-            nbtemp -= 100
-            url = self.outings_url(pagenb)
-
-            print "Get %s ..." % url
-            t0 = time.time()
-            page = self.get_page(url)
-            t1 = time.time()
-            self.download_time += t1 - t0
-
-            t0 = time.time()
-            self.parse_outings_list(page, pagenb)
-            self.parse_time += time.time() - t1
+            ratings = item.get('routes_rating', {})
+            for key, val in ratings.iteritems():
+                cot = getattr(self, COTATIONS[key]['name'])
+                cot[n] = val
 
         self.area = np.array(self.area)
-        print "Found %d outings" % self.nboutings
-
-    def parse_outings_list(self, page, pagenb, soup=False):
-        "Get the content of each line of the table"
-
-        if not soup:
-            soup = BeautifulSoup(page, 'lxml')
-
-        lines = soup.table.tbody.findAll('tr')
-
-        n = (pagenb-1)*100
-        for l in lines:
-            t = l.contents
-            # self.title.append(t[1].a.text)
-            self.date[n] = t[2].time.text
-
-            # keep only the first one for now
-            if t[3].find('span', "printonly"):
-                self.activity[n] = t[3].find('span', "printonly").text
-
-            self.altitude[n] = t[4].text
-
-            if t[5].text:
-                self.gain[n] = int(t[5].text[:-1])
-
-            for i in t[6].findAll('span'):
-                cot_title = i['title'].split(u'\xa0:')[0]
-                try:
-                    cot = getattr(self, COTATIONS[cot_title]['name'])
-                    cot[n] = i.text
-                except KeyError:
-                    # TODO: add logging
-                    pass
-
-            if t[9].text:
-                self.area.append(t[9].a.text)
-
-            n += 1

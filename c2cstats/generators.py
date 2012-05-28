@@ -39,9 +39,6 @@ ACT_SHORT = {u'alpinisme neige, glace, mixte': 'alpinisme',
 COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
                     'D+', 'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+')
 
-MONTHS = (u'janvier', u'février', u'mars', u'avril', u'mai', u'juin', u'juillet',
-          u'août', u'septembre', u'octobre', u'novembre', u'décembre')
-
 class Generator(object):
 
     def __init__(self, data):
@@ -50,10 +47,10 @@ class Generator(object):
         self.cotation_values = []
         self.cotation_title = ''
 
-        self.year = np.array([int(i.split()[2]) for i in self.data.date])
+        self.year = np.array([int(i.split('-')[0]) for i in self.data.date])
         self.year_range = np.arange(np.min(self.year), np.max(self.year)+1)
         self.year_labels = [str(i) for i in self.year_range]
-        self.month = np.array([i.split()[1] for i in data.date])
+        self.month = np.array([int(i.split('-')[1]) for i in data.date])
 
     @property
     def cotation(self):
@@ -94,11 +91,11 @@ class Generator(object):
             gain_m = np.zeros(12, dtype=int)
             outings_m = np.zeros(12, dtype=int)
 
-            for idx, m in enumerate(MONTHS):
+            for m in xrange(1,13):
                 sel = (month_y == m)
                 if sel.any():
-                    outings_m[idx] = len(month_y[sel])
-                    gain_m[idx] = np.sum(gain_y[sel])
+                    outings_m[m-1] = len(month_y[sel])
+                    gain_m[m-1] = np.sum(gain_y[sel])
 
             self.outings_month.append(list(outings_m))
             self.gain_month.append(list(gain_m.cumsum()))
@@ -312,7 +309,6 @@ def generate_json(user_id, filename):
     ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
     ctx['time'] = {
         'download': '{:.2}'.format(data.download_time),
-        'parse': '{:.2}'.format(data.parse_time),
         'generation': '{:.3}'.format(time.time() - t1),
         'total': '{:.2}'.format(time.time() - t0)
     }
