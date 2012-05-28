@@ -2,12 +2,15 @@
 # -*- coding:utf-8 -*-
 
 from c2cstats import app
-from flask import url_for
-from flask_debugtoolbar import DebugToolbarExtension
 
 # the toolbar is only enabled in debug mode
 app.debug = True
-toolbar = DebugToolbarExtension(app)
+
+try:
+    from flask_debugtoolbar import DebugToolbarExtension
+    toolbar = DebugToolbarExtension(app)
+except ImportError:
+    print "Install Flask-DebugToolbar to use it"
 
 # if app.config['DEBUG']:
 #     from werkzeug import SharedDataMiddleware
@@ -17,7 +20,9 @@ toolbar = DebugToolbarExtension(app)
 #                                             app.config['FILES_DIR'])
 #     })
 
+# useful code to test urls:
 # with app.test_request_context():
+#     from flask import url_for
 #     print url_for('index')
 #     print url_for('show_user_stats', user_id=1000)
 #     print url_for('static', filename='css/style.css')
