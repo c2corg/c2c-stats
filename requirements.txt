@@ -1,6 +1,8 @@
-Flask
-numpy
-beautifulsoup4
-lxml
-gunicorn
-requests
+Flask==0.8
+Jinja2==2.6
+Werkzeug==0.8.3
+beautifulsoup4==4.0.2
+gunicorn==0.13.4
+lxml==2.3.4
+numpy==1.6.1
+requests==0.11.1
