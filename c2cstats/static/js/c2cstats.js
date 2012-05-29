@@ -97,7 +97,7 @@ function lineplot(raw, chartdiv) {
   $.each(raw.values_per_month, function(i, year) {
     var d = [];
     $.each(year, function(j, value) {
-      d.push([j, value]);
+      d.push([j+1, value]);
     });
     data.push({
       data: d,
@@ -109,7 +109,7 @@ function lineplot(raw, chartdiv) {
                 "jui", "aou", "sep", "oct", "nov", "dec"];
   var labels = [];
   $.each(months, function(index, value) {
-    labels.push([index, value]);
+    labels.push([index+1, value]);
   });
 
   $.plot($chartdiv, data, {
