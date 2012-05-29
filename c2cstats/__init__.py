@@ -23,7 +23,6 @@
 
 import os
 import logging
-import sys
 
 import locale
 locale.setlocale(locale.LC_ALL, '')
@@ -32,7 +31,7 @@ from c2cstats.parser import ParserError
 from c2cstats.generators import generate_json
 
 from flask import Flask, request, redirect, url_for, render_template, \
-    json, jsonify
+    json, jsonify, flash
 
 # configuration
 SECRET_KEY = 'development key'
@@ -104,5 +103,10 @@ def show_user_stats(user_id):
 
 @app.route('/query', methods=['POST'])
 def query_user():
-    return redirect(url_for('show_user_stats',
-                            user_id=int(request.form['user_id'])))
+    try:
+        user_id = int(request.form['user_id'])
+    except ValueError:
+        flash(u"Le numéro d'utilisateur n'est pas valide", 'alert-error')
+        return redirect(url_for('index'))
+
+    return redirect(url_for('show_user_stats', user_id=user_id))
