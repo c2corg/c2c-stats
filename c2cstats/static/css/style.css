@@ -8,6 +8,7 @@ html, body {
   .thumbnail { float: right; }
 }
 
+#sparkline    { overflow: auto; display: block; }
 .tab-content  { overflow: hidden; }
 .nav, .hide   { display: none; }
 .nav > li > a { text-transform: capitalize; }
@@ -23,12 +24,6 @@ html, body {
   width: 600px;
   max-width: 100%;
   height: 300px;
-}
-
-.bigchart {
-  margin: 2em auto;
-  width: 600px;
-  height: 400px;
 }
 
 .legend table {
