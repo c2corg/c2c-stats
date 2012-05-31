@@ -155,7 +155,8 @@ class Outings:
                 self.activity[n] = ACTIVITIES[int(act)]
             self.altitude[n] = item.get('maxElevation', 0)
             self.gain[n] = item.get('heightDiffUp', 0)
-            self.area.append(item['linkedAreas'][0]['name'])
+            if item['linkedAreas']:
+                self.area.append(item['linkedAreas'][0]['name'])
 
             ratings = item.get('routes_rating', {})
             for key, val in ratings.iteritems():
