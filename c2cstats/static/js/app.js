@@ -39,7 +39,7 @@ $(document).ready(function(){
       setTimeout(function () {  $win.scrollTop($win.scrollTop()) }, 10)
     } else
     {
-      $win.scrollTop(tabsTop - 50)
+      $win.scrollTop(tabsTop - 20)
     }
   })
 
