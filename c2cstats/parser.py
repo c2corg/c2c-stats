@@ -158,7 +158,7 @@ class Outings:
             if item['linkedAreas']:
                 self.area.append(item['linkedAreas'][0]['name'])
 
-            ratings = item.get('routes_rating', {})
+            ratings = item.get('routes_rating', {}) or {}
             for key, val in ratings.iteritems():
                 cot = getattr(self, COTATIONS[key]['name'])
                 cot[n] = val
