@@ -78,29 +78,29 @@ function renderplot(data) {
       if (data[value])
       {
         $(".nav").append('<li><a href="#'+value+'" data-toggle="pill">'+value+'</a></li>');
-        $("#tabs").append('<div id="'+value+'" class="tab-pane fade"></div>');
+        $("#tabs").append('<div id="'+value+'" class="tab-pane fade row"></div>');
 
         if (data[value].cotation != null &&
             data[value].cotation.values.length > 0)
         {
-          $("#"+value).append('<div id="cotation_'+value+'" class="chart"></div>');
+          $("#"+value).append('<div class="span6"><div id="cotation_'+value+'" class="chart"></div></div>');
           $('#cotation_'+value).c2cstats('bar', data[value].cotation);
         }
 
         if (data[value].cotation_globale != null &&
             data[value].cotation_globale.values.length > 0)
         {
-          $("#"+value).append('<div id="cotation_globale_'+value+'" class="chart"></div>');
+          $("#"+value).append('<div class="span6"><div id="cotation_globale_'+value+'" class="chart"></div></div>');
           $('#cotation_globale_'+value).c2cstats('bar', data[value].cotation_globale);
         }
 
-        $("#"+value).append('<div id="outings_'+value+'" class="chart"></div>');
+        $("#"+value).append('<div class="span6"><div id="outings_'+value+'" class="chart"></div></div>');
         $('#outings_'+value).c2cstats('bar', data[value].outings_per_year);
 
-        $("#"+value).append('<div id="gain_'+value+'" class="chart"></div>');
+        $("#"+value).append('<div class="span6"><div id="gain_'+value+'" class="chart"></div></div>');
         $('#gain_'+value).c2cstats('bar', data[value].gain_per_year);
 
-        $("#"+value).append('<div id="gain_cumul_'+value+'" class="chart"></div>');
+        $("#"+value).append('<div class="span6"><div id="gain_cumul_'+value+'" class="chart"></div></div>');
         $('#gain_cumul_'+value).c2cstats('lines', data[value].gain_per_year);
       }
     });
