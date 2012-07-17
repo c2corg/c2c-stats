@@ -21,17 +21,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import os
 import logging
 
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
 from c2cstats.parser import ParserError
-from c2cstats.generators import generate_json
+from c2cstats.generators import generate
 
 from flask import Flask, request, redirect, url_for, render_template, \
-    json, jsonify, flash
+    jsonify, flash
 
 # configuration
 SECRET_KEY = 'development key'
@@ -62,31 +61,25 @@ def user_index():
 
 @app.route('/user/<int:user_id>/json')
 def get_user_stats(user_id):
-    user_id = str(user_id)
-    json_file = os.path.join(app.config['FILES_DIR'], user_id + '.json')
-
-    if not os.path.isfile(json_file):
-        try:
-            generate_json(user_id, json_file)
-        except ParserError:
-            msg = u'Error while generating statistics'
-            app.logger.error(msg)
-            data = { 'error': msg }
-        except:
-            import pdb; pdb.set_trace()
-            msg = u'Something went wrong ...'
-            app.logger.error(msg)
-            data = { 'error': msg }
 
     try:
-        with open(json_file, 'r') as f:
-            data = json.load(f)
-    except IOError:
-        msg = u'No json file with statistics'
+        data = generate(str(user_id))
+    except ParserError:
+        msg = u'Error while generating statistics'
+        app.logger.error(msg)
+        data = { 'error': msg }
+    except:
+        msg = u'Something went wrong ...'
         app.logger.error(msg)
         data = { 'error': msg }
 
+    # jsonify uses indent=None for XMLHttpRequest
     return jsonify(**data)
+
+    # resp = make_response(json.dumps(data, indent=None))
+    # resp.mimetype = 'application/json'
+    # return resp
+
 
 
 @app.route('/user/<int:user_id>')

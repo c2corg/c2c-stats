@@ -257,13 +257,14 @@ class Ski(Generator):
 
 def remove_plus(nparray):
     "Remove '+' for all elements of the numpy array `nparray`"
+
     l = lambda x: x.replace('+','')
     vrem = np.vectorize(l)
     return vrem(nparray)
 
 
-def generate_json(user_id, filename):
-    "Generate a json file with all computed data."
+def generate(user_id):
+    "Generate a dict with all computed data."
 
     t0 = time.time()
     data = Outings(user_id)
@@ -313,8 +314,4 @@ def generate_json(user_id, filename):
         'total': '{:.2}'.format(time.time() - t0)
     }
 
-    try:
-        with open(filename, 'w') as f:
-            json.dump(ctx, f)
-    except IOError:
-        print "Erreur lors de la serialiasation du json"
+    return ctx
