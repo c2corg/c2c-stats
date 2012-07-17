@@ -97,8 +97,8 @@ class Generator(object):
                     outings_m[m-1] = len(month_y[sel])
                     gain_m[m-1] = np.sum(gain_y[sel])
 
-            self.outings_month.append(list(outings_m))
-            self.gain_month.append(list(gain_m.cumsum()))
+            self.outings_month.append(outings_m.tolist())
+            self.gain_month.append(gain_m.cumsum().tolist())
 
     @property
     def outings_per_year(self):
