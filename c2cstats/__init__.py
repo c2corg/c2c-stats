@@ -31,20 +31,26 @@ from c2cstats.generators import generate
 
 from flask import Flask, request, redirect, url_for, render_template, \
     jsonify, flash
+from flaskext.cache import Cache
 
 # configuration
 SECRET_KEY = 'development key'
-FILES_DIR = '_output'
+CACHE_TYPE = 'filesystem'
+CACHE_DIR = '_cache'
+CACHE_THRESHOLD = 100
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
+
+cache = Cache(app)
 
 # logging config
 app.logger.setLevel(logging.INFO)
 # app.logger.addHandler(logging.StreamHandler(sys.stdout))
 
 @app.route('/')
+@cache.cached(timeout=86400)
 def index():
     return render_template('index.html')
 
@@ -60,6 +66,7 @@ def user_index():
 
 
 @app.route('/user/<int:user_id>/json')
+@cache.cached(timeout=604800)
 def get_user_stats(user_id):
 
     try:
@@ -83,6 +90,7 @@ def get_user_stats(user_id):
 
 
 @app.route('/user/<int:user_id>')
+@cache.cached(timeout=86400)
 def show_user_stats(user_id):
     user_id = str(user_id)
 

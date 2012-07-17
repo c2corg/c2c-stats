@@ -2,4 +2,4 @@
 *.svg
 venv/
 .ropeproject/
-_output/
+_cache/
