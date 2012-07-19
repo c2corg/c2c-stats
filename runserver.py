@@ -9,6 +9,7 @@ app.logger.setLevel(logging.DEBUG)
 
 # the toolbar is only enabled in debug mode
 app.debug = True
+app.config['ASSETS_DEBUG'] = True
 
 try:
     from flask_debugtoolbar import DebugToolbarExtension

@@ -48,11 +48,14 @@
 {% endblock %}
 
 {% block footer %}
-<script src="{{ url_for('static', filename='js/libs/libs.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/c2cstats.js') }}"></script>
 
 <script>
 var jsonurl = "{{ json_url }}";
 </script>
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+{% assets filter="rjsmin", output="gen/packed.js",
+"js/libs/bootstrap-transition.js", "js/libs/bootstrap-tab.js", "js/libs/jquery.flot.js", "js/libs/jquery.flot.pie.js", "js/libs/jquery.flot.resize.js", "js/libs/jquery.flot.tooltip.js", "js/libs/jquery.sparkline.js", "js/c2cstats.js", "js/app.js" %}
+    <script src="{{ ASSET_URL }}"></script>
+{% endassets %}
+
 {% endblock %}
