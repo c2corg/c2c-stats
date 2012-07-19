@@ -32,6 +32,7 @@ from c2cstats.generators import generate
 from flask import Flask, request, redirect, url_for, render_template, \
     jsonify, flash
 from flaskext.cache import Cache
+from flask.ext.assets import Environment
 
 # configuration
 SECRET_KEY = 'development key'
@@ -43,6 +44,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
 
+assets = Environment(app)
 cache = Cache(app)
 
 # logging config

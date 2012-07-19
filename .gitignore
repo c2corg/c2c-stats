@@ -3,3 +3,5 @@
 venv/
 .ropeproject/
 _cache/
+c2cstats/static/.webassets-cache/
+c2cstats/static/gen/
