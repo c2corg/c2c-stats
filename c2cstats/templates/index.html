@@ -4,8 +4,9 @@
 <section id="main_form">
   <form action="{{ url_for('query_user') }}" method="post" class="well form-inline">
     <legend>Entrez un numéro d'utilisateur pour calculer les statistiques:</legend>
-    <input type="number" name="user_id" placeholder="N° d'utilisateur (user_id)" autofocus>
-    <button type="submit" class="btn btn-primary">Valider</button>
+    <div class="input-append">
+      <input class="input-large" type="number" name="user_id" placeholder="N° d'utilisateur (user_id)" autofocus><button type="submit" class="btn">Valider</button>
+    </div>
   </form>
 </section>
 
