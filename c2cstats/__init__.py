@@ -36,7 +36,7 @@ from flask.ext.assets import Environment
 
 # configuration
 SECRET_KEY = 'development key'
-CACHE_TYPE = 'filesystem'
+CACHE_TYPE = 'null'
 CACHE_DIR = '_cache'
 CACHE_THRESHOLD = 100
 
