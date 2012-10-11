@@ -31,7 +31,7 @@ from c2cstats.generators import generate
 
 from flask import Flask, request, redirect, url_for, render_template, \
     jsonify, flash
-from flaskext.cache import Cache
+from flask.ext.cache import Cache
 from flask.ext.assets import Environment
 
 # configuration
