@@ -54,7 +54,7 @@
 var jsonurl = "{{ json_url }}";
 </script>
 
-{% assets filter="rjsmin", output="gen/packed.js",
+{% assets filters="rjsmin", output="gen/packed.js",
 "js/libs/bootstrap-transition.js", "js/libs/bootstrap-tab.js", "js/libs/jquery.flot.js", "js/libs/jquery.flot.pie.js", "js/libs/jquery.flot.resize.js", "js/libs/jquery.flot.tooltip.js", "js/libs/jquery.sparkline.js", "js/c2cstats.js", "js/app.js" %}
     <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
