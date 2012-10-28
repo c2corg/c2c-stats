@@ -22,6 +22,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 import json
+import logging
 import requests
 import grequests
 import time
@@ -64,6 +65,8 @@ class Outings:
 
     def __init__(self, user_id):
         self.user_id = str(user_id)
+        self.logger = logging.getLogger(__name__)
+
         self.get_outings()
         self.parse()
 
@@ -102,7 +105,8 @@ class Outings:
 
         t0 = time.time()
         url = self.outings_url()
-        print "Get %s ..." % url
+
+        self.logger.debug("Get %s ...", url)
         self.content = self.get_page(url)
         self.download_time = time.time() - t0
 
@@ -110,7 +114,8 @@ class Outings:
         if self.nboutings == 0:
             raise ParserError('No items')
 
-        print "Get the %d outings" % self.nboutings
+        self.logger.info("Process user %s - %d outings", self.user_id, self.nboutings)
+
         nb_page = (self.nboutings / NB_ITEMS) + 1
 
         if nb_page > 1:
@@ -138,7 +143,7 @@ class Outings:
         self.date     = np.zeros(self.nboutings, dtype=np.dtype('U20'))
         self.activity = np.zeros(self.nboutings, dtype=np.dtype('U30'))
         self.altitude = np.zeros(self.nboutings, dtype=np.dtype('U6'))
-        self.gain     = np.zeros(self.nboutings, dtype=np.dtype('I6'))
+        self.gain     = np.zeros(self.nboutings, dtype=np.dtype(np.int16))
 
         # initialize cotation arrays
         for c in COTATIONS.itervalues():

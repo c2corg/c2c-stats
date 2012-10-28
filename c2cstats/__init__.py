@@ -21,8 +21,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import logging
-
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
@@ -39,6 +37,7 @@ SECRET_KEY = 'development key'
 CACHE_TYPE = 'null'
 CACHE_DIR = '_cache'
 CACHE_THRESHOLD = 100
+LOGGING_FILE = 'c2cstats.log'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -48,8 +47,14 @@ assets = Environment(app)
 cache = Cache(app)
 
 # logging config
-app.logger.setLevel(logging.INFO)
-# app.logger.addHandler(logging.StreamHandler(sys.stdout))
+if not app.debug:
+    import logging
+    file_handler = logging.FileHandler(app.config['LOGGING_FILE'])
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(filename)s:%(lineno)d]'))
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+
 
 @app.route('/')
 @cache.cached(timeout=86400)
