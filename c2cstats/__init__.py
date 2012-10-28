@@ -81,11 +81,11 @@ def get_user_stats(user_id):
     except ParserError:
         msg = u'Error while generating statistics'
         app.logger.error(msg)
-        data = { 'error': msg }
+        data = {'error': msg}
     except:
         msg = u'Something went wrong ...'
         app.logger.error(msg)
-        data = { 'error': msg }
+        data = {'error': msg}
 
     # jsonify uses indent=None for XMLHttpRequest
     return jsonify(**data)
@@ -93,7 +93,6 @@ def get_user_stats(user_id):
     # resp = make_response(json.dumps(data, indent=None))
     # resp.mimetype = 'application/json'
     # return resp
-
 
 
 @app.route('/user/<int:user_id>')

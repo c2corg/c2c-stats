@@ -21,7 +21,6 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-import json
 import time
 import numpy as np
 from collections import Counter
@@ -39,6 +38,7 @@ ACT_SHORT = {u'alpinisme neige, glace, mixte': 'alpinisme',
 COTATION_GLOBALE = ('F', 'PD-', 'PD', 'PD+', 'AD-', 'AD', 'AD+', 'D-', 'D',
                     'D+', 'TD-', 'TD', 'TD+', 'ED-', 'ED', 'ED+')
 
+
 class Generator(object):
 
     def __init__(self, data):
@@ -48,7 +48,7 @@ class Generator(object):
         self.cotation_title = ''
 
         self.year = np.array([int(i.split('-')[0]) for i in self.data.date])
-        self.year_range = np.arange(np.min(self.year), np.max(self.year)+1)
+        self.year_range = np.arange(np.min(self.year), np.max(self.year) + 1)
         self.year_labels = [str(i) for i in self.year_range]
         self.month = np.array([int(i.split('-')[1]) for i in data.date])
 
@@ -67,13 +67,13 @@ class Generator(object):
     def count_per_year(self):
 
         if self.activity:
-           gain = self.filter_activity(self.data.gain, self.activity)
-           year = self.filter_activity(self.year, self.activity)
-           month = self.filter_activity(self.month, self.activity)
+            gain = self.filter_activity(self.data.gain, self.activity)
+            year = self.filter_activity(self.year, self.activity)
+            month = self.filter_activity(self.month, self.activity)
         else:
-           gain = self.data.gain
-           year = self.year
-           month = self.month
+            gain = self.data.gain
+            year = self.year
+            month = self.month
 
         self.gain_year = []
         self.gain_month = []
@@ -91,11 +91,11 @@ class Generator(object):
             gain_m = np.zeros(12, dtype=int)
             outings_m = np.zeros(12, dtype=int)
 
-            for m in xrange(1,13):
+            for m in xrange(1, 13):
                 sel = (month_y == m)
                 if sel.any():
-                    outings_m[m-1] = len(month_y[sel])
-                    gain_m[m-1] = np.sum(gain_y[sel])
+                    outings_m[m - 1] = len(month_y[sel])
+                    gain_m[m - 1] = np.sum(gain_y[sel])
 
             self.outings_month.append(outings_m.tolist())
             self.gain_month.append(gain_m.cumsum().tolist())
@@ -155,7 +155,6 @@ class Global(Generator):
                 'labels': self.year_labels,
                 'values': self.outings_month}
 
-
     def cotation_globale_per_act(self, activity):
         "Count number of outings per bin of cot_globale"
         c = Counter(self.filter_activity(self.data.cot_globale, activity))
@@ -172,7 +171,8 @@ class Escalade(Generator):
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.activity = 'escalade'
-        self.cotation_values = self.filter_activity(self.data.cot_libre, self.activity)
+        self.cotation_values = self.filter_activity(self.data.cot_libre,
+                                                    self.activity)
         self.cotation_values = remove_plus(self.cotation_values)
         self.cotation_title = u'Cotation escalade'
         self.count_per_year()
@@ -234,7 +234,8 @@ class Rocher(Generator):
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.activity = 'rocher haute montagne'
-        self.cotation_values = self.filter_activity(self.data.cot_libre, self.activity)
+        self.cotation_values = self.filter_activity(self.data.cot_libre,
+                                                    self.activity)
         self.cotation_values = remove_plus(self.cotation_values)
         self.cotation_title = u'Cotation escalade'
         self.count_per_year()
@@ -258,7 +259,7 @@ class Ski(Generator):
 def remove_plus(nparray):
     "Remove '+' for all elements of the numpy array `nparray`"
 
-    l = lambda x: x.replace('+','')
+    l = lambda x: x.replace('+', '')
     vrem = np.vectorize(l)
     return vrem(nparray)
 
@@ -286,7 +287,8 @@ def generate(user_id):
     #     'title': u'Cotation globale par activité',
     #     'xlabels': COTATION_GLOBALE,
     #     'labels': data.activities,
-    #     'values': [g.cotation_globale_per_act(act)['values'] for act in data.activities]
+    #     'values': [g.cotation_globale_per_act(act)['values']
+    #                for act in data.activities]
     #     }
 
     # attributes for subclasses (activities)
@@ -296,11 +298,13 @@ def generate(user_id):
 
         # test act to filter out the Global class
         if act and act in data.activities:
-            ctx[ACT_SHORT[act]] = {'full_name': act.title(),
-                                   'outings_per_year': getattr(d, 'outings_per_year', []),
-                                   'gain_per_year': getattr(d, 'gain_per_year', []),
-                                   'cotation': getattr(d, 'cotation', []),
-                                   'cotation_globale': g.cotation_globale_per_act(act)}
+            ctx[ACT_SHORT[act]] = {
+                'full_name': act.title(),
+                'outings_per_year': getattr(d, 'outings_per_year', []),
+                'gain_per_year': getattr(d, 'gain_per_year', []),
+                'cotation': getattr(d, 'cotation', []),
+                'cotation_globale': g.cotation_globale_per_act(act),
+            }
 
             # no cotation_globale for rando
             if act == u'randonnée pédestre':

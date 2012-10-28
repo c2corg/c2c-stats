@@ -36,26 +36,27 @@ ACTIVITIES = ['', u'ski, surf', u'alpinisme neige, glace, mixte',
               u'randonnée pédestre', u'raquette']
 
 COTATIONS = {
-    'ice_rating'                 :  {'name': 'cot_glace'   , 'format': 'U2'},
-    'mixed_rating'               :  {'name': 'cot_mixte'   , 'format': 'U2'},
-    'global_rating'              :  {'name': 'cot_globale' , 'format': 'U3'},
-    'labande_global_rating'      :  {'name': 'cot_globale' , 'format': 'U3'},
-    'rock_free_rating'           :  {'name': 'cot_libre'   , 'format': 'U3'},
-    'rock_required_rating'       :  {'name': 'cot_oblige'  , 'format': 'U3'},
-    'aid_rating'                 :  {'name': 'cot_artif'   , 'format': 'U2'},
-    'hiking_rating'              :  {'name': 'cot_rando'   , 'format': 'U2'},
-    'snowshoeing_rating'         :  {'name': 'cot_raquette', 'format': 'U2'},
-    'toponeige_technical_rating' :  {'name': 'cot_skitech' , 'format': 'U3'},
-    'labande_ski_rating'         :  {'name': 'cot_skiponc' , 'format': 'U2'},
-    'engagement_rating'          :  {'name': 'engagement'  , 'format': 'U3'},
-    'toponeige_exposition_rating':  {'name': 'exposition'  , 'format': 'U2'},
-    'equipment_rating'           :  {'name': 'equipement'  , 'format': 'U2'}
-    }
+    'ice_rating': {'name': 'cot_glace', 'format': 'U2'},
+    'mixed_rating': {'name': 'cot_mixte', 'format': 'U2'},
+    'global_rating': {'name': 'cot_globale', 'format': 'U3'},
+    'labande_global_rating': {'name': 'cot_globale', 'format': 'U3'},
+    'rock_free_rating': {'name': 'cot_libre', 'format': 'U3'},
+    'rock_required_rating': {'name': 'cot_oblige', 'format': 'U3'},
+    'aid_rating': {'name': 'cot_artif', 'format': 'U2'},
+    'hiking_rating': {'name': 'cot_rando', 'format': 'U2'},
+    'snowshoeing_rating': {'name': 'cot_raquette', 'format': 'U2'},
+    'toponeige_technical_rating': {'name': 'cot_skitech', 'format': 'U3'},
+    'labande_ski_rating': {'name': 'cot_skiponc', 'format': 'U2'},
+    'engagement_rating': {'name': 'engagement', 'format': 'U3'},
+    'toponeige_exposition_rating': {'name': 'exposition', 'format': 'U2'},
+    'equipment_rating': {'name': 'equipement', 'format': 'U2'}
+}
 
 
 class ParserError(Exception):
     def __init__(self, msg):
         self.msg = msg
+
     def __str__(self):
         return self.msg
 
@@ -91,7 +92,7 @@ class Outings:
 
     def page_to_json(self, page):
         # Fix errors in the json : hasTrack & conditions miss values
-        content = page.replace('"hasTrack": ,','')
+        content = page.replace('"hasTrack": ,', '')
         content = content.replace('"conditions": ,', '')
 
         try:
@@ -114,13 +115,14 @@ class Outings:
         if self.nboutings == 0:
             raise ParserError('No items')
 
-        self.logger.info("Process user %s - %d outings", self.user_id, self.nboutings)
+        self.logger.info("Process user %s - %d outings", self.user_id,
+                         self.nboutings)
 
         nb_page = (self.nboutings / NB_ITEMS) + 1
 
         if nb_page > 1:
             urls = []
-            for p in xrange(2, nb_page+1):
+            for p in xrange(2, nb_page + 1):
                 urls.append(self.outings_url(page=p))
 
             t0 = time.time()
@@ -140,10 +142,10 @@ class Outings:
         "Get the content of each line of the table"
 
         self.area = []
-        self.date     = np.zeros(self.nboutings, dtype=np.dtype('U20'))
+        self.date = np.zeros(self.nboutings, dtype=np.dtype('U20'))
         self.activity = np.zeros(self.nboutings, dtype=np.dtype('U30'))
         self.altitude = np.zeros(self.nboutings, dtype=np.dtype('U6'))
-        self.gain     = np.zeros(self.nboutings, dtype=np.dtype(np.int16))
+        self.gain = np.zeros(self.nboutings, dtype=np.dtype(np.int16))
 
         # initialize cotation arrays
         for c in COTATIONS.itervalues():
