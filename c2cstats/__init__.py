@@ -22,7 +22,7 @@
 # DEALINGS IN THE SOFTWARE.
 
 import locale
-locale.setlocale(locale.LC_ALL, '')
+import os
 
 from c2cstats.parser import ParserError
 from c2cstats.generators import generate
@@ -31,6 +31,8 @@ from flask import Flask, request, redirect, url_for, render_template, \
     jsonify, flash
 from flask.ext.cache import Cache
 from flask.ext.assets import Environment
+
+locale.setlocale(locale.LC_ALL, '')
 
 # configuration
 SECRET_KEY = 'development key'
@@ -69,14 +71,19 @@ def page_not_found(e):
 
 
 @app.route('/user/')
-def user_index():
-    return redirect(url_for('index'))
+@app.route('/user/<int:user_id>')
+@cache.cached(timeout=86400)
+def show_user_stats(user_id=None):
+    if not user_id:
+        return redirect(url_for('index'))
+    else:
+        json_url = url_for('get_user_stats', user_id=user_id)
+        return render_template('user.html', user_id=user_id, json_url=json_url)
 
 
 @app.route('/user/<int:user_id>/json')
 @cache.cached(timeout=604800)
 def get_user_stats(user_id):
-
     try:
         data = generate(str(user_id))
     except ParserError:
@@ -94,19 +101,6 @@ def get_user_stats(user_id):
     # resp = make_response(json.dumps(data, indent=None))
     # resp.mimetype = 'application/json'
     # return resp
-
-
-@app.route('/user/<int:user_id>')
-@cache.cached(timeout=86400)
-def show_user_stats(user_id):
-    user_id = str(user_id)
-
-    context = {
-        'json_url': url_for('get_user_stats', user_id=user_id),
-        'user_id': user_id
-        }
-
-    return render_template('user.html', **context)
 
 
 @app.route('/query', methods=['POST'])
