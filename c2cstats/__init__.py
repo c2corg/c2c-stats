@@ -47,7 +47,7 @@ app.config.from_envvar('C2CSTATS_SETTINGS', silent=True)
 
 cache = Cache(app)
 assets = Environment(app)
-assets.cache = os.path.join(CACHE_DIR, 'assets')
+assets.cache = os.path.join(app.config['CACHE_DIR'], 'assets')
 
 # logging config
 if not app.debug:
