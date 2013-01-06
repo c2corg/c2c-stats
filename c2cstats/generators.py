@@ -259,6 +259,9 @@ class Ski(Generator):
 def remove_plus(nparray):
     "Remove '+' for all elements of the numpy array `nparray`"
 
+    if len(nparray) == 0:
+        return nparray
+
     l = lambda x: x.replace('+', '')
     vrem = np.vectorize(l)
     return vrem(nparray)
