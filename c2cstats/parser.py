@@ -118,7 +118,8 @@ class Outings:
         self.logger.info("Process user %s - %d outings", self.user_id,
                          self.nboutings)
 
-        nb_page = (self.nboutings / NB_ITEMS) + 1
+        # Compute the number of pages
+        nb_page = ((self.nboutings - 1) / NB_ITEMS) + 1
 
         if nb_page > 1:
             urls = []
