@@ -31,9 +31,14 @@ import numpy as np
 NB_ITEMS = 50
 BASE_URL = "http://www.camptocamp.org/outings/list/users/%s/format/json/npp/%d/page/%d"
 
-ACTIVITIES = ['', u'ski, surf', u'alpinisme neige, glace, mixte',
-              u'rocher haute montagne', u'escalade', u'cascade de glace',
-              u'randonnée pédestre', u'raquette']
+ACTIVITIES = ['',
+              u'alpinisme neige, glace, mixte',
+              u'cascade de glace',
+              u'escalade',
+              u'randonnée pédestre',
+              u'raquette',
+              u'rocher haute montagne',
+              u'ski, surf']
 
 COTATIONS = {
     'ice_rating': {'name': 'cot_glace', 'format': 'U2'},
@@ -62,7 +67,7 @@ class ParserError(Exception):
 
 
 class Outings:
-    "Get and parse the list of outings of user `user_id``"
+    """Get and parse the list of outings of user `user_id``."""
 
     def __init__(self, user_id):
         self.user_id = str(user_id)
@@ -81,7 +86,7 @@ class Outings:
         return BASE_URL % (self.user_id, NB_ITEMS, page)
 
     def get_page(self, url):
-        "Download `url` and return the json converted to dict"
+        """Download `url` and return the json converted to dict."""
 
         r = requests.get(url)
         r.encoding = 'utf-8'
@@ -91,7 +96,8 @@ class Outings:
         return self.page_to_json(r.text)
 
     def page_to_json(self, page):
-        # Fix errors in the json : hasTrack & conditions miss values
+        """Fix errors in the json : hasTrack & conditions miss values."""
+
         content = page.replace('"hasTrack": ,', '')
         content = content.replace('"conditions": ,', '')
 
@@ -103,6 +109,7 @@ class Outings:
         return resp
 
     def get_outings(self):
+        """Download all the outings."""
 
         t0 = time.time()
         url = self.outings_url()
@@ -123,8 +130,8 @@ class Outings:
 
         if nb_page > 1:
             urls = []
-            for p in xrange(2, nb_page + 1):
-                urls.append(self.outings_url(page=p))
+            for page in xrange(2, nb_page + 1):
+                urls.append(self.outings_url(page=page))
 
             t0 = time.time()
             rs = (grequests.get(u) for u in urls)
@@ -140,7 +147,7 @@ class Outings:
             raise ParserError('Missing items')
 
     def parse(self):
-        "Get the content of each line of the table"
+        """Parse the content of each line of the table."""
 
         self.area = []
         self.date = np.zeros(self.nboutings, dtype=np.dtype('U20'))
