@@ -21,3 +21,18 @@ Lancement d'une console pré-configurée (avec l'application ``app`` et la
 méthode pour générer les données ``generate``):
 
     python2 manage.py shell
+
+
+## Notes pour la mise à jour sur le serveur
+
+[Config du serveur](https://dev.camptocamp.org/trac/c2corg/browser/trunk/infrastructure/puppetmaster/site-modules/c2corg/manifests/stats.pp)
+
+Mise à jour:
+
+    cd /usr/src/c2c-stats
+    sudo -u c2corg git pull
+    sudo service gunicorn restart
+
+En cas de correction sur les json, il faut vider le cache:
+
+    sudo find  /var/lib/c2cstats/cache/ -type f -delete
