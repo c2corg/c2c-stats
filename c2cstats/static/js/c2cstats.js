@@ -68,7 +68,7 @@
       $this.before('<h2>'+data.title+'</h2>');
 
       var width = 30*data.labels.length;
-      $this.width(width)
+      $this.width(width);
 
       $.plot($this, [values], {
         series: {
@@ -85,7 +85,9 @@
         grid: defaults.grid,
         tooltip: true,
         tooltipOpts: {
-          content: "%y",
+          content: function(xval, yval) {
+            return data.labels[xval] + " : " + yval;
+          },
           shifts: {
             x: 0,
             y: 20
@@ -147,7 +149,6 @@
   };
 
   $.fn.c2cstats = function( method ) {
-
     // Method calling logic
     if ( methods[method] ) {
       return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
@@ -156,7 +157,6 @@
     } else {
       $.error( 'Method ' +  method + ' does not exist on jQuery.c2cstats' );
     }
-
   };
 
 })( jQuery );
