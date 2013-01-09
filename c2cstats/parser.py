@@ -31,14 +31,16 @@ import numpy as np
 NB_ITEMS = 50
 BASE_URL = "http://www.camptocamp.org/outings/list/users/%s/format/json/npp/%d/page/%d"
 
+# List of activities. The order matters !
+# see https://dev.camptocamp.org/trac/c2corg/browser/trunk/camptocamp.org/apps/frontend/config/app.yml.in#L147
 ACTIVITIES = ['',
+              u'ski, surf',
               u'alpinisme neige, glace, mixte',
-              u'cascade de glace',
-              u'escalade',
-              u'randonnée pédestre',
-              u'raquette',
               u'rocher haute montagne',
-              u'ski, surf']
+              u'escalade',
+              u'cascade de glace',
+              u'randonnée pédestre',
+              u'raquette']
 
 COTATIONS = {
     'ice_rating': {'name': 'cot_glace', 'format': 'U2'},
