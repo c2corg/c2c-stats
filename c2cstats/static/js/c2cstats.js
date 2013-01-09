@@ -1,5 +1,5 @@
 /*
-# Copyright (c) 2012 Simon C. <contact at saimon.org>
+# Copyright (c) 2012-2013 Simon Conseil <simon.conseil at camptocamp.org>
 # see https://github.com/saimn/c2c-stats/LICENSE
 */
 

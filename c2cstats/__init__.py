@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding:utf-8 -*-
 
-# Copyright (c) 2012 Simon C. <contact at saimon.org>
+# Copyright (c) 2012-2013 Simon Conseil <simon.conseil at camptocamp.org>
 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
