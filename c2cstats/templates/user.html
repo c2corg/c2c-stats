@@ -5,6 +5,11 @@
 <p>⇦ Retour à l'<a href="{{ url_for('index') }}">accueil</a>.</p>
 
 <section id="summary" class="well">
+  <div class="links hide">
+    <span class="label label-info"><a id="origin-profile" href="">profil</a></span>
+    <span class="label label-info"><a id="origin-link" href="">liste des sorties</a></span>
+  </div>
+
   <h2>Utilisateur {{ user_id }}</h2>
   <p><span id="sparkline"></span></p>
 
@@ -20,9 +25,9 @@
     de <b><span id="nb_outings" class="badge badge-info"></span> sorties</b>,
     en <span id="total_time" title="Temps total"></span>s
     (<span id="download_time" title="Temps de téléchargement"></span>s).</p>
-  <p class="hide"><span class="label label-info">Liens C2C</span>
-    <a id="origin-profile" href="">profil</a>,
-    <a id="origin-link" href="">liste des sorties</a>.</p>
+  <p class="hide">Les statistiques sont gardées en cache pendant 7 jours, il
+    est donc possible que les sorties récentes ne soit pas prise en compte
+    immédiatement.</p>
 </section>
 
 <section id="charts">
