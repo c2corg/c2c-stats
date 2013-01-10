@@ -27,6 +27,8 @@ from flask.ext.script import Manager, Server, Shell
 from c2cstats import app
 from c2cstats.generators import generate
 
+# app.debug = True
+
 
 def _make_context():
     return dict(app=app, generate=generate)

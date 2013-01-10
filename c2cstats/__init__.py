@@ -71,7 +71,7 @@ def page_not_found(e):
 
 
 @app.route('/user/')
-@app.route('/user/<int:user_id>')
+@app.route('/user/<user_id>')
 @cache.cached(timeout=86400)
 def show_user_stats(user_id=None):
     if not user_id:
@@ -81,7 +81,7 @@ def show_user_stats(user_id=None):
         return render_template('user.html', user_id=user_id, json_url=json_url)
 
 
-@app.route('/user/<int:user_id>/json')
+@app.route('/user/<user_id>/json')
 @cache.cached(timeout=604800)
 def get_user_stats(user_id):
     try:
@@ -105,10 +105,9 @@ def get_user_stats(user_id):
 
 @app.route('/query', methods=['POST'])
 def query_user():
-    try:
-        user_id = int(request.form['user_id'])
-    except ValueError:
+    user_id = request.form['user_id']
+    if not user_id:
         flash(u"Le numéro d'utilisateur n'est pas valide", 'alert-error')
         return redirect(url_for('index'))
-
-    return redirect(url_for('show_user_stats', user_id=user_id))
+    else:
+        return redirect(url_for('show_user_stats', user_id=user_id))
