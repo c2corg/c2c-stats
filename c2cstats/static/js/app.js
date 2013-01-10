@@ -1,26 +1,27 @@
 $(document).ready(function(){
   $tohide = $('.hide');
   $nav = $('.nav');
+  $loading = $('#loading');
 
-  $('#loading')
-    .hide()  // hide it initially
-    .ajaxStart(function() {
-      $tohide.hide();
-      $nav.hide();
-      $(this).show();
-    })
-    .ajaxSuccess(function() {
-      $(this).hide();
-      $tohide.show();
-      $nav.show();
-      $.sparkline_display_visible();
-    })
-    .ajaxError(function() {
-      $tohide.hide();
-      $nav.hide();
-      $(this).hide();
-      $(this).after('<div class="alert alert-error">Erreur lors du chargement des données</div>');
-    });
+  // hide it initially
+  $loading.hide();
+
+  $(document).ajaxStart(function() {
+    $tohide.hide();
+    $nav.hide();
+    $loading.show();
+  });
+
+  $(document).ajaxSuccess(function() {
+    $loading.hide();
+    $tohide.show();
+    $nav.show();
+    $.sparkline_display_visible();
+  });
+
+  $(document).ajaxError(function() {
+    document.location = "/";
+  });
 
   $.getJSON(jsonurl, renderplot);
 
@@ -29,30 +30,30 @@ $(document).ready(function(){
   , $subnav = $('.subnav')
   , navTop = $('.subnav').length && $('.subnav').offset().top
   , tabsTop = $('#tabs').offset().top
-  , isFixed = 0
+  , isFixed = 0;
 
-  processScroll()
+  processScroll();
 
   // hack sad times - holdover until rewrite for 2.1
   $subnav.on('click', function () {
     if (!isFixed) {
-      setTimeout(function () {  $win.scrollTop($win.scrollTop()) }, 10)
+      setTimeout(function () {  $win.scrollTop($win.scrollTop()); }, 10);
     } else
     {
-      $win.scrollTop(tabsTop - 20)
+      $win.scrollTop(tabsTop - 20);
     }
-  })
+  });
 
-  $win.on('scroll', processScroll)
+  $win.on('scroll', processScroll);
 
   function processScroll() {
-    var i, scrollTop = $win.scrollTop()
+    var i, scrollTop = $win.scrollTop();
     if (scrollTop >= navTop && !isFixed) {
-      isFixed = 1
-      $subnav.addClass('subnav-fixed')
+      isFixed = 1;
+      $subnav.addClass('subnav-fixed');
     } else if (scrollTop <= navTop && isFixed) {
-      isFixed = 0
-      $subnav.removeClass('subnav-fixed')
+      isFixed = 0;
+      $subnav.removeClass('subnav-fixed');
     }
   }
 
