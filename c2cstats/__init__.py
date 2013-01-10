@@ -28,7 +28,7 @@ from c2cstats.parser import ParserError
 from c2cstats.generators import generate
 
 from flask import Flask, request, redirect, url_for, render_template, \
-    jsonify, flash
+    jsonify, flash, abort
 from flask.ext.cache import Cache
 from flask.ext.assets import Environment
 
@@ -86,14 +86,15 @@ def show_user_stats(user_id=None):
 def get_user_stats(user_id):
     try:
         data = generate(str(user_id))
-    except ParserError:
-        msg = u'Error while generating statistics'
-        app.logger.error(msg)
-        data = {'error': msg}
+    except ParserError as e:
+        app.logger.error(u'Parser error: ' + e.msg)
+        flash(u"Problème lors de la récupération des données: " + e.msg,
+              'alert-error')
+        abort(500)
     except:
-        msg = u'Something went wrong ...'
-        app.logger.error(msg)
-        data = {'error': msg}
+        app.logger.error(u'Fatal error')
+        flash(u"Une erreur s'est produite", 'alert-error')
+        abort(500)
 
     # jsonify uses indent=None for XMLHttpRequest
     return jsonify(**data)

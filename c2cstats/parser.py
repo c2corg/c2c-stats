@@ -94,7 +94,7 @@ class Outings:
         r.encoding = 'utf-8'
 
         if r.status_code != 200:
-            raise ParserError('Page not found')
+            raise ParserError(u"Page non trouvée")
         return self.page_to_json(r.text)
 
     def page_to_json(self, page):
@@ -106,7 +106,7 @@ class Outings:
         try:
             resp = json.loads(content)
         except ValueError:
-            raise ParserError("Error while loading the json data")
+            raise ParserError(u"Erreur lors du chargement du json")
 
         return resp
 
@@ -122,7 +122,7 @@ class Outings:
 
         self.nboutings = self.content.get('totalItems', 0)
         if self.nboutings == 0:
-            raise ParserError('No items')
+            raise ParserError(u"Pas de sorties")
 
         self.logger.info("Process user %s - %d outings", self.user_id,
                          self.nboutings)
@@ -146,7 +146,7 @@ class Outings:
             self.download_time += t1 - t0
 
         if len(self.content['items']) != self.nboutings:
-            raise ParserError('Missing items')
+            raise ParserError(u"Des sorties sont manquantes")
 
     def parse(self):
         """Parse the content of each line of the table."""
