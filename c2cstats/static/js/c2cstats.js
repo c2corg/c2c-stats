@@ -21,7 +21,10 @@
     pie : function (data) {
       var values = [];
       $.each(data.values, function(index, value) {
-        values.push({label: data.labels[index],  data: value});
+        values.push({
+          label: data.labels[index] + " (" + value + ")",
+          data: value
+        });
       });
 
       var $this = $(this);
@@ -39,7 +42,7 @@
         grid: defaults.grid,
         tooltip: true,
         tooltipOpts: {
-          content: "%s, %y sorties (%p.0%)",
+          content: "%s, %p.0%",
           shifts: {
             x: 20,
             y: 0
