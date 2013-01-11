@@ -60,7 +60,6 @@ if not app.debug:
 
 
 @app.route('/')
-@cache.cached(timeout=86400)
 def index():
     return render_template('index.html')
 
