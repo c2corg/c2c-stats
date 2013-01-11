@@ -21,15 +21,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+import grequests
 import json
 import logging
-import requests
-import grequests
-import time
 import numpy as np
+import requests
+import time
 
 NB_ITEMS = 50
-BASE_URL = "http://www.camptocamp.org/outings/list/users/%s/format/json/npp/%d/page/%d"
+DOMAIN = "http://www.camptocamp.org"
+BASE_URL = DOMAIN + "/outings/list/users/%s/format/json/npp/%d/page/%d"
 
 # List of activities. The order matters !
 # see https://dev.camptocamp.org/trac/c2corg/browser/trunk/camptocamp.org/apps/frontend/config/app.yml.in#L147
@@ -74,7 +75,6 @@ class Outings:
     def __init__(self, user_id):
         self.user_id = str(user_id)
         self.logger = logging.getLogger(__name__)
-
         self.get_outings()
         self.parse()
 
@@ -95,13 +95,14 @@ class Outings:
 
         if r.status_code != 200:
             raise ParserError(u"Page non trouvée")
-        return self.page_to_json(r.text)
+        return self.load_json(r.text)
 
-    def page_to_json(self, page):
-        """Fix errors in the json : hasTrack & conditions miss values."""
+    def load_json(self, text):
+        """Load the json and fix errors."""
 
-        content = page.replace('"hasTrack": ,', '')
-        content = content.replace('"conditions": ,', '')
+        # hasTrack & conditions miss values
+        content = text.replace('"hasTrack": ,', '')\
+                      .replace('"conditions": ,', '')
 
         try:
             resp = json.loads(content)
@@ -113,10 +114,10 @@ class Outings:
     def get_outings(self):
         """Download all the outings."""
 
-        t0 = time.time()
         url = self.outings_url()
-
         self.logger.debug("Get %s ...", url)
+
+        t0 = time.time()
         self.content = self.get_page(url)
         self.download_time = time.time() - t0
 
@@ -138,12 +139,11 @@ class Outings:
             t0 = time.time()
             rs = (grequests.get(u) for u in urls)
             resp = grequests.map(rs)
+            self.download_time += (time.time() - t0)
 
             for r in resp:
-                content = self.page_to_json(r.text)
+                content = self.load_json(r.text)
                 self.content['items'].extend(content['items'])
-            t1 = time.time()
-            self.download_time += t1 - t0
 
         if len(self.content['items']) != self.nboutings:
             raise ParserError(u"Des sorties sont manquantes")
