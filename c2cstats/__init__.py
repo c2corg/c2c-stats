@@ -76,8 +76,10 @@ def show_user_stats(user_id=None):
     if not user_id:
         return redirect(url_for('index'))
     else:
-        json_url = url_for('get_user_stats', user_id=user_id)
-        return render_template('user.html', user_id=user_id, json_url=json_url)
+        ctx = {'user_id': user_id,
+               'robots': 'noindex, follow',
+               'json_url': url_for('get_user_stats', user_id=user_id)}
+        return render_template('user.html', **ctx)
 
 
 @app.route('/user/<user_id>/json')
