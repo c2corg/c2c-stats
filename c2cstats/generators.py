@@ -192,7 +192,7 @@ class Glace(Generator):
 
 class Rando(Generator):
 
-    COTATION_REF = ('T1', 'T2', 'T3', 'T4', 'T5', 'T6')
+    COTATION_REF = ('T1', 'T2', 'T3', 'T4', 'T5')
 
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
