@@ -33,6 +33,12 @@ Mise à jour:
     sudo -u c2corg git pull
     sudo service gunicorn restart
 
+En cas de modification du requirements.txt, il mettre à jour le virtualenv
+avant de redémarrer gunicorn. Comme le virtualenv est géré par puppet, il faut
+forcer son exécution:
+
+    sudo puppet agent -t
+
 En cas de correction sur les json, il faut vider le cache:
 
     sudo find  /var/lib/c2cstats/cache/ -type f -delete
