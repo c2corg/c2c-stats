@@ -125,6 +125,8 @@ class Outings:
         self.nboutings = self.content.get('totalItems', 0)
         if self.nboutings == 0:
             raise ParserError(u"Pas de sorties")
+        elif self.nboutings > 5000:
+            raise ParserError(u"Trop de sorties !")
 
         self.logger.info("Process user %s - %d outings", self.user_id,
                          self.nboutings)
