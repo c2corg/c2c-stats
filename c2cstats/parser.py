@@ -94,7 +94,8 @@ class Outings:
         r.encoding = 'utf-8'
 
         if r.status_code != 200:
-            raise ParserError(u"Page non trouvée")
+            raise ParserError(
+                u"Page non trouvée ({}, {})".format(r.status_code, url))
         return self.load_json(r.text)
 
     def load_json(self, text):
