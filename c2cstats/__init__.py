@@ -105,6 +105,12 @@ def get_user_stats(user_id):
     # return resp
 
 
+@app.route('/user/<user_id>/delete')
+def delete_user_stats(user_id):
+    cache.delete('view//user/%s/json' % user_id)
+    return redirect(url_for('show_user_stats', user_id=user_id))
+
+
 @app.route('/query', methods=['POST'])
 def query_user():
     user_id = request.form['user_id']
