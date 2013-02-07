@@ -105,10 +105,10 @@ def get_user_stats(user_id):
     # return resp
 
 
-@app.route('/user/<user_id>/delete')
+@app.route('/user/<user_id>', methods=['DELETE'])
 def delete_user_stats(user_id):
     cache.delete('view//user/%s/json' % user_id)
-    return redirect(url_for('show_user_stats', user_id=user_id))
+    return '', 204
 
 
 @app.route('/query', methods=['POST'])

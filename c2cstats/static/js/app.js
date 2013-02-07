@@ -6,24 +6,32 @@ $(document).ready(function(){
   // hide it initially
   $loading.hide();
 
-  $(document).ajaxStart(function() {
+  load_json_stats();
+
+  function load_json_stats() {
     $tohide.hide();
     $nav.hide();
     $loading.show();
-  });
 
-  $(document).ajaxSuccess(function() {
-    $loading.hide();
-    $tohide.show();
-    $nav.show();
-    $.sparkline_display_visible();
-  });
+    $.getJSON(jsonurl, function(data) {
+      $loading.hide();
+      $tohide.show();
+      $nav.show();
+      $.sparkline_display_visible();
+      renderplot(data);
+    })
+    .error(function() {
+      document.location = "/";
+    });
+  }
 
-  $(document).ajaxError(function() {
-    document.location = "/";
+  $('#delete-cache').on('click', function () {
+    $.ajax({
+      url: "/user/" + user_id,
+      type: 'DELETE'
+    })
+    .done(load_json_stats);
   });
-
-  $.getJSON(jsonurl, renderplot);
 
   // fix sub nav on scroll
   var $win = $(window)
