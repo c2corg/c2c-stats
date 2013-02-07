@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $tohide = $('.hide');
-  $nav = $('.nav');
+  $charts = $('#charts');
   $loading = $('#loading');
 
   // hide it initially
@@ -10,13 +10,13 @@ $(document).ready(function(){
 
   function load_json_stats() {
     $tohide.hide();
-    $nav.hide();
+    $charts.hide();
     $loading.show();
 
     $.getJSON(jsonurl, function(data) {
       $loading.hide();
       $tohide.show();
-      $nav.show();
+      $charts.show();
       $.sparkline_display_visible();
       renderplot(data);
     })
@@ -36,35 +36,27 @@ $(document).ready(function(){
   // fix sub nav on scroll
   var $win = $(window)
   , $subnav = $('.subnav')
-  , navTop = $('.subnav').length && $('.subnav').offset().top
-  , tabsTop = $('#tabs').offset().top
+  , navTop = 370 //$('.subnav').length && $('.subnav').offset().top
+  // , tabsTop = $('#global').offset().top
   , isFixed = 0;
 
   processScroll();
-
-  // hack sad times - holdover until rewrite for 2.1
-  $subnav.on('click', function () {
-    if (!isFixed) {
-      setTimeout(function () {  $win.scrollTop($win.scrollTop()); }, 10);
-    } else
-    {
-      $win.scrollTop(tabsTop - 20);
-    }
-  });
-
   $win.on('scroll', processScroll);
+
+  // $subnav.on('click', function () {
+  //   setTimeout(function () {  $win.scrollTop($win.scrollTop()); }, 10);
+  // });
 
   function processScroll() {
     var i, scrollTop = $win.scrollTop();
     if (scrollTop >= navTop && !isFixed) {
       isFixed = 1;
-      $subnav.addClass('subnav-fixed');
+      $subnav.addClass('navbar-fixed-top');
     } else if (scrollTop <= navTop && isFixed) {
       isFixed = 0;
-      $subnav.removeClass('subnav-fixed');
+      $subnav.removeClass('navbar-fixed-top');
     }
   }
-
 });
 
 function renderplot(data) {
@@ -80,36 +72,35 @@ function renderplot(data) {
     $("#origin-link").attr({href: data.url});
     $("#origin-profile").attr({href: data.user_url});
 
+    // Remove the chart titles if they are present
+    $('#global .chart-title').remove();
+
     $('#chart_activities').c2cstats('pie', data.global.activities);
     $('#chart_area').c2cstats('pie', data.global.area);
+
+    var source   = $("#charts-template").html();
+    var template = Handlebars.compile(source);
 
     $.each(data.activities, function(index, value) {
       if (data[value])
       {
-        $(".nav").append('<li><a href="#'+value+'" data-toggle="pill">'+value+'</a></li>');
-        $("#tabs").append('<div id="'+value+'" class="tab-pane fade row"></div>');
+        $("." + value).removeClass("disabled");
+
+        var html = template({activity: value});
+        $("#"+value).html(html);
 
         if (data[value].cotation != null &&
-            data[value].cotation.values.length > 0)
-        {
-          $("#"+value).append('<div class="span6"><div id="cotation_'+value+'" class="chart"></div></div>');
+            data[value].cotation.values.length > 0) {
           $('#cotation_'+value).c2cstats('bar', data[value].cotation);
         }
 
         if (data[value].cotation_globale != null &&
-            data[value].cotation_globale.values.length > 0)
-        {
-          $("#"+value).append('<div class="span6"><div id="cotation_globale_'+value+'" class="chart"></div></div>');
+            data[value].cotation_globale.values.length > 0) {
           $('#cotation_globale_'+value).c2cstats('bar', data[value].cotation_globale);
         }
 
-        $("#"+value).append('<div class="span6"><div id="outings_'+value+'" class="chart"></div></div>');
         $('#outings_'+value).c2cstats('bar', data[value].outings_per_year);
-
-        $("#"+value).append('<div class="span6"><div id="gain_'+value+'" class="chart"></div></div>');
         $('#gain_'+value).c2cstats('bar', data[value].gain_per_year);
-
-        $("#"+value).append('<div class="span6"><div id="gain_cumul_'+value+'" class="chart"></div></div>');
         $('#gain_cumul_'+value).c2cstats('lines', data[value].gain_per_year);
       }
     });

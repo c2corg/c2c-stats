@@ -28,7 +28,7 @@
       });
 
       var $this = $(this);
-      $this.before('<h2>'+data.title+'</h2>');
+      $this.before('<h2 class="chart-title">'+data.title+'</h2>');
 
       var plot = $.plot($this, values, {
         series: {
@@ -68,7 +68,7 @@
       });
 
       var $this = $(this);
-      $this.before('<h2>'+data.title+'</h2>');
+      $this.before('<h2 class="chart-title">'+data.title+'</h2>');
 
       var width = 30*data.labels.length;
       $this.width(width);
@@ -102,7 +102,7 @@
 
     lines : function (data) {
       var $this = $(this);
-      $this.before('<h2>'+data.title+'</h2>');
+      $this.before('<h2 class="chart-title">'+data.title+'</h2>');
 
       var values = [];
       $.each(data.values_per_month, function(i, year) {

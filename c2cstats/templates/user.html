@@ -1,4 +1,3 @@
-
 {% extends "layout.html" %}
 
 {% block body %}
@@ -36,13 +35,24 @@
   <div class="navbar subnav">
     <div class="navbar-inner">
       <ul class="nav">
-        <li class="active"><a href="#global" data-toggle="pill">Général</a></li>
+        <li><a href="#global">Général</a></li>
+        <li class="disabled alpinisme"><a href="#alpinisme">Alpinisme</a></li>
+        <li class="disabled glace"><a href="#glace">Glace</a></li>
+        <li class="disabled escalade"><a href="#escalade">Escalade</a></li>
+        <li class="disabled rando"><a href="#rando">Rando</a></li>
+        <li class="disabled raquette"><a href="#raquette">Raquette</a></li>
+        <li class="disabled rocher"><a href="#rocher">Rocher</a></li>
+        <li class="disabled ski"><a href="#ski">Ski</a></li>
       </ul>
     </div>
   </div>
 
-  <div id="tabs" class="tab-content">
-    <div id="global" class="tab-pane fade active in row">
+  <section id="global">
+    <div class="page-header">
+      <h1>Général</h1>
+    </div>
+
+    <div class="row">
       <div class="span6">
         <div id="chart_activities" class="chart"></div>
       </div>
@@ -50,7 +60,15 @@
         <div id="chart_area" class="chart"></div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <section id="alpinisme"></section>
+  <section id="glace"></section>
+  <section id="escalade"></section>
+  <section id="rando"></section>
+  <section id="raquette"></section>
+  <section id="rocher"></section>
+  <section id="ski"></section>
 </section>
 
 {% endblock %}
@@ -62,8 +80,26 @@ var user_id = "{{ user_id }}";
 var jsonurl = "{{ json_url }}";
 </script>
 
+{% raw %}
+<script id="charts-template" type="text/x-handlebars-template">
+  <div class="page-header">
+    <h1>{{ activity }}</h1>
+  </div>
+
+  <div class="row">
+    <div class="span6"><div id="cotation_{{ activity }}" class="chart"></div></div>
+    <div class="span6"><div id="cotation_globale_{{ activity }}" class="chart"></div></div>
+  </div>
+  <div class="row">
+    <div class="span6"><div id="outings_{{ activity }}" class="chart"></div></div>
+    <div class="span6"><div id="gain_{{ activity }}" class="chart"></div></div>
+  </div>
+  <div id="gain_cumul_{{ activity }}" class="chart"></div>
+</script>
+{% endraw %}
+
 {% assets filters="rjsmin", output="gen/packed.js",
-"js/libs/bootstrap-transition.js", "js/libs/bootstrap-tab.js", "js/libs/jquery.flot.js", "js/libs/jquery.flot.pie.js", "js/libs/jquery.flot.resize.js", "js/libs/jquery.flot.tooltip.js", "js/libs/jquery.sparkline.js", "js/c2cstats.js", "js/app.js" %}
+"js/libs/handlebars.js", "js/libs/jquery.flot.js", "js/libs/jquery.flot.pie.js", "js/libs/jquery.flot.resize.js", "js/libs/jquery.flot.tooltip.js", "js/libs/jquery.sparkline.js", "js/c2cstats.js", "js/app.js" %}
     <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
 
