@@ -78,15 +78,18 @@ function renderplot(data) {
     $('#chart_activities').c2cstats('pie', data.global.activities);
     $('#chart_area').c2cstats('pie', data.global.area);
 
+    var source   = $("#nav-template").html();
+    var nav_template = Handlebars.compile(source);
+    var html = nav_template({activities: data.activities});
+    $(".subnav .nav").html(html);
+
     var source   = $("#charts-template").html();
-    var template = Handlebars.compile(source);
+    var charts_template = Handlebars.compile(source);
 
     $.each(data.activities, function(index, value) {
       if (data[value])
       {
-        $("." + value).removeClass("disabled");
-
-        var html = template({activity: value});
+        var html = charts_template({activity: value});
         $("#"+value).html(html);
 
         if (data[value].cotation != null &&

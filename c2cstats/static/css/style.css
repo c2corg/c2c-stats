@@ -23,6 +23,10 @@ h2 {font-weight: normal;}
 
 .links a, .links a:hover { color: #fff; }
 
+.navbar .nav > li > a {
+  text-transform: capitalize;
+}
+
 #loading {
   text-align: center;
   width: 40%;
