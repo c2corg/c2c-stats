@@ -1,6 +1,6 @@
 $(document).ready(function(){
-  $tohide = $('.hide');
   $charts = $('#charts');
+  $summary = $('#summary');
   $loading = $('#loading');
 
   // hide it initially
@@ -9,14 +9,14 @@ $(document).ready(function(){
   load_json_stats();
 
   function load_json_stats() {
-    $tohide.hide();
     $charts.hide();
+    $summary.hide();
     $loading.show();
 
     $.getJSON(jsonurl, function(data) {
       $loading.hide();
-      $tohide.show();
       $charts.show();
+      $summary.show();
       $.sparkline_display_visible();
       renderplot(data);
     })
@@ -25,19 +25,10 @@ $(document).ready(function(){
     });
   }
 
-  $('#delete-cache').on('click', function () {
-    $.ajax({
-      url: "/user/" + user_id,
-      type: 'DELETE'
-    })
-    .done(load_json_stats);
-  });
-
   // fix sub nav on scroll
   var $win = $(window)
   , $subnav = $('.subnav')
   , navTop = 370 //$('.subnav').length && $('.subnav').offset().top
-  // , tabsTop = $('#global').offset().top
   , isFixed = 0;
 
   processScroll();
@@ -57,20 +48,32 @@ $(document).ready(function(){
       $subnav.removeClass('navbar-fixed-top');
     }
   }
-});
 
-function renderplot(data) {
+  function renderplot(data) {
     if (data === null || data.length === 0) {
-        $("#charts").html('Error retrieving data');
-        return 1;
+      $("#charts").html('Error retrieving data');
+      return 1;
     }
 
-    $("#nb_outings").text(data.nb_outings);
-    $("#date_generated").text(data.date_generated);
-    $("#download_time").text(data.time.download);
-    $("#total_time").text(data.time.total);
-    $("#origin-link").attr({href: data.url});
-    $("#origin-profile").attr({href: data.user_url});
+    var source = $("#summary-template").html();
+    var summary_template = Handlebars.compile(source);
+    var html = summary_template({
+      date_generated: data.date_generated,
+      time: data.time,
+      nb_outings: data.nb_outings,
+      origin_link: data.url,
+      origin_profile: data.user_url,
+      user_id: user_id
+    });
+    $("#summary").html(html);
+
+    $('#delete-cache').on('click', function () {
+      $.ajax({
+        url: "/user/" + user_id,
+        type: 'DELETE'
+      })
+        .done(load_json_stats);
+    });
 
     // Remove the chart titles if they are present
     $('#global .chart-title').remove();
@@ -78,12 +81,12 @@ function renderplot(data) {
     $('#chart_activities').c2cstats('pie', data.global.activities);
     $('#chart_area').c2cstats('pie', data.global.area);
 
-    var source   = $("#nav-template").html();
+    source = $("#nav-template").html();
     var nav_template = Handlebars.compile(source);
-    var html = nav_template({activities: data.activities});
+    html = nav_template({activities: data.activities});
     $(".subnav .nav").html(html);
 
-    var source   = $("#charts-template").html();
+    source = $("#charts-template").html();
     var charts_template = Handlebars.compile(source);
 
     $.each(data.activities, function(index, value) {
@@ -117,6 +120,10 @@ function renderplot(data) {
     if (spark_data.length*5 > 680) {
       bar_width = Math.max(Math.floor(680 / spark_data.length) - 1, 2);
     }
-    $('#sparkline').sparkline(spark_data,
-                              { type: 'bar', barColor: '#0088cc', barWidth: bar_width });
-}
+    $('#sparkline').sparkline(spark_data, {
+      type: 'bar',
+      barColor: '#0088cc',
+      barWidth: bar_width
+    });
+  }
+});
