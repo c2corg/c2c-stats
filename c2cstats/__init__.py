@@ -24,13 +24,13 @@
 import locale
 import os
 
-from c2cstats.parser import ParserError
-from c2cstats.generators import generate
-
 from flask import Flask, request, redirect, url_for, render_template, \
     jsonify, flash, abort
 from flask.ext.cache import Cache
 from flask.ext.assets import Environment
+
+from c2cstats.parser import ParserError
+from c2cstats.generators import generate
 
 locale.setlocale(locale.LC_ALL, '')
 
@@ -98,11 +98,9 @@ def get_user_stats(user_id):
         abort(500)
 
     # jsonify uses indent=None for XMLHttpRequest
-    return jsonify(**data)
-
-    # resp = make_response(json.dumps(data, indent=None))
-    # resp.mimetype = 'application/json'
-    # return resp
+    resp = jsonify(**data)
+    resp.headers['Cache-Control'] = 'max-age=86400,must-revalidate'
+    return resp
 
 
 @app.route('/user/<user_id>', methods=['DELETE'])

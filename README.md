@@ -39,6 +39,6 @@ forcer son exécution:
 
     sudo puppet agent -t
 
-En cas de correction sur les json, il faut vider le cache:
+En cas de modification des stats json ou des pages html, il faut vider le cache:
 
-    sudo find  /var/lib/c2cstats/cache/ -type f -delete
+    sudo find /var/lib/c2cstats/cache/ -type f -delete
