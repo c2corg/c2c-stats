@@ -6,9 +6,9 @@ $(document).ready(function(){
   // hide it initially
   $loading.hide();
 
-  load_json_stats(true);
+  load_json_stats();
 
-  function load_json_stats(cache) {
+  function load_json_stats() {
     $charts.hide();
     $summary.hide();
     $loading.show();
@@ -16,7 +16,7 @@ $(document).ready(function(){
     $.ajax({
       dataType: "json",
       url: jsonurl,
-      cache: cache,
+      cache: false,
       success: function(data) {
         $loading.hide();
         $charts.show();
@@ -77,9 +77,7 @@ $(document).ready(function(){
         url: "/user/" + user_id,
         type: 'DELETE'
       })
-        .done(function() {
-          load_json_stats(false);
-        });
+        .done(load_json_stats);
     });
 
     // Remove the chart titles if they are present
