@@ -6,19 +6,24 @@ $(document).ready(function(){
   // hide it initially
   $loading.hide();
 
-  load_json_stats();
+  load_json_stats(true);
 
-  function load_json_stats() {
+  function load_json_stats(cache) {
     $charts.hide();
     $summary.hide();
     $loading.show();
 
-    $.getJSON(jsonurl, function(data) {
-      $loading.hide();
-      $charts.show();
-      $summary.show();
-      $.sparkline_display_visible();
-      renderplot(data);
+    $.ajax({
+      dataType: "json",
+      url: jsonurl,
+      cache: cache,
+      success: function(data) {
+        $loading.hide();
+        $charts.show();
+        $summary.show();
+        $.sparkline_display_visible();
+        renderplot(data);
+      }
     })
     .error(function() {
       document.location = "/";
@@ -72,7 +77,9 @@ $(document).ready(function(){
         url: "/user/" + user_id,
         type: 'DELETE'
       })
-        .done(load_json_stats);
+        .done(function() {
+          load_json_stats(false);
+        });
     });
 
     // Remove the chart titles if they are present
