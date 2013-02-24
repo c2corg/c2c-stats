@@ -1,0 +1,2 @@
+httpretty==0.5.9
+pytest==2.3.4

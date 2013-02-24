@@ -145,7 +145,7 @@ class Global(Generator):
         use = zip(*use)
         return {'title': u'Répartition par région',
                 'labels': use[0],
-                'values': use[1]}
+                'values': list(use[1])}
 
     @property
     def outings_per_month(self):
@@ -314,7 +314,7 @@ def generate(user_id):
                 del ctx[ACT_SHORT[act]]['cotation_globale']
 
     d = datetime.now()
-    ctx['date_generated'] = unicode(d.strftime('%d %B %Y à %X'), 'utf-8')
+    ctx['date_generated'] = unicode(d.strftime('%d %B %Y %X'), 'utf-8')
     ctx['time'] = {
         'download': '{:.2}'.format(data.download_time),
         'generation': '{:.3}'.format(time.time() - t1),

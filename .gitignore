@@ -1,7 +1,10 @@
 *.pyc
 *.svg
-venv/
+.coverage
 .ropeproject/
+c2cstats.log
 _cache/
 c2cstats/static/.webassets-cache/
 c2cstats/static/gen/
+htmlcov/
+venv/
