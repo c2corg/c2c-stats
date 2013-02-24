@@ -1,6 +1,8 @@
 Calcul de statistiques pour camptocamp.org
 ==========================================
 
+[![Build Status](https://travis-ci.org/c2corg/c2c-stats.png?branch=master)](https://travis-ci.org/c2corg/c2c-stats)
+
 c2cstats est une application web qui permet de calculer des statistiques pour
 la liste de sorties d'un utilisateur de [camptocamp.org](http://camptocamp.org/).
 
@@ -21,6 +23,11 @@ Lancement d'une console pré-configurée (avec l'application ``app`` et la
 méthode pour générer les données ``generate``):
 
     python2 manage.py shell
+
+Pour lancer les tests unitaires:
+
+    pip install -r test-requirements.txt
+    py.test tests
 
 
 ## Notes pour la mise à jour sur le serveur
