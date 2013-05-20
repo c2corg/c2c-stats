@@ -74,6 +74,7 @@
       $this.width(width);
 
       $.plot($this, [values], {
+        canvas: true,
         series: {
           bars: {
             show: true,
