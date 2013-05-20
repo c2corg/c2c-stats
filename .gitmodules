@@ -1,0 +1,3 @@
+[submodule "c2cstats/static/bootstrap"]
+	path = c2cstats/static/bootstrap
+	url = https://github.com/twitter/bootstrap.git
