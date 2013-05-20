@@ -1,0 +1,7 @@
+cov-core==1.7
+coverage==3.6
+gunicorn==0.17.4
+httpretty==0.6.0
+py==1.4.14
+pytest-cov==1.6
+pytest==2.3.5
