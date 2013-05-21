@@ -32,7 +32,7 @@ Pour lancer les tests unitaires:
 
 ## Notes pour la mise à jour sur le serveur
 
-[Config du serveur](https://dev.camptocamp.org/trac/c2corg/browser/trunk/infrastructure/puppetmaster/site-modules/c2corg/manifests/stats.pp)
+[Config du serveur](https://github.com/c2corg/infrastructure/blob/master/puppetmaster/site-modules/c2corg/manifests/stats.pp)
 
 Mise à jour:
 
@@ -49,3 +49,6 @@ forcer son exécution:
 En cas de modification des stats json ou des pages html, il faut vider le cache:
 
     sudo find /var/lib/c2cstats/cache/ -type f -delete
+
+Voir aussi le fichier `fabfile.py` pour lancer ces commandes facilement avec
+[Fabric](docs.fabfile.org/).
