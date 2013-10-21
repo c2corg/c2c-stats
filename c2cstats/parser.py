@@ -44,20 +44,21 @@ ACTIVITIES = ['',
               u'raquette']
 
 COTATIONS = {
-    'ice_rating': {'name': 'cot_glace', 'format': 'U2'},
-    'mixed_rating': {'name': 'cot_mixte', 'format': 'U2'},
+    'aid_rating': {'name': 'cot_artif', 'format': 'U2'},
+    'engagement_rating': {'name': 'engagement', 'format': 'U3'},
+    'equipment_rating': {'name': 'equipement', 'format': 'U2'},
     'global_rating': {'name': 'cot_globale', 'format': 'U3'},
+    'hiking_rating': {'name': 'cot_rando', 'format': 'U2'},
+    'ice_rating': {'name': 'cot_glace', 'format': 'U2'},
     'labande_global_rating': {'name': 'cot_globale', 'format': 'U3'},
+    'labande_ski_rating': {'name': 'cot_skiponc', 'format': 'U2'},
+    'mixed_rating': {'name': 'cot_mixte', 'format': 'U2'},
+    'objective_risk_rating': {'name': 'objective_risk', 'format': 'U2'},
     'rock_free_rating': {'name': 'cot_libre', 'format': 'U3'},
     'rock_required_rating': {'name': 'cot_oblige', 'format': 'U3'},
-    'aid_rating': {'name': 'cot_artif', 'format': 'U2'},
-    'hiking_rating': {'name': 'cot_rando', 'format': 'U2'},
     'snowshoeing_rating': {'name': 'cot_raquette', 'format': 'U2'},
-    'toponeige_technical_rating': {'name': 'cot_skitech', 'format': 'U3'},
-    'labande_ski_rating': {'name': 'cot_skiponc', 'format': 'U2'},
-    'engagement_rating': {'name': 'engagement', 'format': 'U3'},
     'toponeige_exposition_rating': {'name': 'exposition', 'format': 'U2'},
-    'equipment_rating': {'name': 'equipement', 'format': 'U2'}
+    'toponeige_technical_rating': {'name': 'cot_skitech', 'format': 'U3'},
 }
 
 
@@ -180,7 +181,8 @@ class Outings:
 
             ratings = item.get('routes_rating', {}) or {}
             for key, val in ratings.iteritems():
-                cot = getattr(self, COTATIONS[key]['name'])
-                cot[n] = val
+                if key in COTATIONS:
+                    cot = getattr(self, COTATIONS[key]['name'])
+                    cot[n] = val
 
         self.area = np.array(self.area)
