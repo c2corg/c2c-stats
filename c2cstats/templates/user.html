@@ -6,17 +6,18 @@
 <div id="loading">
   <p>Chargement ...</p>
   <div class="progress progress-striped active">
-    <div class="bar" style="width: 100%;"></div>
+    <div class="progress-bar"  role="progressbar" style="width: 100%">
+      <span class="sr-only">Loading ...</span>
+    </div>
   </div>
+
 </div>
 
 <section id="summary"></section>
 
 <section id="charts">
-  <div class="navbar subnav">
-    <div class="navbar-inner">
-      <ul class="nav"></ul>
-    </div>
+  <div class="navbar navbar-default subnav">
+    <ul class="nav navbar-nav"></ul>
   </div>
 
   <section id="global">
@@ -25,10 +26,10 @@
     </div>
 
     <div class="row">
-      <div class="span6">
+      <div class="col-md-6">
         <div id="chart_activities" class="chart"></div>
       </div>
-      <div class="span6">
+      <div class="col-md-6">
         <div id="chart_area" class="chart"></div>
       </div>
     </div>
@@ -90,12 +91,12 @@ var jsonurl = "{{ json_url }}";
   </div>
 
   <div class="row">
-    <div class="span6"><div id="cotation_{{activity}}" class="chart"></div></div>
-    <div class="span6"><div id="cotation_globale_{{activity}}" class="chart"></div></div>
+    <div class="col-md-6"><div id="cotation_{{activity}}" class="chart"></div></div>
+    <div class="col-md-6"><div id="cotation_globale_{{activity}}" class="chart"></div></div>
   </div>
   <div class="row">
-    <div class="span6"><div id="outings_{{activity}}" class="chart"></div></div>
-    <div class="span6"><div id="gain_{{activity}}" class="chart"></div></div>
+    <div class="col-md-6"><div id="outings_{{activity}}" class="chart"></div></div>
+    <div class="col-md-6"><div id="gain_{{activity}}" class="chart"></div></div>
   </div>
   <div id="gain_cumul_{{activity}}" class="chart"></div>
 </script>

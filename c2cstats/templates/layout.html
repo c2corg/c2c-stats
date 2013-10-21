@@ -5,8 +5,8 @@
     <title>Statistiques - Camptocamp.org</title>
     <meta name="description" content="Statistiques pour les utilisateurs de camptocamp.org">
     <!--[if lt IE 9]>
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <script src="{{ url_for('static', filename='js/libs/excanvas.min.js') }}"></script>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="{{ url_for('static', filename='js/libs/excanvas.min.js') }}"></script>
     <![endif]-->
 
     <meta name="viewport" content="width=device-width">
@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic">
 
     {% assets filters="cssmin", output="gen/main.css",
-              "css/bootstrap.min.css", "css/bootstrap-responsive.min.css", "css/style.css" %}
+              "css/bootstrap.min.css", "css/style.css" %}
     <link rel="stylesheet" href="{{ ASSET_URL }}">
     {% endassets %}
 
