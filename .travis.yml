@@ -6,5 +6,5 @@ before_install:
     - sudo apt-get install -qq libevent-dev
 install:
     - pip install --use-mirrors -r requirements.txt
-    - pip install --use-mirrors -r test-requirements.txt
+    - pip install --use-mirrors -r dev-requirements.txt
 script: py.test tests
