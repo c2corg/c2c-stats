@@ -34,14 +34,13 @@ BASE_URL = DOMAIN + "/outings/list/users/%s/format/json/npp/%d/page/%d"
 
 # List of activities. The order matters !
 # see https://dev.camptocamp.org/trac/c2corg/browser/trunk/camptocamp.org/apps/frontend/config/app.yml.in#L147
-ACTIVITIES = ['',
-              u'ski, surf',
-              u'alpinisme neige, glace, mixte',
-              u'rocher haute montagne',
-              u'escalade',
-              u'cascade de glace',
-              u'randonnée pédestre',
-              u'raquette']
+ACTIVITIES = {'skitouring': u'ski, surf',
+              'snow_ice_mixed': u'alpinisme neige, glace, mixte',
+              'mountain_climbing': u'rocher haute montagne',
+              'rock_climbing': u'escalade',
+              'ice_climbing': u'cascade de glace',
+              'hiking': u'randonnée pédestre',
+              'snowshoeing': u'raquette'}
 
 COTATIONS = {
     'aid_rating': {'name': 'cot_artif', 'format': 'U2'},
@@ -100,14 +99,10 @@ class Outings:
         return self.load_json(r.text)
 
     def load_json(self, text):
-        """Load the json and fix errors."""
-
-        # hasTrack & conditions miss values
-        content = text.replace('"hasTrack": ,', '')\
-                      .replace('"conditions": ,', '')
+        """Load the json."""
 
         try:
-            resp = json.loads(content)
+            resp = json.loads(text)
         except ValueError:
             raise ParserError(u"Erreur lors du chargement du json")
 
@@ -123,7 +118,7 @@ class Outings:
         self.content = self.get_page(url)
         self.download_time = time.time() - t0
 
-        self.nboutings = self.content.get('totalItems', 0)
+        self.nboutings = self.content['metadata'].get('totalItems', 0)
         if self.nboutings == 0:
             raise ParserError(u"Pas de sorties")
         elif self.nboutings > 5000:
@@ -147,9 +142,9 @@ class Outings:
 
             for r in resp:
                 content = self.load_json(r.text)
-                self.content['items'].extend(content['items'])
+                self.content['features'].extend(content['features'])
 
-        if len(self.content['items']) != self.nboutings:
+        if len(self.content['features']) != self.nboutings:
             raise ParserError(u"Des sorties sont manquantes")
 
     def parse(self):
@@ -167,15 +162,22 @@ class Outings:
                 setattr(self, c['name'],
                         np.zeros(self.nboutings, dtype=np.dtype(c['format'])))
 
-        for n, item in enumerate(self.content['items']):
+        for n, item in enumerate(self.content['features']):
+            item = item['properties']
             # self.title.append(t[1].a.text)
             self.date[n] = item['date']
             # keep only the first activity
             act = item['activities'][0]
             if act:
-                self.activity[n] = ACTIVITIES[int(act)]
-            self.altitude[n] = item.get('maxElevation', 0)
-            self.gain[n] = item.get('heightDiffUp', 0)
+                self.activity[n] = ACTIVITIES[act]
+            try:
+                self.altitude[n] = item.get('maxElevation', 0)
+            except TypeError:
+                self.altitude[n] = 0
+            try:
+                self.gain[n] = item.get('heightDiffUp', 0)
+            except TypeError:
+                self.gain[n] = 0
             if item['linkedAreas']:
                 self.area.append(item['linkedAreas'][0]['name'])
 
