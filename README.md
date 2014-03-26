@@ -26,7 +26,7 @@ méthode pour générer les données ``generate``):
 
 Pour lancer les tests unitaires:
 
-    pip install -r test-requirements.txt
+    pip install -r dev-requirements.txt
     py.test tests
 
 
