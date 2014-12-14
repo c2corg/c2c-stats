@@ -34,6 +34,13 @@ def data():
     HTTPretty.register_uri(HTTPretty.GET, URL + '/page/2', body=content,
                            content_type="application/json")
 
+    filename = os.path.join(DATA_DIR, '113594.3.json')
+    with codecs.open(filename, "r", "utf-8") as f:
+        content = f.read()
+
+    HTTPretty.register_uri(HTTPretty.GET, URL + '/page/3', body=content,
+                           content_type="application/json")
+
     return generate(113594)
 
 
@@ -53,6 +60,13 @@ def outings():
         content = f.read()
 
     HTTPretty.register_uri(HTTPretty.GET, URL + '/page/2', body=content,
+                           content_type="application/json")
+
+    filename = os.path.join(DATA_DIR, '113594.3.json')
+    with codecs.open(filename, "r", "utf-8") as f:
+        content = f.read()
+
+    HTTPretty.register_uri(HTTPretty.GET, URL + '/page/3', body=content,
                            content_type="application/json")
 
     return Outings(113594)

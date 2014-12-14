@@ -1,0 +1,1126 @@
+{
+    "type": "FeatureCollection",
+    "metadata": {
+        "totalItems": 123,
+        "nbItems": 23,
+        "startIndex": 101,
+        "currentPage": "http://www.camptocamp.org/outings/list/users/113594/format/json/npp/50/page/3",
+        "nextPage": null,
+        "previousPage": "http://www.camptocamp.org/outings/list/users/113594/format/json/npp/50/page/2",
+        "baseLanguage": "fr",
+        "generated": "Sun, 14 Dec 2014 12:35:25 +0100"
+    },
+    "features": [
+        {
+            "type": "Feature",
+            "id": 223400,
+            "properties": {
+                "module": "outings",
+                "name": "Pic Saint Michel\u00a0: Travers\u00e9e Villard-de-Lans >> Saint-Nizier-du-Moucherotte",
+                "url": "http://www.camptocamp.org/outings/223400/fr/pic-saint-michel-traversee-villard-de-lans-saint-nizier-du-moucherotte",
+                "date": "2010-06-12",
+                "activities": [
+                    "hiking"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 1955,
+                "heightDiffUp": 1500,
+                "routesRating": {
+                    "hikingRating": "T2"
+                },
+                "conditionsStatus": "mean conditions",
+                "frequentationStatus": "some people",
+                "nbLinkedImages": 4,
+                "nbComments": 5,
+                "hasTrack": true,
+                "linkedAreas": [
+                    {
+                        "id": 14459,
+                        "name": "Vercors",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14459/fr/vercors"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 223220,
+            "properties": {
+                "module": "outings",
+                "name": "Rocheplaine / St Egr\u00e8ve\u00a0: \u00c9peron des Gosses Mythiques",
+                "url": "http://www.camptocamp.org/outings/223220/fr/rocheplaine-st-egreve-eperon-des-gosses-mythiques",
+                "date": "2010-06-06",
+                "activities": [
+                    "rock_climbing"
+                ],
+                "creator": "Gregory Bataille",
+                "maxElevation": 550,
+                "heightDiffUp": 350,
+                "routesRating": {
+                    "globalRating": "AD+",
+                    "engagementRating": "I",
+                    "rockFreeRating": "5a",
+                    "rockRequiredRating": "4c",
+                    "equipmentRating": "P1"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 0,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14401,
+                        "name": "Chartreuse",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14401/fr/chartreuse"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 220250,
+            "properties": {
+                "module": "outings",
+                "name": "Rochers de Belles Ombres\u00a0: par le sangle de Belles Ombres",
+                "url": "http://www.camptocamp.org/outings/220250/fr/rochers-de-belles-ombres-par-le-sangle-de-belles-ombres",
+                "date": "2010-05-23",
+                "activities": [
+                    "hiking"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 1833,
+                "heightDiffUp": 600,
+                "routesRating": {
+                    "hikingRating": "T3"
+                },
+                "conditionsStatus": "excellent conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 5,
+                "nbComments": 0,
+                "hasTrack": true,
+                "linkedAreas": [
+                    {
+                        "id": 14401,
+                        "name": "Chartreuse",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14401/fr/chartreuse"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 212564,
+            "properties": {
+                "module": "outings",
+                "name": "La Cochette : Petit Piton",
+                "url": "http://www.camptocamp.org/outings/212564/fr/la-cochette-petit-piton",
+                "date": "2010-04-03",
+                "activities": [
+                    "rock_climbing"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 1300,
+                "heightDiffUp": 200,
+                "routesRating": {
+                    "globalRating": "D-",
+                    "engagementRating": "I",
+                    "rockFreeRating": "5b",
+                    "rockRequiredRating": "4c",
+                    "equipmentRating": "P1"
+                },
+                "conditionsStatus": "mean conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 0,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14401,
+                        "name": "Chartreuse",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14401/fr/chartreuse"
+                    },
+                    {
+                        "id": 14295,
+                        "name": "Savoie",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14295/fr/savoie"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 212558,
+            "properties": {
+                "module": "outings",
+                "name": "Pas de la Coche : Versant NW - depuis Prabert",
+                "url": "http://www.camptocamp.org/outings/212558/fr/pas-de-la-coche-versant-nw-depuis-prabert",
+                "date": "2010-04-02",
+                "activities": [
+                    "snowshoeing"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 2085,
+                "heightDiffUp": 850,
+                "routesRating": {
+                    "snowshoeingRating": "R3"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "some people",
+                "nbLinkedImages": 3,
+                "nbComments": 1,
+                "hasTrack": true,
+                "linkedAreas": [
+                    {
+                        "id": 14398,
+                        "name": "Belledonne",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14398/fr/belledonne"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 199286,
+            "properties": {
+                "module": "outings",
+                "name": "Casse Rousse : Goulotte du chien + Goulotte du bloc coinc\u00e9",
+                "url": "http://www.camptocamp.org/outings/199286/fr/casse-rousse-goulotte-du-chien-goulotte-du-bloc-coince",
+                "date": "2010-01-16",
+                "activities": [
+                    "snow_ice_mixed"
+                ],
+                "creator": "Lazare Grenier",
+                "maxElevation": 2100,
+                "heightDiffUp": 500,
+                "routesRating": {
+                    "globalRating": "D",
+                    "engagementRating": "I",
+                    "iceRating": "3",
+                    "mixedRating": "M3",
+                    "equipmentRating": "P3"
+                },
+                "conditionsStatus": "mean conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 9,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14398,
+                        "name": "Belledonne",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14398/fr/belledonne"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 196175,
+            "properties": {
+                "module": "outings",
+                "name": "Hohneck : Ar\u00eate des Spitzkoepfe",
+                "url": "http://www.camptocamp.org/outings/196175/fr/hohneck-arete-des-spitzkoepfe",
+                "date": "2009-12-27",
+                "activities": [
+                    "rock_climbing"
+                ],
+                "creator": "L. Besson",
+                "maxElevation": 1309,
+                "heightDiffUp": 600,
+                "routesRating": {
+                    "globalRating": "PD",
+                    "engagementRating": "I",
+                    "rockFreeRating": "3b",
+                    "rockRequiredRating": "2",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "mean conditions",
+                "frequentationStatus": "some people",
+                "nbLinkedImages": 5,
+                "nbComments": 10,
+                "hasTrack": true,
+                "linkedAreas": [
+                    {
+                        "id": 14419,
+                        "name": "Vosges",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14419/fr/vosges"
+                    },
+                    {
+                        "id": 14367,
+                        "name": "Haut-Rhin",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14367/fr/haut-rhin"
+                    },
+                    {
+                        "id": 14281,
+                        "name": "Vosges",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14281/fr/vosges"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 189570,
+            "properties": {
+                "module": "outings",
+                "name": "Pointe de l'Aigleton ou Signal du V\u00e9n\u00e9tier : Ar\u00eates de l'Aigleton",
+                "url": "http://www.camptocamp.org/outings/189570/fr/pointe-de-l-aigleton-ou-signal-du-venetier-aretes-de-l-aigleton",
+                "date": "2009-10-24",
+                "activities": [
+                    "snow_ice_mixed"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 2498,
+                "heightDiffUp": 1162,
+                "routesRating": {
+                    "globalRating": "PD-",
+                    "engagementRating": "II",
+                    "rockFreeRating": "3b",
+                    "rockRequiredRating": "3b",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "mean conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 9,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14398,
+                        "name": "Belledonne",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14398/fr/belledonne"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 181413,
+            "properties": {
+                "module": "outings",
+                "name": "Pointe des Aigles : Ar\u00eate W",
+                "url": "http://www.camptocamp.org/outings/181413/fr/pointe-des-aigles-arete-w",
+                "date": "2009-08-22",
+                "activities": [
+                    "mountain_climbing"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 3336,
+                "heightDiffUp": 1100,
+                "routesRating": {
+                    "globalRating": "D",
+                    "engagementRating": "III",
+                    "rockFreeRating": "4c",
+                    "rockRequiredRating": "4b",
+                    "equipmentRating": "P3"
+                },
+                "conditionsStatus": "excellent conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 3,
+                "nbComments": 4,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14403,
+                        "name": "\u00c9crins",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14403/fr/ecrins"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 177076,
+            "properties": {
+                "module": "outings",
+                "name": "Le R\u00e2teau - Sommet E : Ar\u00eate S - depuis le refuge de la Selle (voie normale)",
+                "url": "http://www.camptocamp.org/outings/177076/fr/le-rateau-sommet-e-arete-s-depuis-le-refuge-de-la-selle-voie-normale",
+                "date": "2009-07-22",
+                "activities": [
+                    "snow_ice_mixed"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 3809,
+                "heightDiffUp": 1150,
+                "routesRating": {
+                    "globalRating": "PD-",
+                    "engagementRating": "II",
+                    "equipmentRating": "P3"
+                },
+                "conditionsStatus": "mean conditions",
+                "frequentationStatus": "quite crowded",
+                "nbLinkedImages": 5,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14403,
+                        "name": "\u00c9crins",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14403/fr/ecrins"
+                    },
+                    {
+                        "id": 14361,
+                        "name": "Hautes-Alpes",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14361/fr/hautes-alpes"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 175927,
+            "properties": {
+                "module": "outings",
+                "name": "Dent Blanche : Ar\u00eate S (Voie Normale)",
+                "url": "http://www.camptocamp.org/outings/175927/fr/dent-blanche-arete-s-voie-normale",
+                "date": "2009-07-11",
+                "activities": [
+                    "snow_ice_mixed",
+                    "mountain_climbing"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 4357,
+                "heightDiffUp": 2530,
+                "routesRating": {
+                    "globalRating": "AD",
+                    "engagementRating": "IV",
+                    "rockFreeRating": "4b",
+                    "rockRequiredRating": "3b",
+                    "equipmentRating": "P3"
+                },
+                "conditionsStatus": "excellent conditions",
+                "frequentationStatus": "quite crowded",
+                "nbLinkedImages": 4,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14437,
+                        "name": "Valais W - Alpes Pennines W",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14437/fr/valais-w-alpes-pennines-w"
+                    },
+                    {
+                        "id": 14384,
+                        "name": "Valais",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14384/fr/valais"
+                    },
+                    {
+                        "id": 14067,
+                        "name": "Suisse",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14067/fr/suisse"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 175612,
+            "properties": {
+                "module": "outings",
+                "name": "Petite Dent de Veisivi : Travers\u00e9e",
+                "url": "http://www.camptocamp.org/outings/175612/fr/petite-dent-de-veisivi-traversee",
+                "date": "2009-07-09",
+                "activities": [
+                    "mountain_climbing"
+                ],
+                "creator": "L. Besson",
+                "maxElevation": 3183,
+                "heightDiffUp": 1400,
+                "routesRating": {
+                    "globalRating": "AD",
+                    "engagementRating": "II",
+                    "rockFreeRating": "4b",
+                    "equipmentRating": "P2"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 3,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14437,
+                        "name": "Valais W - Alpes Pennines W",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14437/fr/valais-w-alpes-pennines-w"
+                    },
+                    {
+                        "id": 14384,
+                        "name": "Valais",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14384/fr/valais"
+                    },
+                    {
+                        "id": 14067,
+                        "name": "Suisse",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14067/fr/suisse"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 171364,
+            "properties": {
+                "module": "outings",
+                "name": "Montagne de Morretet / Combe d'Oyans : Voie Fran\u00e7oise + Chemin des Dames",
+                "url": "http://www.camptocamp.org/outings/171364/fr/montagne-de-morretet-combe-d-oyans-voie-francoise-chemin-des-dames",
+                "date": "2009-06-01",
+                "activities": [
+                    "rock_climbing"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 650,
+                "heightDiffUp": 350,
+                "routesRating": {
+                    "globalRating": "AD+",
+                    "engagementRating": "I",
+                    "rockFreeRating": "5c",
+                    "rockRequiredRating": "4b",
+                    "equipmentRating": "P2"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 0,
+                "nbComments": 4,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14459,
+                        "name": "Vercors",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14459/fr/vercors"
+                    },
+                    {
+                        "id": 14342,
+                        "name": "Dr\u00f4me",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14342/fr/drome"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 170143,
+            "properties": {
+                "module": "outings",
+                "name": "Saint Sauveur de Cruzi\u00e8res - Champer",
+                "url": "http://www.camptocamp.org/outings/170143/fr/saint-sauveur-de-cruzieres-champer",
+                "date": "2009-05-24",
+                "activities": [
+                    "rock_climbing"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": null,
+                "heightDiffUp": null,
+                "routesRating": null,
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 0,
+                "nbComments": 2,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14359,
+                        "name": "Ard\u00e8che",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14359/fr/ardeche"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 168327,
+            "properties": {
+                "module": "outings",
+                "name": "Dents du Loup : Travers\u00e9e des ar\u00eates",
+                "url": "http://www.camptocamp.org/outings/168327/fr/dents-du-loup-traversee-des-aretes",
+                "date": "2009-05-09",
+                "activities": [
+                    "mountain_climbing"
+                ],
+                "creator": "L. Besson",
+                "maxElevation": 2375,
+                "heightDiffUp": 1200,
+                "routesRating": {
+                    "globalRating": "AD-",
+                    "engagementRating": "II",
+                    "rockFreeRating": "4a",
+                    "rockRequiredRating": "4a",
+                    "equipmentRating": "P3"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 4,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14398,
+                        "name": "Belledonne",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14398/fr/belledonne"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 166680,
+            "properties": {
+                "module": "outings",
+                "name": "Calanques - Aiguille de Sugiton : La Directe",
+                "url": "http://www.camptocamp.org/outings/166680/fr/calanques-aiguille-de-sugiton-la-directe",
+                "date": "2009-04-23",
+                "activities": [
+                    "rock_climbing"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 175,
+                "heightDiffUp": 80,
+                "routesRating": {
+                    "globalRating": "AD",
+                    "engagementRating": "I",
+                    "rockFreeRating": "4c",
+                    "equipmentRating": "P1"
+                },
+                "conditionsStatus": "excellent conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 0,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14463,
+                        "name": "Provence",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14463/fr/provence"
+                    },
+                    {
+                        "id": 14353,
+                        "name": "Bouches-du-Rh\u00f4ne",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14353/fr/bouches-du-rhone"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 140779,
+            "properties": {
+                "module": "outings",
+                "name": "Pic du Glacier d'Arsine : Ar\u00eate W par le col du Glacier Blanc",
+                "url": "http://www.camptocamp.org/outings/140779/fr/pic-du-glacier-d-arsine-arete-w-par-le-col-du-glacier-blanc",
+                "date": "2008-10-05",
+                "activities": [
+                    "snow_ice_mixed"
+                ],
+                "creator": "Bruno Besson",
+                "maxElevation": 3364,
+                "heightDiffUp": 820,
+                "routesRating": {
+                    "globalRating": "F",
+                    "engagementRating": "I",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 1,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14403,
+                        "name": "\u00c9crins",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14403/fr/ecrins"
+                    },
+                    {
+                        "id": 14361,
+                        "name": "Hautes-Alpes",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14361/fr/hautes-alpes"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 136639,
+            "properties": {
+                "module": "outings",
+                "name": "Punta di Ceresole : Face N",
+                "url": "http://www.camptocamp.org/outings/136639/fr/punta-di-ceresole-face-n",
+                "date": "2008-08-10",
+                "activities": [
+                    "snow_ice_mixed"
+                ],
+                "creator": "L. Besson",
+                "maxElevation": 3777,
+                "heightDiffUp": 594,
+                "routesRating": {
+                    "globalRating": "PD",
+                    "engagementRating": "II",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 3,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 280066,
+                        "name": "Province de Turin",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/280066/fr/province-de-turin"
+                    },
+                    {
+                        "id": 14427,
+                        "name": "Grand Paradis",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14427/fr/grand-paradis"
+                    },
+                    {
+                        "id": 14270,
+                        "name": "Italie",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14270/fr/italie"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 136629,
+            "properties": {
+                "module": "outings",
+                "name": "Travers\u00e9e Testa di Valnontey - Testa della Tribolazione",
+                "url": "http://www.camptocamp.org/outings/136629/fr/traversee-testa-di-valnontey-testa-della-tribolazione",
+                "date": "2008-08-09",
+                "activities": [
+                    "snow_ice_mixed",
+                    "mountain_climbing"
+                ],
+                "creator": "L. Besson",
+                "maxElevation": 3642,
+                "heightDiffUp": 459,
+                "routesRating": {
+                    "globalRating": "PD",
+                    "engagementRating": "II",
+                    "rockFreeRating": "3b",
+                    "rockRequiredRating": "3b",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 2,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 280066,
+                        "name": "Province de Turin",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/280066/fr/province-de-turin"
+                    },
+                    {
+                        "id": 14427,
+                        "name": "Grand Paradis",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14427/fr/grand-paradis"
+                    },
+                    {
+                        "id": 280072,
+                        "name": "Vall\u00e9e d'Aoste",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/280072/fr/vallee-d-aoste"
+                    },
+                    {
+                        "id": 14270,
+                        "name": "Italie",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14270/fr/italie"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 136003,
+            "properties": {
+                "module": "outings",
+                "name": "Becca di Montandayn\u00e9 : Voie normale depuis le bivouac Leonessa",
+                "url": "http://www.camptocamp.org/outings/136003/fr/becca-di-montandayne-voie-normale-depuis-le-bivouac-leonessa",
+                "date": "2008-08-05",
+                "activities": [
+                    "snow_ice_mixed"
+                ],
+                "creator": "Lazare Grenier",
+                "maxElevation": 3838,
+                "heightDiffUp": 928,
+                "routesRating": {
+                    "globalRating": "PD",
+                    "engagementRating": "II",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 4,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14427,
+                        "name": "Grand Paradis",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14427/fr/grand-paradis"
+                    },
+                    {
+                        "id": 280072,
+                        "name": "Vall\u00e9e d'Aoste",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/280072/fr/vallee-d-aoste"
+                    },
+                    {
+                        "id": 14270,
+                        "name": "Italie",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14270/fr/italie"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 132652,
+            "properties": {
+                "module": "outings",
+                "name": "La Rouye : Voie Normale - couloir des sorciers puis ar\u00eate S",
+                "url": "http://www.camptocamp.org/outings/132652/fr/la-rouye-voie-normale-couloir-des-sorciers-puis-arete-s",
+                "date": "2008-07-06",
+                "activities": [
+                    "snow_ice_mixed",
+                    "mountain_climbing"
+                ],
+                "creator": "L. Besson",
+                "maxElevation": 3084,
+                "heightDiffUp": 740,
+                "routesRating": {
+                    "globalRating": "AD",
+                    "engagementRating": "III",
+                    "rockFreeRating": "4a",
+                    "rockRequiredRating": "4a",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": null,
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 0,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14403,
+                        "name": "\u00c9crins",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14403/fr/ecrins"
+                    },
+                    {
+                        "id": 14361,
+                        "name": "Hautes-Alpes",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14361/fr/hautes-alpes"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 99730,
+            "properties": {
+                "module": "outings",
+                "name": "Aiguille de l'Olan : Voie normale depuis Fond Turbat",
+                "url": "http://www.camptocamp.org/outings/99730/fr/aiguille-de-l-olan-voie-normale-depuis-fond-turbat",
+                "date": "2007-07-01",
+                "activities": [
+                    "mountain_climbing"
+                ],
+                "creator": "Lazare Grenier",
+                "maxElevation": 3360,
+                "heightDiffUp": 1160,
+                "routesRating": {
+                    "globalRating": "PD",
+                    "rockFreeRating": "2",
+                    "rockRequiredRating": "2",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "desert",
+                "nbLinkedImages": 1,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14403,
+                        "name": "\u00c9crins",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14403/fr/ecrins"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        },
+        {
+            "type": "Feature",
+            "id": 99265,
+            "properties": {
+                "module": "outings",
+                "name": "Pic Coolidge : Voie originale",
+                "url": "http://www.camptocamp.org/outings/99265/fr/pic-coolidge-voie-originale",
+                "date": "2007-06-10",
+                "activities": [
+                    "snow_ice_mixed"
+                ],
+                "creator": "Lazare Grenier",
+                "maxElevation": 3775,
+                "heightDiffUp": 1365,
+                "routesRating": {
+                    "globalRating": "PD",
+                    "engagementRating": "III",
+                    "equipmentRating": "P4"
+                },
+                "conditionsStatus": "good conditions",
+                "frequentationStatus": "some people",
+                "nbLinkedImages": 0,
+                "nbComments": 0,
+                "hasTrack": false,
+                "linkedAreas": [
+                    {
+                        "id": 14403,
+                        "name": "\u00c9crins",
+                        "type": "range",
+                        "url": "http://www.camptocamp.org/areas/14403/fr/ecrins"
+                    },
+                    {
+                        "id": 14361,
+                        "name": "Hautes-Alpes",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14361/fr/hautes-alpes"
+                    },
+                    {
+                        "id": 14328,
+                        "name": "Is\u00e8re",
+                        "type": "admin_limits",
+                        "url": "http://www.camptocamp.org/areas/14328/fr/isere"
+                    },
+                    {
+                        "id": 14274,
+                        "name": "France",
+                        "type": "country",
+                        "url": "http://www.camptocamp.org/areas/14274/fr/france"
+                    }
+                ]
+            },
+            "geometry": null
+        }
+    ]
+}
